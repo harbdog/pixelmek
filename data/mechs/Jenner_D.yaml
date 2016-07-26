@@ -1,0 +1,27 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1692/jenner-jr7-d
+name: Jenner
+variant: JR7-D
+image_path: images/mechs/jenner.png
+cost: 3,161,925
+pv: 20
+type: BM
+size: 1
+tmm: 3
+move: 14
+jump: 10
+role: Striker
+skill: 4
+short: 2
+medium: 2
+long: 0
+overheat: 1
+armor: 2
+structure: 3
+specials:
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA}
+- !include ../weapons/is_mlas.yaml: {location: LA}
+- !include ../weapons/is_mlas.yaml: {location: RA}
+- !include ../weapons/is_mlas.yaml: {location: RA}
+- !include ../weapons/is_srm.yaml: {location: CT, count: 4}

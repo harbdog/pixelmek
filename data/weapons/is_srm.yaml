@@ -1,0 +1,4 @@
+--- !Weapon
+name: Short Range Missile
+short_name: SRM
+range: medium

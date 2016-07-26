@@ -1,0 +1,34 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1985/mad-cat-timber-wolf-prime
+name: Mad Cat (Timber Wolf)
+variant: Prime
+image_path: images/mechs/timberwolf.png
+cost: 24,099,688
+pv: 49
+type: BM
+size: 3
+tmm: 2
+move: 10
+role: Brawler
+skill: 4
+short: 5
+medium: 5
+long: 4
+overheat: 1
+armor: 8
+structure: 4
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/idf.yaml: 2
+- !include ../specials/lrm.yaml: [1, 1, 2]
+weapons:
+- !include ../weapons/cl_erll.yaml: {location: LA}
+- !include ../weapons/cl_erml.yaml: {location: LA}
+- !include ../weapons/cl_erll.yaml: {location: RA}
+- !include ../weapons/cl_erml.yaml: {location: RA}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 20}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 20}
+- !include ../weapons/cl_mpl.yaml: {location: RT}
+- !include ../weapons/cl_mg.yaml: {location: RT}
+- !include ../weapons/cl_mg.yaml: {location: CT}
