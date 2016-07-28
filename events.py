@@ -1,5 +1,7 @@
 import cocos
 import pyglet
+from cocos.actions import *
+from cocos.particle_systems import Meteor
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
@@ -30,7 +32,20 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
             mech.sprite.pause()
 
         elif char == "SPACE":
-            mech.sprite.stop()
+            # mech.sprite.stop()
+            ppc = Meteor()
+            ppc.size = 10
+            ppc.speed = 0
+            ppc.gravity = cocos.euclid.Point2(-200, -200)
+            ppc.emission_rate = 100
+            ppc.life = 0.5
+            ppc.life_var = 0.1
+
+            ppc.position = mech.sprite.position
+            self.battle.board.add(ppc, z=1000)
+
+            action = MoveTo((300, 300), duration=1) + CallFunc(ppc.stop_system)
+            ppc.do(action)
 
         elif char == "W":
             mech.sprite.strut()
@@ -108,3 +123,60 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
 
         if char == "P":
             mech.sprite.resume()
+
+
+class MouseEvents(cocos.layer.ScrollableLayer):
+
+    is_event_handler = True     #: enable director.window events
+
+    def __init__(self, battle):
+        super(MouseEvents, self).__init__()
+
+        self.battle = battle
+
+    def on_mouse_motion(self, x, y, dx, dy):
+        """Called when the mouse moves over the app window with no button pressed
+
+        (x, y) are the physical coordinates of the mouse
+        (dx, dy) is the distance vector covered by the mouse pointer since the
+          last call.
+        """
+        # self.update_text(x, y)
+
+    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+        """Called when the mouse moves over the app window with some button(s) pressed
+
+        (x, y) are the physical coordinates of the mouse
+        (dx, dy) is the distance vector covered by the mouse pointer since the
+          last call.
+        'buttons' is a bitwise or of pyglet.window.mouse constants LEFT, MIDDLE, RIGHT
+        'modifiers' is a bitwise or of pyglet.window.key modifier constants
+           (values like 'SHIFT', 'OPTION', 'ALT')
+        """
+        # self.update_text(x, y)
+
+    def on_mouse_press(self, x, y, buttons, modifiers):
+        """This function is called when any mouse button is pressed
+
+        (x, y) are the physical coordinates of the mouse
+        'buttons' is a bitwise or of pyglet.window.mouse constants LEFT, MIDDLE, RIGHT
+        'modifiers' is a bitwise or of pyglet.window.key modifier constants
+           (values like 'SHIFT', 'OPTION', 'ALT')
+        """
+        real_x, real_y = self.battle.scroller.screen_to_world(x, y)
+
+        mech = self.battle.getTurnUnit()
+
+        ppc = Meteor()
+        ppc.size = 10
+        ppc.speed = 15
+        ppc.gravity = cocos.euclid.Point2(0, 0)
+        ppc.emission_rate = 100
+        ppc.life = 0.5
+        ppc.life_var = 0.1
+
+        ppc.position = mech.sprite.position
+        self.battle.board.add(ppc, z=1000)
+
+        action = MoveTo((real_x, real_y), duration=1) + CallFunc(ppc.stop_system)
+        ppc.do(action)

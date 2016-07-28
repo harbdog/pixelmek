@@ -29,6 +29,7 @@ board = Board()
 battle = Battle()
 battle.setBoard(board)
 key_events = events.KeyboardEvents(battle)
+mouse_events = events.MouseEvents(battle)
 
 for mech in mech_list:
     col = randint(0, 5)
@@ -48,6 +49,9 @@ for mech in mech_list:
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
 scroller.add(key_events, z=-1)
+scroller.add(mouse_events, z=1)
+
+battle.setScroller(scroller)
 
 # TODO: focus on an actual unit
 scroller.set_focus(150, 150)

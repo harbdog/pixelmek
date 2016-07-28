@@ -4,11 +4,15 @@ import model
 class Battle(object):
     def __init__(self):
         self.board = None
+        self.scroller = None
         self.unit_list = []
         self.unit_turn = 1
 
     def setBoard(self, board):
         self.board = board
+
+    def setScroller(self, scroller):
+        self.scroller = scroller
 
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
