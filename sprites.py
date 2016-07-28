@@ -24,10 +24,11 @@ class MechSprite(cocos.layer.Layer):
         # board[aws_col, aws_row] = self.batch
 
         aws_static = Sprite(mech_img_grid[0])
+        self.aws_static = aws_static
 
         shadow = Sprite(MechSprite.shadow_img_grid[battle_mech.getSize() - 1])
         indicator_rect = shadow.get_rect()
-        indicator_rect.bottomleft = (self.battle_mech.col * 32), (self.battle_mech.row * 32) - shadow.height//2 + 8
+        indicator_rect.bottomleft = (self.battle_mech.col * 32), (self.battle_mech.row * 32) - shadow.height//4
         shadow.position = indicator_rect.center
         self.shadow = shadow
 
@@ -158,7 +159,23 @@ class MechSprite(cocos.layer.Layer):
         if func is not None:
             actions += CallFunc(func)
 
-        # self.shadow.do(ToggleVisibility() + Delay(time) + ToggleVisibility())
-
         self.do(actions)
         self.shadow.do(actions)
+
+    def moveToCell(self, col, row, func):
+        time = self.timeBySize() * 6
+
+        shadow_rect = self.shadow.get_rect()
+        shadow_rect.bottomleft = (col * 32), (row * 32) - self.shadow.height // 4
+
+        rect = self.aws_static.get_rect()
+        rect.bottomleft = (col * 32) - (self.aws_static.width // 2 - self.shadow.width // 2), (row * 32)
+
+        actions = MoveTo(rect.center, duration=time)
+        if func is not None:
+            actions += CallFunc(func)
+
+        self.do(actions)
+
+        shadow_action = MoveTo(shadow_rect.center, duration=time)
+        self.shadow.do(shadow_action)

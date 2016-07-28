@@ -84,3 +84,9 @@ class Board(cocos.layer.ScrollableLayer):
                         cell_sprite.position = cell_rect.center
 
                         cell_batch.add(cell_sprite)
+
+    def board_to_layer(self, *coords):
+        return (coords[0] * self.TILE_SIZE), (coords[1] * self.TILE_SIZE)
+
+    def layer_to_board(self, *point):
+        return (point[0] // self.TILE_SIZE), (point[1] // self.TILE_SIZE)

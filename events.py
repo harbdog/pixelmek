@@ -2,6 +2,8 @@ import cocos
 import pyglet
 from cocos.actions import *
 from cocos.particle_systems import Meteor
+from cocos.euclid import Point2
+from pyglet.window import mouse
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
@@ -165,18 +167,39 @@ class MouseEvents(cocos.layer.ScrollableLayer):
         """
         real_x, real_y = self.battle.scroller.screen_to_world(x, y)
 
-        mech = self.battle.getTurnUnit()
+        turn_unit = self.battle.getTurnUnit()
+        if buttons & mouse.RIGHT:
+            # fire a test ppc
+            ppc = Meteor()
+            ppc.size = 10
+            ppc.speed = 15
+            ppc.gravity = Point2(0, 0)
+            ppc.emission_rate = 100
+            ppc.life = 0.5
+            ppc.life_var = 0.1
 
-        ppc = Meteor()
-        ppc.size = 10
-        ppc.speed = 15
-        ppc.gravity = cocos.euclid.Point2(0, 0)
-        ppc.emission_rate = 100
-        ppc.life = 0.5
-        ppc.life_var = 0.1
+            ppc.position = turn_unit.sprite.position
+            self.battle.board.add(ppc, z=1000)
 
-        ppc.position = mech.sprite.position
-        self.battle.board.add(ppc, z=1000)
+            # figure out the duration based on speed and distance
+            ppc_speed = 400     # pixels per second
+            distance = Point2(ppc.x, ppc.y).distance(Point2(real_x, real_y))
+            ppc_t = distance / ppc_speed
 
-        action = MoveTo((real_x, real_y), duration=1) + CallFunc(ppc.stop_system)
-        ppc.do(action)
+            action = MoveTo((real_x, real_y), duration=ppc_t) + CallFunc(ppc.stop_system)
+            ppc.do(action)
+
+        elif buttons & mouse.LEFT:
+            # test movement to the specific cell
+            # chk_colnum = turn_unit.col
+            # chk_rownum = turn_unit.row - 1
+            chk_cell = self.battle.board.layer_to_board(real_x, real_y)
+            chk_colnum = chk_cell[0]
+            chk_rownum = chk_cell[1]
+
+            if self.battle.isCellAvailable(chk_colnum, chk_rownum):
+                turn_unit.col = chk_colnum
+                turn_unit.row = chk_rownum
+
+                turn_unit.sprite.strut()
+                turn_unit.sprite.moveToCell(chk_colnum, chk_rownum, turn_unit.sprite.sulk)
