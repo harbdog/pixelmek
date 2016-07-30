@@ -135,12 +135,6 @@ class Weapon(yaml.YAMLObject):
     def isLong(self):
         return self.range == Weapon.RANGE_LONG
 
-    def isLaser(self):
-        return self.short_name in Weapon._laser
-
-    def isPPC(self):
-        return self.short_name in Weapon._ppc
-
     def isEnergy(self):
         return self.type == Weapon.TYPE_ENERGY
 
@@ -149,6 +143,18 @@ class Weapon(yaml.YAMLObject):
 
     def isBallistic(self):
         return self.type == Weapon.TYPE_BALLISTIC
+
+    def isLaser(self):
+        return self.short_name in Weapon._laser
+
+    def isPPC(self):
+        return self.short_name in Weapon._ppc
+
+    def isLRM(self):
+        return self.short_name == Weapon.LRM
+
+    def isSRM(self):
+        return self.short_name == Weapon.SRM
 
 
 class Special(yaml.YAMLObject):

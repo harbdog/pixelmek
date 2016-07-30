@@ -228,11 +228,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         las_inner.do(las_action)
 
                     elif weapon.isBallistic():
-
-                        num_ballistic = weapon.get_projectiles()
-
                         # fire test ballistic projectile
                         ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
+
+                        num_ballistic = weapon.get_projectiles()
 
                         # figure out the duration based on speed and distance
                         ballistic_speed = weapon.get_speed()  # pixels per second
@@ -259,6 +258,48 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             ballistic.do(action)
 
                             self.battle.board.add(ballistic, z=1000+i)
+
+                    elif weapon.isMissile():
+                        # fire test missile projectile
+                        missile_img = pyglet.resource.image("images/weapons/missile.png")
+
+                        num_missile = weapon_data.get('count', 1)
+
+                        num_per_row = 1
+                        if weapon.isLRM():
+                            num_per_row = 5
+                        elif weapon.isSRM():
+                            num_per_row = 2
+
+                        # figure out the duration based on speed and distance
+                        missile_speed = weapon.get_speed()  # pixels per second
+                        distance = Point2(weapon_x, weapon_y).distance(Point2(real_x, real_y))
+                        missile_t = distance / missile_speed
+
+                        for i in range(num_missile):
+
+                            tube_x = i % num_per_row
+                            tube_y = i // num_per_row
+
+                            missile = Sprite(missile_img)
+                            missile.visible = False
+                            missile.position = weapon_x + tube_x, weapon_y + tube_y
+                            missile.scale = weapon.get_scale()
+                            missile.anchor = 0, 0
+
+                            dx = real_x - weapon_x
+                            dy = real_y - weapon_y
+                            rads = atan2(-dy, dx)
+                            rads %= 2 * pi
+                            angle = degrees(rads)
+
+                            missile.rotation = angle
+
+                            action = Delay(i * 0.05) + ToggleVisibility() + MoveTo((real_x, real_y), missile_t) \
+                                + CallFunc(missile.kill)
+                            missile.do(action)
+
+                            self.battle.board.add(missile, z=1000 + i)
 
         elif buttons & mouse.LEFT:
             # test movement to the specific cell

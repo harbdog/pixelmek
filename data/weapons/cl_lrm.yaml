@@ -3,3 +3,5 @@ name: Long Range Missile
 short_name: LRM
 range: long
 type: missile
+speed: 400
+scale: 0.75
