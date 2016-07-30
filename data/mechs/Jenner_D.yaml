@@ -20,8 +20,8 @@ armor: 2
 structure: 3
 specials:
 weapons:
-- !include ../weapons/is_mlas.yaml: {location: LA}
-- !include ../weapons/is_mlas.yaml: {location: LA}
-- !include ../weapons/is_mlas.yaml: {location: RA}
-- !include ../weapons/is_mlas.yaml: {location: RA}
-- !include ../weapons/is_srm.yaml: {location: CT, count: 4}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 12]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 15]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 12]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 15]}
+- !include ../weapons/is_srm.yaml: {location: CT, count: 4, offset: [0, 15]}

@@ -79,12 +79,15 @@ class Weapon(yaml.YAMLObject):
     RANGE_MEDIUM = 'medium'
     RANGE_LONG = 'long'
 
-    def __init__(self, name, short_name, _range, _type, color):
+    def __init__(self, name, short_name, _range, _type, color, speed, scale, projectiles):
         self.name = name
         self.short_name = short_name
         self.range = _range
         self.type = _type
         self.color = color
+        self.speed = speed
+        self.scale = scale
+        self.projectiles = projectiles
 
     def __repr__(self):
         return "%s(name=%r)" % (
@@ -98,6 +101,30 @@ class Weapon(yaml.YAMLObject):
             self.color = [0, 0, 0]
 
         return self.color
+
+    def get_projectiles(self):
+        try:
+            self.projectiles
+        except AttributeError:
+            self.projectiles = 1
+
+        return self.projectiles
+
+    def get_scale(self):
+        try:
+            self.scale
+        except AttributeError:
+            self.scale = 1.0
+
+        return self.scale
+
+    def get_speed(self):
+        try:
+            self.speed
+        except AttributeError:
+            self.speed = 100
+
+        return self.speed
 
     def isShort(self):
         return self.range == Weapon.RANGE_SHORT

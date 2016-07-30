@@ -4,3 +4,4 @@ short_name: PPC
 range: long
 type: energy
 color: [0, 100, 250]
+speed: 400

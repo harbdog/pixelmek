@@ -186,7 +186,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         self.battle.board.add(ppc, z=1000)
 
                         # figure out the duration based on speed and distance
-                        ppc_speed = 400     # pixels per second
+                        ppc_speed = weapon.get_speed()     # pixels per second
                         distance = Point2(ppc.x, ppc.y).distance(Point2(real_x, real_y))
                         ppc_t = distance / ppc_speed
 
@@ -198,11 +198,11 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         # fire test laser
                         las_size = (1, 1, 1)
                         if weapon.isShort():
-                            las_size = (3, 2, 1)
+                            las_size = (2, 1, 0.5)
                         elif weapon.isMedium():
-                            las_size = (6, 4, 2)
+                            las_size = (3, 2, 1)
                         elif weapon.isLong():
-                            las_size = (9, 6, 3)
+                            las_size = (6, 4, 2)
 
                         las_outer = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
                                                   width=las_size[0],
@@ -220,37 +220,45 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         node.add(las_inner, z=3)
                         self.battle.board.add(node, z=1000)
 
+                        # TODO: give lasers a small particle pre-fire effect like PPC?
                         las_action = gl.LineDriftBy((random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)), 1) \
-                                        + CallFunc(node.kill)
+                            + CallFunc(node.kill)
                         las_outer.do(las_action)
                         las_middle.do(las_action)
                         las_inner.do(las_action)
 
                     elif weapon.isBallistic():
+
+                        num_ballistic = weapon.get_projectiles()
+
                         # fire test ballistic projectile
                         ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
-                        ballistic = Sprite(ballistic_img)
-
-                        ballistic.position = weapon_x, weapon_y
-                        ballistic.anchor = 0, 0
-
-                        dx = real_x - weapon_x
-                        dy = real_y - weapon_y
-                        rads = atan2(-dy, dx)
-                        rads %= 2 * pi
-                        angle = degrees(rads)
-
-                        ballistic.rotation = angle
 
                         # figure out the duration based on speed and distance
-                        ballistic_speed = 500  # pixels per second
+                        ballistic_speed = weapon.get_speed()  # pixels per second
                         distance = Point2(weapon_x, weapon_y).distance(Point2(real_x, real_y))
                         ballistic_t = distance / ballistic_speed
 
-                        action = MoveTo((real_x, real_y), ballistic_t) + CallFunc(ballistic.kill)
-                        ballistic.do(action)
+                        for i in range(num_ballistic):
+                            ballistic = Sprite(ballistic_img)
+                            ballistic.visible = False
+                            ballistic.position = weapon_x, weapon_y
+                            ballistic.scale = weapon.get_scale()
+                            ballistic.anchor = 0, 0
 
-                        self.battle.board.add(ballistic, z=1000)
+                            dx = real_x - weapon_x
+                            dy = real_y - weapon_y
+                            rads = atan2(-dy, dx)
+                            rads %= 2 * pi
+                            angle = degrees(rads)
+
+                            ballistic.rotation = angle
+
+                            action = Delay(i * 0.1) + ToggleVisibility() + MoveTo((real_x, real_y), ballistic_t) \
+                                + CallFunc(ballistic.kill)
+                            ballistic.do(action)
+
+                            self.battle.board.add(ballistic, z=1000+i)
 
         elif buttons & mouse.LEFT:
             # test movement to the specific cell

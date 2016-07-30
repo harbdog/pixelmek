@@ -3,3 +3,6 @@ name: Machine Gun
 short_name: MG
 range: short
 type: ballistic
+speed: 400
+scale: 0.5
+projectiles: 5
