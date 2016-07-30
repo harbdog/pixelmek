@@ -2,3 +2,5 @@
 name: Extended Range Large Laser
 short_name: ERLL
 range: long
+type: energy
+color: [0, 200, 250]

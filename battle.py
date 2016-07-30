@@ -6,7 +6,7 @@ class Battle(object):
         self.board = None
         self.scroller = None
         self.unit_list = []
-        self.unit_turn = 0
+        self.unit_turn = 2
 
     def setBoard(self, board):
         self.board = board

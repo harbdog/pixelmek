@@ -2,3 +2,4 @@
 name: Long Range Missile
 short_name: LRM
 range: long
+type: missile

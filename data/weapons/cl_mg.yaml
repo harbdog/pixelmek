@@ -2,3 +2,4 @@
 name: Machine Gun
 short_name: MG
 range: short
+type: ballistic

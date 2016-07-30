@@ -2,3 +2,5 @@
 name: Medium Pulse Laser
 short_name: MPL
 range: medium
+type: energy
+color: [50, 250, 50]

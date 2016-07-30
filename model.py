@@ -47,15 +47,81 @@ class Mech(yaml.YAMLObject):
 class Weapon(yaml.YAMLObject):
     yaml_tag = u'!Weapon'
 
-    def __init__(self, name, short_name, _range):
+    FLAMR = 'FLAMR'  # flamer
+    SLAS = 'SLAS'   # small laser
+    MLAS = 'MLAS'   # medium laser
+    LLAS = 'LLAS'   # large laser
+    ERSL = 'ERSL'   # ER small laser
+    ERML = 'ERML'   # ER medium laser
+    ERLL = 'ERLL'   # ER large laser
+    SPL = 'SPL'     # small pulse laser
+    MPL = 'MPL'     # medium pulse laser
+    LPL = 'LPL'     # large pulse laser
+    PPC = 'PPC'     # particle projection cannon
+    ERPPC = 'ERPPC'  # ER particle projection cannon
+    SRM = 'SRM'     # short range missile
+    MRM = 'MRM'     # medium range missile
+    LRM = 'LRM'     # long range missile
+    ATM = 'ATM'     # advanced tactical missile
+    MG = 'MG'       # machine gun
+    AC = 'AC'       # autocannon
+    LBX = 'LBX'     # LB-X autocannon
+    GAUSS = 'GAUSS'  # gauss rifle
+
+    _laser = (SLAS, MLAS, LLAS, ERSL, ERML, ERLL, SPL, MPL, LPL)
+    _ppc = (PPC, ERPPC)
+
+    TYPE_ENERGY = 'energy'
+    TYPE_MISSILE = 'missile'
+    TYPE_BALLISTIC = 'ballistic'
+
+    RANGE_SHORT = 'short'
+    RANGE_MEDIUM = 'medium'
+    RANGE_LONG = 'long'
+
+    def __init__(self, name, short_name, _range, _type, color):
         self.name = name
         self.short_name = short_name
         self.range = _range
+        self.type = _type
+        self.color = color
 
     def __repr__(self):
         return "%s(name=%r)" % (
             self.__class__.__name__, self.name
         )
+
+    def get_color(self):
+        try:
+            self.color
+        except AttributeError:
+            self.color = [0, 0, 0]
+
+        return self.color
+
+    def isShort(self):
+        return self.range == Weapon.RANGE_SHORT
+
+    def isMedium(self):
+        return self.range == Weapon.RANGE_MEDIUM
+
+    def isLong(self):
+        return self.range == Weapon.RANGE_LONG
+
+    def isLaser(self):
+        return self.short_name in Weapon._laser
+
+    def isPPC(self):
+        return self.short_name in Weapon._ppc
+
+    def isEnergy(self):
+        return self.type == Weapon.TYPE_ENERGY
+
+    def isMissile(self):
+        return self.type == Weapon.TYPE_MISSILE
+
+    def isBallistic(self):
+        return self.type == Weapon.TYPE_BALLISTIC
 
 
 class Special(yaml.YAMLObject):

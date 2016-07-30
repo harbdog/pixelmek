@@ -1,3 +1,5 @@
+import gl
+import random
 import cocos
 import pyglet
 from cocos.actions import *
@@ -34,20 +36,7 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
             mech.sprite.pause()
 
         elif char == "SPACE":
-            # mech.sprite.stop()
-            ppc = Meteor()
-            ppc.size = 10
-            ppc.speed = 0
-            ppc.gravity = cocos.euclid.Point2(-200, -200)
-            ppc.emission_rate = 100
-            ppc.life = 0.5
-            ppc.life_var = 0.1
-
-            ppc.position = mech.sprite.position
-            self.battle.board.add(ppc, z=1000)
-
-            action = MoveTo((300, 300), duration=1) + CallFunc(ppc.stop_system)
-            ppc.do(action)
+            mech.sprite.stop()
 
         elif char == "W":
             mech.sprite.strut()
@@ -169,25 +158,71 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
         turn_unit = self.battle.getTurnUnit()
         if buttons & mouse.RIGHT:
-            # fire a test ppc
-            ppc = Meteor()
-            ppc.size = 10
-            ppc.speed = 15
-            ppc.gravity = Point2(0, 0)
-            ppc.emission_rate = 100
-            ppc.life = 0.5
-            ppc.life_var = 0.1
+            for weaponMap in turn_unit.mech.weapons:
+                for weapon in weaponMap.iterkeys():
+                    weapon_data = weaponMap[weapon]
 
-            ppc.position = turn_unit.sprite.position
-            self.battle.board.add(ppc, z=1000)
+                    weapon_offset = weapon_data.get('offset', [0, 0])
+                    weapon_x = turn_unit.sprite.position[0] + weapon_offset[0]
+                    weapon_y = turn_unit.sprite.position[1] + weapon_offset[1]
 
-            # figure out the duration based on speed and distance
-            ppc_speed = 400     # pixels per second
-            distance = Point2(ppc.x, ppc.y).distance(Point2(real_x, real_y))
-            ppc_t = distance / ppc_speed
+                    weapon_color = weapon.get_color()
 
-            action = MoveTo((real_x, real_y), duration=ppc_t) + CallFunc(ppc.stop_system)
-            ppc.do(action)
+                    if weapon.isPPC():
+                        # fire test ppcs
+                        ppc = Meteor()
+                        ppc.size = 10
+                        ppc.speed = 20
+                        ppc.gravity = Point2(0, 0)
+                        # TODO: offer decreased particle emission rate to improve performance
+                        ppc.emission_rate = 100
+                        ppc.life = 0.5
+                        ppc.life_var = 0.1
+
+                        ppc.position = weapon_x, weapon_y
+                        self.battle.board.add(ppc, z=1000)
+
+                        # figure out the duration based on speed and distance
+                        ppc_speed = 400     # pixels per second
+                        distance = Point2(ppc.x, ppc.y).distance(Point2(real_x, real_y))
+                        ppc_t = distance / ppc_speed
+
+                        action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
+                            + CallFunc(ppc.stop_system) + CallFunc(ppc.kill)
+                        ppc.do(action)
+
+                    elif weapon.isLaser():
+                        # fire test laser
+                        las_size = (1, 1, 1)
+                        if weapon.isShort():
+                            las_size = (3, 2, 1)
+                        elif weapon.isMedium():
+                            las_size = (6, 4, 2)
+                        elif weapon.isLong():
+                            las_size = (9, 6, 3)
+
+                        las_outer = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
+                                                  width=las_size[0],
+                                                  color=(weapon_color[0], weapon_color[1], weapon_color[2], 50))
+                        las_middle = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
+                                                   width=las_size[1],
+                                                   color=(weapon_color[0], weapon_color[1], weapon_color[2], 125))
+                        las_inner = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
+                                                  width=las_size[2],
+                                                  color=(weapon_color[0], weapon_color[1], weapon_color[2], 200))
+
+                        node = cocos.layer.Layer()
+                        node.anchor = weapon_x, weapon_y
+                        node.add(las_outer, z=1)
+                        node.add(las_middle, z=2)
+                        node.add(las_inner, z=3)
+                        self.battle.board.add(node, z=1000)
+
+                        las_action = gl.LineDriftBy((random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)), 1) \
+                                        + CallFunc(node.kill)
+                        las_outer.do(las_action)
+                        las_middle.do(las_action)
+                        las_inner.do(las_action)
 
         elif buttons & mouse.LEFT:
             # test movement to the specific cell

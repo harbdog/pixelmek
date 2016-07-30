@@ -2,3 +2,5 @@
 name: Medium Laser
 short_name: MLAS
 range: medium
+type: energy
+color: [0, 250, 50]

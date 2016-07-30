@@ -2,3 +2,5 @@
 name: Small Laser
 short_name: SLAS
 range: short
+type: energy
+color: [250, 0, 0]
