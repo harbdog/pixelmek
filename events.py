@@ -3,9 +3,12 @@ import random
 import cocos
 import pyglet
 from cocos.actions import *
+from cocos.sprite import Sprite
 from cocos.particle_systems import Meteor
 from cocos.euclid import Point2
 from pyglet.window import mouse
+
+from math import atan2, degrees, pi
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
@@ -212,7 +215,6 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                                                   color=(weapon_color[0], weapon_color[1], weapon_color[2], 200))
 
                         node = cocos.layer.Layer()
-                        node.anchor = weapon_x, weapon_y
                         node.add(las_outer, z=1)
                         node.add(las_middle, z=2)
                         node.add(las_inner, z=3)
@@ -223,6 +225,32 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         las_outer.do(las_action)
                         las_middle.do(las_action)
                         las_inner.do(las_action)
+
+                    elif weapon.isBallistic():
+                        # fire test ballistic projectile
+                        ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
+                        ballistic = Sprite(ballistic_img)
+
+                        ballistic.position = weapon_x, weapon_y
+                        ballistic.anchor = 0, 0
+
+                        dx = real_x - weapon_x
+                        dy = real_y - weapon_y
+                        rads = atan2(-dy, dx)
+                        rads %= 2 * pi
+                        angle = degrees(rads)
+
+                        ballistic.rotation = angle
+
+                        # figure out the duration based on speed and distance
+                        ballistic_speed = 500  # pixels per second
+                        distance = Point2(weapon_x, weapon_y).distance(Point2(real_x, real_y))
+                        ballistic_t = distance / ballistic_speed
+
+                        action = MoveTo((real_x, real_y), ballistic_t) + CallFunc(ballistic.kill)
+                        ballistic.do(action)
+
+                        self.battle.board.add(ballistic, z=1000)
 
         elif buttons & mouse.LEFT:
             # test movement to the specific cell
