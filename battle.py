@@ -6,7 +6,7 @@ class Battle(object):
         self.board = None
         self.scroller = None
         self.unit_list = []
-        self.unit_turn = 2
+        self.unit_turn = 0
 
     def setBoard(self, board):
         self.board = board
@@ -19,6 +19,11 @@ class Battle(object):
 
     def getTurnUnit(self):
         return self.unit_list[self.unit_turn]
+
+    def nextTurn(self):
+        self.unit_turn += 1
+        if self.unit_turn >= len(self.unit_list):
+            self.unit_turn = 0
 
     def isCellAvailable(self, col, row):
         if self.board is None:

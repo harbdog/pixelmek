@@ -42,7 +42,8 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
             mech.sprite.pause()
 
         elif char == "SPACE":
-            mech.sprite.stop()
+            # skip to next unit for testing purposes
+            self.battle.nextTurn()
 
         elif char == "W":
             mech.sprite.strut()
