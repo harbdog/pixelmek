@@ -1,10 +1,13 @@
+from __future__ import division
+
 import gl
 import random
 import cocos
 import pyglet
 from cocos.actions import *
 from cocos.sprite import Sprite
-from cocos.particle_systems import Meteor
+from cocos.particle import Color
+from cocos.particle_systems import Meteor, Galaxy
 from cocos.euclid import Point2
 from pyglet.window import mouse
 
@@ -185,9 +188,12 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         ppc.position = weapon_x, weapon_y
                         self.battle.board.add(ppc, z=1000)
 
+                        target_x = real_x + random_offset()
+                        target_y = real_y + random_offset()
+
                         # figure out the duration based on speed and distance
                         ppc_speed = weapon.get_speed()     # pixels per second
-                        distance = Point2(ppc.x, ppc.y).distance(Point2(real_x, real_y))
+                        distance = Point2(ppc.x, ppc.y).distance(Point2(target_x, target_y))
                         ppc_t = distance / ppc_speed
 
                         action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
@@ -196,23 +202,34 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                     elif weapon.isLaser():
                         # fire test laser
+                        las_life = 1.0
                         las_size = (1, 1, 1)
                         if weapon.isShort():
                             las_size = (2, 1, 0.5)
+                            las_life = 0.5
                         elif weapon.isMedium():
                             las_size = (3, 2, 1)
+                            las_life = 0.75
                         elif weapon.isLong():
                             las_size = (6, 4, 2)
+                            las_life = 1.0
 
-                        las_outer = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
+                        target_x = real_x + random_offset()
+                        target_y = real_y + random_offset()
+
+                        las_outer = gl.SingleLine((weapon_x, weapon_y), (target_x, target_y),
                                                   width=las_size[0],
                                                   color=(weapon_color[0], weapon_color[1], weapon_color[2], 50))
-                        las_middle = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
+                        las_middle = gl.SingleLine((weapon_x, weapon_y), (target_x, target_y),
                                                    width=las_size[1],
                                                    color=(weapon_color[0], weapon_color[1], weapon_color[2], 125))
-                        las_inner = gl.SingleLine((weapon_x, weapon_y), (real_x, real_y),
+                        las_inner = gl.SingleLine((weapon_x, weapon_y), (target_x, target_y),
                                                   width=las_size[2],
                                                   color=(weapon_color[0], weapon_color[1], weapon_color[2], 200))
+
+                        las_outer.visible = False
+                        las_middle.visible = False
+                        las_inner.visible = False
 
                         node = cocos.layer.Layer()
                         node.add(las_outer, z=1)
@@ -220,9 +237,24 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         node.add(las_inner, z=3)
                         self.battle.board.add(node, z=1000)
 
-                        # TODO: give lasers a small particle pre-fire effect like PPC?
-                        las_action = gl.LineDriftBy((random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)), 1) \
-                            + CallFunc(node.kill)
+                        # give lasers a small particle pre-fire effect
+                        laser_charge = Galaxy()
+                        laser_charge.angle = 270
+                        laser_charge.angle_var = 180
+                        laser_charge.position = weapon_x, weapon_y
+                        laser_charge.size = 10
+                        laser_charge.size_var = 5
+                        laser_charge.emission_rate = 15
+                        laser_charge.life = 0.5
+                        laser_charge.speed = 0
+                        laser_charge.speed_var = 0
+                        laser_charge.start_color = Color(weapon_color[0]/255, weapon_color[1]/255, weapon_color[2]/255, 1.0)
+                        laser_charge.end_color = Color(weapon_color[0]/255, weapon_color[1]/255, weapon_color[2]/255, 1.0)
+                        node.add(laser_charge, z=0)
+
+                        las_action = Delay(0.5) + ToggleVisibility() \
+                            + gl.LineDriftBy((random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)), las_life) \
+                            + CallFunc(laser_charge.stop_system) + CallFunc(node.kill)
                         las_outer.do(las_action)
                         las_middle.do(las_action)
                         las_inner.do(las_action)
@@ -232,11 +264,6 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
 
                         num_ballistic = weapon.get_projectiles()
-
-                        # figure out the duration based on speed and distance
-                        ballistic_speed = weapon.get_speed()  # pixels per second
-                        distance = Point2(weapon_x, weapon_y).distance(Point2(real_x, real_y))
-                        ballistic_t = distance / ballistic_speed
 
                         for i in range(num_ballistic):
                             ballistic = Sprite(ballistic_img)
@@ -253,7 +280,15 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                             ballistic.rotation = angle
 
-                            action = Delay(i * 0.1) + ToggleVisibility() + MoveTo((real_x, real_y), ballistic_t) \
+                            target_x = real_x + random_offset()
+                            target_y = real_y + random_offset()
+
+                            # figure out the duration based on speed and distance
+                            ballistic_speed = weapon.get_speed()  # pixels per second
+                            distance = Point2(weapon_x, weapon_y).distance(Point2(target_x, target_y))
+                            ballistic_t = distance / ballistic_speed
+
+                            action = Delay(i * 0.1) + ToggleVisibility() + MoveTo((target_x, target_y), ballistic_t) \
                                 + CallFunc(ballistic.kill)
                             ballistic.do(action)
 
@@ -270,11 +305,6 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             num_per_row = 5
                         elif weapon.isSRM():
                             num_per_row = 2
-
-                        # figure out the duration based on speed and distance
-                        missile_speed = weapon.get_speed()  # pixels per second
-                        distance = Point2(weapon_x, weapon_y).distance(Point2(real_x, real_y))
-                        missile_t = distance / missile_speed
 
                         for i in range(num_missile):
 
@@ -295,7 +325,15 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                             missile.rotation = angle
 
-                            action = Delay(i * 0.05) + ToggleVisibility() + MoveTo((real_x, real_y), missile_t) \
+                            target_x = real_x + random_offset()
+                            target_y = real_y + random_offset()
+
+                            # figure out the duration based on speed and distance
+                            missile_speed = weapon.get_speed()  # pixels per second
+                            distance = Point2(weapon_x, weapon_y).distance(Point2(target_x, target_y))
+                            missile_t = distance / missile_speed
+
+                            action = Delay(i * 0.05) + ToggleVisibility() + MoveTo((target_x, target_y), missile_t) \
                                 + CallFunc(missile.kill)
                             missile.do(action)
 
@@ -315,3 +353,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                 turn_unit.sprite.strut()
                 turn_unit.sprite.moveToCell(chk_colnum, chk_rownum, turn_unit.sprite.sulk)
+
+
+def random_offset(max_offset=8):
+    return random.randint(-max_offset, max_offset)
