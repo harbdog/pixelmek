@@ -191,6 +191,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                         target_x = real_x + random_offset()
                         target_y = real_y + random_offset()
+                        target_pos = target_x, target_y
 
                         # figure out the duration based on speed and distance
                         ppc_speed = weapon.get_speed()     # pixels per second
@@ -198,7 +199,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         ppc_t = distance / ppc_speed
 
                         action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
-                            + CallFunc(ppc.stop_system) + CallFunc(ppc.kill)
+                            + CallFunc(impact_ppc, ppc) \
+                            + Delay(0.25) + CallFunc(ppc.stop_system) + Delay(0.5) + CallFunc(ppc.kill)
+
+                        # + CallFunc(create_ppc_impact, self.battle.board, target_pos) + CallFunc(ppc.stop_system) + CallFunc(ppc.kill)
                         ppc.do(action)
 
                     elif weapon.isLaser():
@@ -217,6 +221,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                         target_x = real_x + random_offset()
                         target_y = real_y + random_offset()
+                        target_pos = target_x, target_y
 
                         las_outer = gl.SingleLine((weapon_x, weapon_y), (target_x, target_y),
                                                   width=las_size[0],
@@ -253,8 +258,11 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         laser_charge.end_color = Color(weapon_color[0]/255, weapon_color[1]/255, weapon_color[2]/255, 1.0)
                         node.add(laser_charge, z=0)
 
-                        las_action = Delay(0.5) + ToggleVisibility() \
-                            + gl.LineDriftBy((random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)), las_life) \
+                        laser_drift = random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)
+
+                        las_action = Delay(1) + ToggleVisibility() \
+                            + CallFunc(create_laser_impact, self.battle.board, target_pos, laser_drift, las_life) \
+                            + gl.LineDriftBy(laser_drift, las_life) \
                             + CallFunc(laser_charge.stop_system) + CallFunc(node.kill)
                         las_outer.do(las_action)
                         las_middle.do(las_action)
@@ -328,6 +336,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                             target_x = real_x + random_offset()
                             target_y = real_y + random_offset()
+                            target_pos = target_x, target_y
 
                             # figure out the duration based on speed and distance
                             missile_speed = weapon.get_speed()  # pixels per second
@@ -335,6 +344,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             missile_t = distance / missile_speed
 
                             action = Delay(i * 0.05) + ToggleVisibility() + MoveTo((target_x, target_y), missile_t) \
+                                + CallFunc(create_missile_impact, self.battle.board, target_pos) \
                                 + CallFunc(missile.kill)
                             missile.do(action)
 
@@ -356,5 +366,47 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                 turn_unit.sprite.moveToCell(chk_colnum, chk_rownum, turn_unit.sprite.sulk)
 
 
-def random_offset(max_offset=8):
+class LaserImpact(cocos.sprite.Sprite):
+    raw = pyglet.resource.image('images/weapons/explosion_01.png')
+    seq = pyglet.image.ImageGrid(raw, 1, 24)
+    explosion_img = pyglet.image.Animation.from_image_sequence(seq, 0.05, False)
+
+    def __init__(self, pos):
+        super(LaserImpact, self).__init__(LaserImpact.explosion_img, pos)
+        self.do(Delay(0.05 * 24) + CallFunc(self.kill))
+
+
+def create_laser_impact(board, pos, drift, duration):
+    # give lasers an impact effect
+    laser_impact = LaserImpact(pos)
+    laser_impact.scale = 0.25
+    board.add(laser_impact, z=1000)
+
+    impact_action = MoveBy(drift, duration)
+    laser_impact.do(impact_action)
+
+
+def impact_ppc(ppc):
+    ppc.speed = 50
+    ppc.emission_rate *= 2
+
+
+class MissileImpact(cocos.sprite.Sprite):
+    raw = pyglet.resource.image('images/weapons/explosion_07.png')
+    seq = pyglet.image.ImageGrid(raw, 1, 26)
+    explosion_img = pyglet.image.Animation.from_image_sequence(seq, 0.05, False)
+
+    def __init__(self, pos):
+        super(MissileImpact, self).__init__(MissileImpact.explosion_img, pos)
+        self.do(Delay(0.05 * 24) + CallFunc(self.kill))
+
+
+def create_missile_impact(board, pos):
+    # give missiles an impact effect
+    missile_impact = MissileImpact(pos)
+    missile_impact.scale = 0.5
+    board.add(missile_impact, z=1000)
+
+
+def random_offset(max_offset=12):
     return random.randint(-max_offset, max_offset)
