@@ -411,19 +411,20 @@ def create_missile_impact(board, pos):
 
 
 class BallisticImpact(cocos.sprite.Sprite):
-    raw = pyglet.resource.image('images/weapons/explosion_05.png')
-    seq = pyglet.image.ImageGrid(raw, 1, 24)
-    explosion_img = pyglet.image.Animation.from_image_sequence(seq, 0.05, False)
+    raw = pyglet.resource.image('images/weapons/flash_03.png')
+    seq = pyglet.image.ImageGrid(raw, 1, 6)
+    explosion_img = pyglet.image.Animation.from_image_sequence(seq, 0.07, False)
 
     def __init__(self, pos):
         super(BallisticImpact, self).__init__(BallisticImpact.explosion_img, pos)
-        self.do(Delay(0.05 * 24) + CallFunc(self.kill))
+        self.do(Delay(0.07 * 6) + CallFunc(self.kill))
 
 
 def create_ballistic_impact(board, pos):
     # give ballistics an impact effect
     ballistic_impact = BallisticImpact(pos)
     ballistic_impact.scale = 0.25
+    ballistic_impact.rotation = random.randint(0, 360)
     board.add(ballistic_impact, z=1000)
 
 

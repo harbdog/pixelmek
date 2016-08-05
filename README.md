@@ -14,13 +14,15 @@
 
 The following art and sound resources used in this game are from various non-commercial sources:
 
-* Pixel Mechs by Alistair Winter
+* Pixel Mechs by Alistair Winter:
     * http://mwomercs.com/forums/topic/144488-x-mas-present-free-pixel-mechs/
     * http://mwomercs.com/forums/topic/184415-x-mas-2014-free-clan-pixel-mechs/
-* Pixel Mechs by Luscious Dan
+* Pixel Mechs by Luscious Dan:
     * http://mwomercs.com/forums/topic/231592-luscious-dans-pixel-mechs/
 * Various OpenGameArt.org hosted sprite sheets:
     * http://opengameart.org/content/colony-sim-extended-version
     * http://opengameart.org/content/explosions-0
     * http://opengameart.org/content/sci-fi-space-simple-bullets
     * http://opengameart.org/content/2d-shooter-effects-alpha-version
+* Pow Studios flash sprites:
+    * http://powstudios.com/content/flash-animation-pack-1
