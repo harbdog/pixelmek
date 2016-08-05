@@ -200,9 +200,8 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                         action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
                             + CallFunc(impact_ppc, ppc) \
-                            + Delay(0.25) + CallFunc(ppc.stop_system) + Delay(0.5) + CallFunc(ppc.kill)
+                            + Delay(0.5) + CallFunc(ppc.kill)
 
-                        # + CallFunc(create_ppc_impact, self.battle.board, target_pos) + CallFunc(ppc.stop_system) + CallFunc(ppc.kill)
                         ppc.do(action)
 
                     elif weapon.isLaser():
@@ -260,7 +259,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                         laser_drift = random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)
 
-                        las_action = Delay(1) + ToggleVisibility() \
+                        las_action = Delay(0.5) + ToggleVisibility() \
                             + CallFunc(create_laser_impact, self.battle.board, target_pos, laser_drift, las_life) \
                             + gl.LineDriftBy(laser_drift, las_life) \
                             + CallFunc(laser_charge.stop_system) + CallFunc(node.kill)
@@ -291,6 +290,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                             target_x = real_x + random_offset()
                             target_y = real_y + random_offset()
+                            target_pos = target_x, target_y
 
                             # figure out the duration based on speed and distance
                             ballistic_speed = weapon.get_speed()  # pixels per second
@@ -298,6 +298,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             ballistic_t = distance / ballistic_speed
 
                             action = Delay(i * 0.1) + ToggleVisibility() + MoveTo((target_x, target_y), ballistic_t) \
+                                + CallFunc(create_ballistic_impact, self.battle.board, target_pos) \
                                 + CallFunc(ballistic.kill)
                             ballistic.do(action)
 
@@ -389,6 +390,7 @@ def create_laser_impact(board, pos, drift, duration):
 def impact_ppc(ppc):
     ppc.speed = 50
     ppc.emission_rate *= 2
+    ppc.do(Delay(0.25) + CallFunc(ppc.stop_system))
 
 
 class MissileImpact(cocos.sprite.Sprite):
@@ -398,7 +400,7 @@ class MissileImpact(cocos.sprite.Sprite):
 
     def __init__(self, pos):
         super(MissileImpact, self).__init__(MissileImpact.explosion_img, pos)
-        self.do(Delay(0.05 * 24) + CallFunc(self.kill))
+        self.do(Delay(0.05 * 26) + CallFunc(self.kill))
 
 
 def create_missile_impact(board, pos):
@@ -406,6 +408,23 @@ def create_missile_impact(board, pos):
     missile_impact = MissileImpact(pos)
     missile_impact.scale = 0.5
     board.add(missile_impact, z=1000)
+
+
+class BallisticImpact(cocos.sprite.Sprite):
+    raw = pyglet.resource.image('images/weapons/explosion_05.png')
+    seq = pyglet.image.ImageGrid(raw, 1, 24)
+    explosion_img = pyglet.image.Animation.from_image_sequence(seq, 0.05, False)
+
+    def __init__(self, pos):
+        super(BallisticImpact, self).__init__(BallisticImpact.explosion_img, pos)
+        self.do(Delay(0.05 * 24) + CallFunc(self.kill))
+
+
+def create_ballistic_impact(board, pos):
+    # give ballistics an impact effect
+    ballistic_impact = BallisticImpact(pos)
+    ballistic_impact.scale = 0.25
+    board.add(ballistic_impact, z=1000)
 
 
 def random_offset(max_offset=12):

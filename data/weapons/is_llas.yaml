@@ -1,0 +1,6 @@
+--- !Weapon
+name: Large Laser
+short_name: LLAS
+range: long
+type: energy
+color: [0, 50, 250]
