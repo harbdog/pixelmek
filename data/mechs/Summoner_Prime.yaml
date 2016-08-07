@@ -1,0 +1,29 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3183/thor-summoner-prime
+name: Thor (Summoner)
+variant: Prime
+image_path: images/mechs/summoner.png
+cost: 21,150,834
+pv: 41
+type: BM
+size: 3
+tmm: 2
+move: 10
+jump: 10
+role: Sniper
+skill: 4
+short: 4
+medium: 4
+long: 4
+overheat: 0
+armor: 6
+structure: 4
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/idf.yaml: 1
+- !include ../specials/flk.yaml: [1, 1, 1]
+weapons:
+- !include ../weapons/cl_lbx10.yaml: {location: LA, offset: [18, 9]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-19, 9]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 15, offset: [6, 30]}

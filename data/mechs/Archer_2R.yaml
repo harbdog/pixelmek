@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/74/archer-arc-2r
+name: Archer
+variant: ARC-2R
+image_path: images/mechs/archer.png
+cost: 6,180,974
+pv: 39
+type: BM
+size: 3
+tmm: 1
+move: 8
+role: Missile Boat
+skill: 4
+short: 2
+medium: 3
+long: 3
+overheat: 1
+armor: 7
+structure: 6
+specials:
+- !include ../specials/idf.yaml: 1
+- !include ../specials/lrm.yaml: [1, 2, 2]
+- !include ../specials/rear.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [20, 2]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-20, 2]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [2, 12]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [-2, 12]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 20, offset: [10, 25]}
+- !include ../weapons/is_lrm.yaml: {location: RT, count: 20, offset: [-12, 25]}

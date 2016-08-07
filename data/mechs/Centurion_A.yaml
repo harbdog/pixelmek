@@ -1,0 +1,28 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/516/centurion-cn9-a
+name: Centurion
+variant: CN9-A
+image_path: images/mechs/centurion.png
+cost: 3,383,500
+pv: 28
+type: BM
+size: 2
+tmm: 1
+move: 8
+role: Brawler
+skill: 4
+short: 2
+medium: 3
+long: 1
+overheat: 0
+armor: 5
+structure: 4
+specials:
+- !include ../specials/idf.yaml: 1
+- !include ../specials/rear.yaml: [1, 1, 0]
+- !include ../specials/ac.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 10]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 13]}
+- !include ../weapons/is_ac10.yaml:  {location: RA, offset: [-16, 10]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [4, 20]}

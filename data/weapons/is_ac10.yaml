@@ -1,0 +1,8 @@
+--- !Weapon
+name: Autocannon/10
+short_name: AC/10
+range: medium
+type: ballistic
+speed: 450
+scale: 0.85
+projectiles: 3

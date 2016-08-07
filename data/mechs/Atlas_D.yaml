@@ -1,0 +1,32 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/140/atlas-as7-d
+name: Atlas
+variant: AS7-D
+image_path: images/mechs/atlas.png
+cost: 9,412,000
+pv: 52
+type: BM
+size: 4
+tmm: 1
+move: 6
+role: Juggernaut
+skill: 4
+short: 5
+medium: 5
+long: 2
+overheat: 0
+armor: 10
+structure: 8
+specials:
+- !include ../specials/idf.yaml: 1
+- !include ../specials/lrm.yaml: [1, 1, 1]
+- !include ../specials/rear.yaml: [1, 1, 0]
+- !include ../specials/ac.yaml: [2, 2, 0]
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [20, 12]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-20, 12]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [2, 15]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [-2, 15]}
+- !include ../weapons/is_ac20.yaml:  {location: RT, offset: [-9, 18]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 20, offset: [10, 28]}
+- !include ../weapons/is_srm.yaml: {location: LT, count: 6, offset: [10, 15]}
