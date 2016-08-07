@@ -12,6 +12,12 @@ from cocos.euclid import Point2
 from pyglet.window import mouse
 
 from math import atan2, degrees, pi
+from cocos.audio.pygame.mixer import Sound
+
+
+class Audio(Sound):
+    def __init__(self, audio_file):
+        super(Audio, self).__init__(audio_file)
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
@@ -198,6 +204,9 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         distance = Point2(ppc.x, ppc.y).distance(Point2(target_x, target_y))
                         ppc_t = distance / ppc_speed
 
+                        ppc_sound = Audio("data/sounds/ppc-shot.ogg")
+                        ppc_sound.play()
+
                         action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
                             + CallFunc(impact_ppc, ppc) \
                             + Delay(0.5) + CallFunc(ppc.kill)
@@ -267,11 +276,20 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         las_middle.do(las_action)
                         las_inner.do(las_action)
 
+                        las_sound = Audio("data/sounds/laser-blast-long.ogg")
+                        las_sound.play()
+                        las_duration_ms = int(las_action.duration * 1000)
+                        las_sound.fadeout(las_duration_ms)
+
                     elif weapon.isBallistic():
                         # fire test ballistic projectile
                         ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
 
                         num_ballistic = weapon.get_projectiles()
+
+                        # machine gun sound only plays once instead of per projectile
+                        if weapon.isMG():
+                            cannon_sound = Audio("data/sounds/machine-gun.ogg")
 
                         for i in range(num_ballistic):
                             ballistic = Sprite(ballistic_img)
@@ -297,7 +315,13 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             distance = Point2(weapon_x, weapon_y).distance(Point2(target_x, target_y))
                             ballistic_t = distance / ballistic_speed
 
-                            action = Delay(i * 0.1) + ToggleVisibility() + MoveTo((target_x, target_y), ballistic_t) \
+                            # setup the firing sound
+                            if not weapon.isMG():
+                                cannon_sound = Audio("data/sounds/autocannon-shot.ogg")
+
+                            action = Delay(i * 0.1) + ToggleVisibility() \
+                                + CallFunc(cannon_sound.play) \
+                                + MoveTo((target_x, target_y), ballistic_t) \
                                 + CallFunc(create_ballistic_impact, self.battle.board, target_pos) \
                                 + CallFunc(ballistic.kill)
                             ballistic.do(action)
@@ -344,7 +368,12 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             distance = Point2(weapon_x, weapon_y).distance(Point2(target_x, target_y))
                             missile_t = distance / missile_speed
 
-                            action = Delay(i * 0.05) + ToggleVisibility() + MoveTo((target_x, target_y), missile_t) \
+                            rand_missile_sound = random.randint(0, 7)
+                            missile_sound = Audio("data/sounds/missile-shot-%s.ogg" % rand_missile_sound)
+
+                            action = Delay(i * 0.05) + ToggleVisibility() \
+                                + CallFunc(missile_sound.play) \
+                                + MoveTo((target_x, target_y), missile_t) \
                                 + CallFunc(create_missile_impact, self.battle.board, target_pos) \
                                 + CallFunc(missile.kill)
                             missile.do(action)

@@ -9,6 +9,8 @@ from board import *
 from cocos.director import director
 from random import randint
 
+import pygame
+
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
 mech_list = []
@@ -31,6 +33,9 @@ battle = Battle()
 battle.setBoard(board)
 key_events = events.KeyboardEvents(battle)
 mouse_events = events.MouseEvents(battle)
+
+# initialize the audio mixer
+pygame.mixer.init(44100, -16, 2, 2048)
 
 for mech in mech_list:
     col = randint(0, 5)

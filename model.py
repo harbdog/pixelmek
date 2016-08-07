@@ -156,6 +156,9 @@ class Weapon(yaml.YAMLObject):
     def isSRM(self):
         return self.short_name == Weapon.SRM
 
+    def isMG(self):
+        return self.short_name == Weapon.MG
+
 
 class Special(yaml.YAMLObject):
     yaml_tag = u'!Special'
