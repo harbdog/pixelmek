@@ -1,0 +1,7 @@
+--- !Weapon
+name: ER Particle Projection Cannon
+short_name: ERPPC
+range: long
+type: energy
+color: [0, 100, 250]
+speed: 500

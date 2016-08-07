@@ -33,5 +33,6 @@ The following art and sound resources used in this game are from various non-com
     * Cannon: http://www.freesound.org/people/Andromadax24/sounds/169775/
     * PPC: http://www.freesound.org/people/soundmatch24/sounds/194312/
     * Machine Gun: http://www.freesound.org/people/burkay/sounds/130123/
+    * Flamer: http://www.freesound.org/people/Vosvoy/sounds/123632/
     * Missiles: http://www.freesound.org/people/Audionautics/sounds/171655/
     * Explosion: http://www.freesound.org/people/klankbeeld/sounds/344686/

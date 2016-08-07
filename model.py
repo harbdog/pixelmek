@@ -47,7 +47,7 @@ class Mech(yaml.YAMLObject):
 class Weapon(yaml.YAMLObject):
     yaml_tag = u'!Weapon'
 
-    FLAMR = 'FLAMR'  # flamer
+    FLAMER = 'FLAMR'  # flamer
     SLAS = 'SLAS'   # small laser
     MLAS = 'MLAS'   # medium laser
     LLAS = 'LLAS'   # large laser
@@ -161,6 +161,9 @@ class Weapon(yaml.YAMLObject):
 
     def isGauss(self):
         return self.short_name == Weapon.GAUSS
+
+    def isFlamer(self):
+        return self.short_name == Weapon.FLAMER
 
 
 class Special(yaml.YAMLObject):

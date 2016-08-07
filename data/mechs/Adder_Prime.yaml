@@ -1,0 +1,27 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/2598/puma-adder-prime
+name: Puma (Adder)
+variant: Prime
+image_path: images/mechs/adder.png
+cost: 7,021,688
+pv: 27
+type: BM
+size: 1
+tmm: 2
+move: 12
+role: Sniper
+skill: 4
+short: 3
+medium: 3
+long: 3
+overheat: 1
+armor: 4
+structure: 2
+specials:
+- !include ../specials/ene.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/ovl.yaml: True
+weapons:
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [16, 11]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-16, 11]}
+- !include ../weapons/cl_flamer.yaml: {location: CT, count: 4, offset: [0, 20]}

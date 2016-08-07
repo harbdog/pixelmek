@@ -8,7 +8,7 @@ import pygame
 from cocos.actions import *
 from cocos.sprite import Sprite
 from cocos.particle import Color
-from cocos.particle_systems import Meteor, Galaxy
+from cocos.particle_systems import Meteor, Galaxy, Fire
 from cocos.euclid import Point2
 from pyglet.window import mouse
 
@@ -208,13 +208,59 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         ppc_sound = Sound("data/sounds/ppc-shot.ogg")
                         weapon_channel.play(ppc_sound)
 
-                        action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
+                        action = Delay(0.5) + MoveTo((target_x, target_y), duration=ppc_t) \
                             + CallFunc(impact_ppc, ppc) \
                             + Delay(0.5) + CallFunc(ppc.kill) \
                             + Delay(ppc_sound.get_length()) \
                             + CallFunc(weapon_channel.stop)
 
                         ppc.do(action)
+
+                    elif weapon.isFlamer():
+                        # fire test flamer
+                        flamer = Fire()
+
+                        flamer.size = 25
+                        flamer.speed = 300
+                        flamer.gravity = Point2(0, 0)
+                        # TODO: offer decreased particle emission rate to improve performance
+                        flamer.emission_rate = 100
+
+                        dx = real_x - weapon_x
+                        dy = real_y - weapon_y
+                        rads = atan2(-dy, dx)
+                        rads %= 2 * pi
+                        angle = degrees(rads) + 90
+
+                        flamer.rotation = angle
+                        flamer.angle_var = 5
+                        flamer.pos_var = Point2(5, 5)
+
+                        flamer.position = weapon_x, weapon_y
+                        self.battle.board.add(flamer, z=1000)
+
+                        target_x = real_x + random_offset()
+                        target_y = real_y + random_offset()
+                        target_pos = target_x, target_y
+
+                        # figure out the duration based on speed and distance
+                        flamer_speed = weapon.get_speed()  # pixels per second
+                        distance = Point2(flamer.x, flamer.y).distance(Point2(target_x, target_y))
+                        flamer_t = 1
+
+                        flamer.life = distance / flamer_speed
+                        flamer.life_var = 0
+
+                        flamer_sound = Sound("data/sounds/flamer-shot.ogg")
+                        weapon_channel.play(flamer_sound)
+
+                        action = Delay(flamer_t) \
+                            + CallFunc(impact_flamer, flamer) \
+                            + CallFunc(weapon_channel.fadeout, 750) \
+                            + Delay(flamer_t) + CallFunc(flamer.kill) \
+                            + CallFunc(weapon_channel.stop)
+
+                        flamer.do(action)
 
                     elif weapon.isLaser():
                         # fire test laser
@@ -447,6 +493,11 @@ def impact_ppc(ppc):
     ppc.speed = 50
     ppc.emission_rate *= 2
     ppc.do(Delay(0.25) + CallFunc(ppc.stop_system))
+
+
+def impact_flamer(flamer):
+    flamer.emission_rate *= 2
+    flamer.do(Delay(0.25) + CallFunc(flamer.stop_system))
 
 
 class MissileImpact(cocos.sprite.Sprite):
