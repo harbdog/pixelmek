@@ -2,14 +2,13 @@ import events
 import include
 import model
 import os
+import pygame
 import sprites
 
 from battle import *
 from board import *
 from cocos.director import director
 from random import randint
-
-import pygame
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
@@ -36,6 +35,7 @@ mouse_events = events.MouseEvents(battle)
 
 # initialize the audio mixer
 pygame.mixer.init(44100, -16, 2, 2048)
+pygame.mixer.set_num_channels(16)
 
 for mech in mech_list:
     col = randint(0, 5)
