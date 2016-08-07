@@ -159,6 +159,9 @@ class Weapon(yaml.YAMLObject):
     def isMG(self):
         return self.short_name == Weapon.MG
 
+    def isGauss(self):
+        return self.short_name == Weapon.GAUSS
+
 
 class Special(yaml.YAMLObject):
     yaml_tag = u'!Special'

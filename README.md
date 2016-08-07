@@ -28,6 +28,7 @@ The following art and sound resources used in this game are from various non-com
 * Pow Studios flash sprites:
     * http://powstudios.com/content/flash-animation-pack-1
 * Sound effects:
+    * Gauss: http://www.freesound.org/people/roper1911/sounds/155790/
     * Laser: http://www.freesound.org/people/Nakhas/sounds/344813/
     * Cannon: http://www.freesound.org/people/Andromadax24/sounds/169775/
     * PPC: http://www.freesound.org/people/soundmatch24/sounds/194312/

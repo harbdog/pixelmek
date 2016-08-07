@@ -66,8 +66,6 @@ class BattleMech(object):
         self.armor = mech.armor
         self.structure = mech.structure
 
-        print("jump: "+str(mech.jump))
-
     def __repr__(self):
         return "%s(name='%s %s', location=[%s,%s])" % (
             self.__class__.__name__, self.mech.name, self.mech.variant, self.col, self.row

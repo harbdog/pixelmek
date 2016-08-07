@@ -211,6 +211,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         action = Delay(0.5) + MoveTo((real_x, real_y), duration=ppc_t) \
                             + CallFunc(impact_ppc, ppc) \
                             + Delay(0.5) + CallFunc(ppc.kill) \
+                            + Delay(ppc_sound.get_length()) \
                             + CallFunc(weapon_channel.stop)
 
                         ppc.do(action)
@@ -285,7 +286,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                     elif weapon.isBallistic():
                         # fire test ballistic projectile
-                        ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
+                        if weapon.isGauss():
+                            ballistic_img = pyglet.resource.image("images/weapons/gauss.png")
+                        else:
+                            ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
 
                         num_ballistic = weapon.get_projectiles()
 
@@ -293,6 +297,8 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         cannon_sound = None
                         if weapon.isMG():
                             cannon_sound = Sound("data/sounds/machine-gun.ogg")
+                        elif weapon.isGauss():
+                            cannon_sound = Sound("data/sounds/gauss-shot.ogg")
 
                         for i in range(num_ballistic):
                             ballistic = Sprite(ballistic_img)
@@ -326,8 +332,11 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                                 + CallFunc(weapon_channel.play, cannon_sound) \
                                 + MoveTo((target_x, target_y), ballistic_t) \
                                 + CallFunc(create_ballistic_impact, self.battle.board, target_pos) \
-                                + CallFunc(ballistic.kill) \
-                                + CallFunc(weapon_channel.stop)
+                                + CallFunc(ballistic.kill)
+
+                            if weapon.isGauss():
+                                # give gauss sound a bit more time to stop
+                                action += Delay(cannon_sound.get_length())
 
                             if i == num_ballistic - 1:
                                 # stop the sound channel after the last projectile only
