@@ -33,3 +33,4 @@ The following art and sound resources used in this game are from various non-com
     * PPC: http://www.freesound.org/people/soundmatch24/sounds/194312/
     * Machine Gun: http://www.freesound.org/people/burkay/sounds/130123/
     * Missiles: http://www.freesound.org/people/Audionautics/sounds/171655/
+    * Explosion: http://www.freesound.org/people/klankbeeld/sounds/344686/

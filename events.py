@@ -380,11 +380,15 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             rand_missile_sound = random.randint(0, 7)
                             missile_sound = Sound("data/sounds/missile-shot-%s.ogg" % rand_missile_sound)
 
+                            explosion_sound = Sound("data/sounds/explosion-single.ogg")
+
                             action = Delay(i * 0.05) + ToggleVisibility() \
                                 + CallFunc(weapon_channel.play, missile_sound) \
                                 + MoveTo((target_x, target_y), missile_t) \
                                 + CallFunc(create_missile_impact, self.battle.board, target_pos) \
-                                + CallFunc(missile.kill)
+                                + CallFunc(missile.kill) \
+                                + CallFunc(weapon_channel.play, explosion_sound) \
+                                + Delay(0.5)
 
                             if i == num_missile - 1:
                                 # stop the sound channel after the last missile only
