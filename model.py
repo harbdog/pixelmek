@@ -165,6 +165,9 @@ class Weapon(yaml.YAMLObject):
     def isFlamer(self):
         return self.short_name == Weapon.FLAMER
 
+    def isLBX(self):
+        return Weapon.LBX in self.short_name
+
 
 class Special(yaml.YAMLObject):
     yaml_tag = u'!Special'

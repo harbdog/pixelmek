@@ -3,6 +3,6 @@ name: LBX Autocannon/10
 short_name: LBX/10
 range: medium
 type: ballistic
-speed: 400
-scale: 0.75
-projectiles: 1
+speed: 500
+scale: 0.85
+projectiles: 10

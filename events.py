@@ -332,12 +332,16 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                     elif weapon.isBallistic():
                         # fire test ballistic projectile
+                        num_ballistic = weapon.get_projectiles()
+
                         if weapon.isGauss():
                             ballistic_img = pyglet.resource.image("images/weapons/gauss.png")
+                        elif weapon.isLBX():
+                            # LBX fires only one projectile, but will appear to have multiple random impacts
+                            num_ballistic = 1
+                            ballistic_img = pyglet.resource.image("images/weapons/buckshot.png")
                         else:
                             ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
-
-                        num_ballistic = weapon.get_projectiles()
 
                         # machine gun sound only plays once instead of per projectile
                         cannon_sound = None
@@ -374,10 +378,14 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             if cannon_sound is None:
                                 cannon_sound = Sound("data/sounds/autocannon-shot.ogg")
 
+                            impact_func = create_ballistic_impact
+                            if weapon.isLBX:
+                                impact_func = create_lbx_impact
+
                             action = Delay(i * 0.1) + ToggleVisibility() \
                                 + CallFunc(weapon_channel.play, cannon_sound) \
                                 + MoveTo((target_x, target_y), ballistic_t) \
-                                + CallFunc(create_ballistic_impact, self.battle.board, target_pos) \
+                                + CallFunc(impact_func, weapon, self.battle.board, target_pos) \
                                 + CallFunc(ballistic.kill)
 
                             if weapon.isGauss():
@@ -527,12 +535,24 @@ class BallisticImpact(cocos.sprite.Sprite):
         self.do(Delay(0.07 * 6) + CallFunc(self.kill))
 
 
-def create_ballistic_impact(board, pos):
+def create_ballistic_impact(weapon, board, pos):
     # give ballistics an impact effect
     ballistic_impact = BallisticImpact(pos)
-    ballistic_impact.scale = 0.25
+    ballistic_impact.scale = 0.5 * weapon.scale
     ballistic_impact.rotation = random.randint(0, 360)
     board.add(ballistic_impact, z=1000)
+
+
+def create_lbx_impact(weapon, board, pos):
+    # give lbx a special set of impact effects
+    num_ballistic = weapon.get_projectiles()
+    for i in range(num_ballistic):
+        ballistic_impact = BallisticImpact(pos)
+        ballistic_impact.x += random.randint(-8, 8)
+        ballistic_impact.y += random.randint(-8, 8)
+        ballistic_impact.scale = 0.5 * weapon.scale
+        ballistic_impact.rotation = random.randint(0, 360)
+        board.add(ballistic_impact, z=1000)
 
 
 def random_offset(max_offset=12):
