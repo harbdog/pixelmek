@@ -11,9 +11,9 @@ from cocos.particle import Color
 from cocos.particle_systems import Meteor, Galaxy, Fire
 from cocos.euclid import Point2
 from pyglet.window import mouse
-
 from math import atan2, degrees, pi
-from pygame.mixer import Sound
+
+from resources import Resources
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
@@ -45,7 +45,11 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
 
         elif char == "SPACE":
             # skip to next unit for testing purposes
+            self.battle.getTurnUnit().sprite.stop()
+
             self.battle.nextTurn()
+
+            self.battle.getTurnUnit().sprite.sulk()
 
         elif char == "W":
             mech.sprite.strut()
@@ -205,7 +209,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         distance = Point2(ppc.x, ppc.y).distance(Point2(target_x, target_y))
                         ppc_t = distance / ppc_speed
 
-                        ppc_sound = Sound("data/sounds/ppc-shot.ogg")
+                        ppc_sound = Resources.ppc_sound
                         weapon_channel.play(ppc_sound)
 
                         action = Delay(0.5) + MoveTo((target_x, target_y), duration=ppc_t) \
@@ -251,7 +255,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         flamer.life = distance / flamer_speed
                         flamer.life_var = 0
 
-                        flamer_sound = Sound("data/sounds/flamer-shot.ogg")
+                        flamer_sound = Resources.flamer_sound
                         weapon_channel.play(flamer_sound)
 
                         action = Delay(flamer_t) \
@@ -325,7 +329,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         las_middle.do(las_action)
                         las_inner.do(las_action)
 
-                        las_sound = Sound("data/sounds/laser-blast-long.ogg")
+                        las_sound = Resources.las_sound
                         weapon_channel.play(las_sound)
                         las_duration_ms = int(las_action.duration * 1000)
                         weapon_channel.fadeout(las_duration_ms)
@@ -335,20 +339,20 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         num_ballistic = weapon.get_projectiles()
 
                         if weapon.isGauss():
-                            ballistic_img = pyglet.resource.image("images/weapons/gauss.png")
+                            ballistic_img = Resources.gauss_img
                         elif weapon.isLBX():
                             # LBX fires only one projectile, but will appear to have multiple random impacts
                             num_ballistic = 1
-                            ballistic_img = pyglet.resource.image("images/weapons/buckshot.png")
+                            ballistic_img = Resources.buckshot_img
                         else:
-                            ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
+                            ballistic_img = Resources.ballistic_img
 
                         # machine gun sound only plays once instead of per projectile
                         cannon_sound = None
                         if weapon.isMG():
-                            cannon_sound = Sound("data/sounds/machine-gun.ogg")
+                            cannon_sound = Resources.machinegun_sound
                         elif weapon.isGauss():
-                            cannon_sound = Sound("data/sounds/gauss-shot.ogg")
+                            cannon_sound = Resources.gauss_sound
 
                         for i in range(num_ballistic):
                             ballistic = Sprite(ballistic_img)
@@ -376,10 +380,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                             # setup the firing sound
                             if cannon_sound is None:
-                                cannon_sound = Sound("data/sounds/autocannon-shot.ogg")
+                                cannon_sound = Resources.cannon_sound
 
                             impact_func = create_ballistic_impact
-                            if weapon.isLBX:
+                            if weapon.isLBX():
                                 impact_func = create_lbx_impact
 
                             action = Delay(i * 0.1) + ToggleVisibility() \
@@ -402,7 +406,7 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                     elif weapon.isMissile():
                         # fire test missile projectile
-                        missile_img = pyglet.resource.image("images/weapons/missile.png")
+                        missile_img = Resources.missile_img
 
                         num_missile = weapon_data.get('count', 1)
 
@@ -441,9 +445,9 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             missile_t = distance / missile_speed
 
                             rand_missile_sound = random.randint(0, 7)
-                            missile_sound = Sound("data/sounds/missile-shot-%s.ogg" % rand_missile_sound)
+                            missile_sound = Resources.missile_sounds[rand_missile_sound]
 
-                            explosion_sound = Sound("data/sounds/explosion-single.ogg")
+                            explosion_sound = Resources.explosion_sound
 
                             action = Delay(i * 0.05) + ToggleVisibility() \
                                 + CallFunc(weapon_channel.play, missile_sound) \

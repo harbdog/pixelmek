@@ -113,6 +113,7 @@ class MechSprite(cocos.layer.Layer):
         self.stop()
 
         # TODO: adjust Z order only AFTER a Y position move
+        # TODO: Z order should be based on the number of rows in the board
         new_z = 10 - self.battle_mech.row
 
         parent = self.parent

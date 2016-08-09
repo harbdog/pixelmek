@@ -10,6 +10,8 @@ from board import *
 from cocos.director import director
 from random import randint
 
+from resources import Resources
+
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
 mech_list = []
@@ -35,7 +37,7 @@ mouse_events = events.MouseEvents(battle)
 
 # initialize the audio mixer
 pygame.mixer.init(44100, -16, 2, 2048)
-pygame.mixer.set_num_channels(16)
+pygame.mixer.set_num_channels(32)
 
 for mech in mech_list:
     col = randint(0, 5)
@@ -46,11 +48,13 @@ for mech in mech_list:
 
     sprite = sprites.MechSprite(battle_mech)
     battle_mech.setSprite(sprite)
-    board.add(sprite.shadow, z=100)
-    board.add(sprite, z=100)
+    # TODO: Z order should be based on the number of rows in the board
+    sprite_z = 10 - row
+    board.add(sprite.shadow, z=sprite_z)
+    board.add(sprite, z=sprite_z)
 
-    # TODO: only sulk during the unit's turn
-    sprite.sulk()
+# only sulk during the unit's turn
+battle.getTurnUnit().sprite.sulk()
 
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
@@ -64,5 +68,8 @@ scroller.set_focus(150, 150)
 
 scene = cocos.scene.Scene()
 scene.add(scroller, z=1)
+
+# preload all sound and image resources
+Resources.preload()
 
 director.run(scene)
