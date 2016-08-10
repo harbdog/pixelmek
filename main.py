@@ -39,9 +39,14 @@ mouse_events = events.MouseEvents(battle)
 pygame.mixer.init(44100, -16, 2, 2048)
 pygame.mixer.set_num_channels(32)
 
+# fill out the test board with mechs
+col = randint(0, battle.getNumCols())
+row = randint(0, battle.getNumRows())
+
 for mech in mech_list:
-    col = randint(0, 5)
-    row = randint(0, 5)
+    while not battle.isCellAvailable(col, row):
+        col = randint(0, battle.getNumCols()-1)
+        row = randint(0, battle.getNumRows()-1)
 
     battle_mech = BattleMech(mech, col, row)
     battle.addUnit(battle_mech)

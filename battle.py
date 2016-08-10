@@ -25,11 +25,15 @@ class Battle(object):
         if self.unit_turn >= len(self.unit_list):
             self.unit_turn = 0
 
+    def getNumRows(self):
+        return self.board.numRows
+
+    def getNumCols(self):
+        return self.board.numCols
+
     def isCellAvailable(self, col, row):
         if self.board is None:
             return False
-
-        print("checking cell [%s, %s]:" % (col, row))
 
         # check to see if any units occupy the space
         for battle_unit in self.unit_list:
