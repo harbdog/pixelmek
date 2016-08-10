@@ -19,11 +19,11 @@ class Board(cocos.layer.ScrollableLayer):
 
     TYPE_BUILDING = 'building'
 
+    numCols = 10
+    numRows = 10
+
     def __init__(self):
         super(Board, self).__init__()
-
-        self.numCols = 10
-        self.numRows = 10
 
         self.boardMap = {}
 
@@ -66,7 +66,7 @@ class Board(cocos.layer.ScrollableLayer):
 
             if cell_images is not None:
                 cell_level = cell_data[self.KEY_LEVEL]
-                cell_z = self.numCols - row - cell_level
+                cell_z = (self.numCols - row - cell_level) * 10
 
                 cell_batch = BatchNode()
                 cell_batch.position = col * self.TILE_SIZE, row * self.TILE_SIZE

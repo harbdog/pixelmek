@@ -54,12 +54,15 @@ for mech in mech_list:
     sprite = sprites.MechSprite(battle_mech)
     battle_mech.setSprite(sprite)
     # TODO: Z order should be based on the number of rows in the board
-    sprite_z = 10 - row
-    board.add(sprite.shadow, z=sprite_z)
-    board.add(sprite, z=sprite_z)
+    sprite_z = (battle.getNumRows() - row) * 10
+    board.add(sprite.indicator, z=sprite_z)
+    board.add(sprite.shadow, z=sprite_z+1)
+    board.add(sprite, z=sprite_z+2)
 
 # only sulk during the unit's turn
-battle.getTurnUnit().sprite.sulk()
+next_unit = battle.getTurnUnit()
+next_unit.sprite.sulk()
+next_unit.sprite.indicator.visible = True
 
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)

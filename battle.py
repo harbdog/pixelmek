@@ -1,4 +1,5 @@
 import model
+from board import Board
 
 
 class Battle(object):
@@ -26,13 +27,16 @@ class Battle(object):
             self.unit_turn = 0
 
     def getNumRows(self):
-        return self.board.numRows
+        return Board.numRows
 
     def getNumCols(self):
-        return self.board.numCols
+        return Board.numCols
 
     def isCellAvailable(self, col, row):
         if self.board is None:
+            return False
+
+        if col < 0 or row < 0 or col >= self.board.numCols or row >= self.board.numRows:
             return False
 
         # check to see if any units occupy the space

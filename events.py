@@ -45,11 +45,15 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
 
         elif char == "SPACE":
             # skip to next unit for testing purposes
-            self.battle.getTurnUnit().sprite.stop()
+            prev_unit = self.battle.getTurnUnit()
+            prev_unit.sprite.stop()
+            prev_unit.sprite.indicator.visible = False
 
             self.battle.nextTurn()
 
-            self.battle.getTurnUnit().sprite.sulk()
+            next_unit = self.battle.getTurnUnit()
+            next_unit.sprite.sulk()
+            next_unit.sprite.indicator.visible = True
 
         elif char == "W":
             mech.sprite.strut()

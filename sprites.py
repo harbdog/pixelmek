@@ -1,7 +1,8 @@
 import cocos
-import battle
 import pyglet
+import battle
 
+from board import Board
 from cocos.actions import *
 from cocos.batch import BatchNode
 from cocos.sprite import Sprite
@@ -27,42 +28,49 @@ class MechSprite(cocos.layer.Layer):
 
         img_static = Sprite(mech_img_grid[0])
 
+        indicator = cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
+        indicator.visible = False
+        indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)
+        self.indicator = indicator
+
         shadow = Sprite(MechSprite.shadow_img_grid[battle_mech.getSize() - 1])
-        indicator_rect = shadow.get_rect()
-        indicator_rect.bottomleft = (self.battle_mech.col * 32), (self.battle_mech.row * 32) - shadow.height//4
-        shadow.position = indicator_rect.center
+        shadow_rect = shadow.get_rect()
+        shadow_rect.bottomleft = (self.battle_mech.col * Board.TILE_SIZE), \
+                                 (self.battle_mech.row * Board.TILE_SIZE)
+        shadow.position = shadow_rect.center
         self.shadow = shadow
 
         rect = img_static.get_rect()
-        rect.bottomleft = (self.battle_mech.col * 32) - (img_static.width//2 - shadow.width//2), (self.battle_mech.row * 32)
+        rect.bottomleft = (self.battle_mech.col * Board.TILE_SIZE) - (img_static.width//2 - shadow.width//2), \
+                          (self.battle_mech.row * Board.TILE_SIZE)
         self.position = rect.center
 
         # batches do not allow different positions within, so separate the shadow from the mech images
         self.node = BatchNode()
         self.add(self.node, z=1)
 
-        img_static.y = 4
+        img_static.y = Board.TILE_SIZE//4
         self.node.add(img_static)
         self.img_static = img_static
 
         img_ct = Sprite(mech_img_grid[1])
-        img_ct.y = 4
+        img_ct.y = Board.TILE_SIZE//4
         self.img_ct = img_ct
 
         img_ll = Sprite(mech_img_grid[4])
-        img_ll.y = 4
+        img_ll.y = Board.TILE_SIZE//4
         self.img_ll = img_ll
 
         img_rl = Sprite(mech_img_grid[5])
-        img_rl.y = 4
+        img_rl.y = Board.TILE_SIZE//4
         self.img_rl = img_rl
 
         img_la = Sprite(mech_img_grid[2])
-        img_la.y = 4
+        img_la.y = Board.TILE_SIZE//4
         self.img_la = img_la
 
         img_ra = Sprite(mech_img_grid[3])
-        img_ra.y = 4
+        img_ra.y = Board.TILE_SIZE//4
         self.img_ra = img_ra
 
     def timeBySize(self):
@@ -124,13 +132,15 @@ class MechSprite(cocos.layer.Layer):
 
         # TODO: adjust Z order only AFTER a Y position move
         # TODO: Z order should be based on the number of rows in the board
-        new_z = 10 - self.battle_mech.row
+        new_z = (Board.numRows - self.battle_mech.row) * 10
 
         parent = self.parent
+        parent.remove(self.indicator)
         parent.remove(self.shadow)
         parent.remove(self)
-        parent.add(self.shadow, z=new_z)
-        parent.add(self, z=new_z)
+        parent.add(self.indicator, z=new_z)
+        parent.add(self.shadow, z=new_z+1)
+        parent.add(self, z=new_z+2)
 
         # make smaller mechs move faster
         time = self.timeBySize()
@@ -147,14 +157,14 @@ class MechSprite(cocos.layer.Layer):
     def reset(self):
         for section in self.node.get_children():
             section.stop()
-            section.position = 0, 4
+            section.position = 0, Board.TILE_SIZE//4
 
     def stop(self):
         self.shadow.stop()
 
         for section in self.node.get_children():
             section.stop()
-            section.position = 0, 4
+            section.position = 0, Board.TILE_SIZE//4
 
         if not self.static:
             self.static = True
@@ -188,11 +198,17 @@ class MechSprite(cocos.layer.Layer):
     def moveToCell(self, col, row, func):
         time = self.timeBySize() * 6
 
+        self.indicator.visible = False
+        self.indicator.position = (col * 32), (row * 32)
+        indicator_action = Delay(time) + ToggleVisibility()
+        self.indicator.do(indicator_action)
+
         shadow_rect = self.shadow.get_rect()
-        shadow_rect.bottomleft = (col * 32), (row * 32) - self.shadow.height // 4
+        shadow_rect.bottomleft = (col * 32), (row * 32)
 
         rect = self.img_static.get_rect()
-        rect.bottomleft = (col * 32) - (self.img_static.width // 2 - self.shadow.width // 2), (row * 32)
+        rect.bottomleft = (col * Board.TILE_SIZE) - (self.img_static.width // 2 - self.shadow.width // 2), \
+                          (row * Board.TILE_SIZE)
 
         actions = MoveTo(rect.center, duration=time)
         if func is not None:
