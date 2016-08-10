@@ -27,7 +27,7 @@ for root, dirs, f_names in os.walk(DATA_DIR+'/mechs/'):
 mech_list = sorted(mech_list, key=lambda x: x.name)
 
 # director must be initialized before any cocos elements can be created
-director.init(width=480, height=400, resizable=True, autoscale=False)
+director.init(width=480, height=420, resizable=True, autoscale=False)
 director.show_FPS = True
 board = Board()
 battle = Battle()

@@ -20,7 +20,7 @@ structure: 4
 specials:
 - !include ../specials/ac.yaml: [2, 2, 0]
 weapons:
-- !include ../weapons/is_mlas.yaml: {location: LA, offset: [15, 10]}
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-15, 10]}
-- !include ../weapons/is_slas.yaml: {location: HD, offset: [4, 28]}
-- !include ../weapons/is_ac20.yaml:  {location: RT, offset: [-4, 25]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [15, 14]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-15, 14]}
+- !include ../weapons/is_slas.yaml: {location: HD, offset: [4, 32]}
+- !include ../weapons/is_ac20.yaml:  {location: RT, offset: [-4, 29]}
