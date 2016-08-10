@@ -23,8 +23,9 @@ class MechSprite(cocos.layer.Layer):
         # TODO: add unit to model board by position, then keep updated as it moves
         # board[aws_col, aws_row] = self.batch
 
-        aws_static = Sprite(mech_img_grid[0])
-        self.aws_static = aws_static
+        self.static = True
+
+        img_static = Sprite(mech_img_grid[0])
 
         shadow = Sprite(MechSprite.shadow_img_grid[battle_mech.getSize() - 1])
         indicator_rect = shadow.get_rect()
@@ -32,45 +33,37 @@ class MechSprite(cocos.layer.Layer):
         shadow.position = indicator_rect.center
         self.shadow = shadow
 
-        rect = aws_static.get_rect()
-        rect.bottomleft = (self.battle_mech.col * 32) - (aws_static.width//2 - shadow.width//2), (self.battle_mech.row * 32)
+        rect = img_static.get_rect()
+        rect.bottomleft = (self.battle_mech.col * 32) - (img_static.width//2 - shadow.width//2), (self.battle_mech.row * 32)
         self.position = rect.center
 
         # batches do not allow different positions within, so separate the shadow from the mech images
         self.node = BatchNode()
         self.add(self.node, z=1)
 
-        z = 1
+        img_static.y = 4
+        self.node.add(img_static)
+        self.img_static = img_static
 
-        aws_ct = Sprite(mech_img_grid[1])
-        aws_ct.y = 4
-        self.node.add(aws_ct, z=z)
-        self.aws_ct = aws_ct
-        z += 1
+        img_ct = Sprite(mech_img_grid[1])
+        img_ct.y = 4
+        self.img_ct = img_ct
 
-        aws_ll = Sprite(mech_img_grid[4])
-        aws_ll.y = 4
-        self.node.add(aws_ll, z=z)
-        self.aws_ll = aws_ll
-        z += 1
+        img_ll = Sprite(mech_img_grid[4])
+        img_ll.y = 4
+        self.img_ll = img_ll
 
-        aws_rl = Sprite(mech_img_grid[5])
-        aws_rl.y = 4
-        self.node.add(aws_rl, z=z)
-        self.aws_rl = aws_rl
-        z += 1
+        img_rl = Sprite(mech_img_grid[5])
+        img_rl.y = 4
+        self.img_rl = img_rl
 
-        aws_la = Sprite(mech_img_grid[2])
-        aws_la.y = 4
-        self.node.add(aws_la, z=z)
-        self.aws_la = aws_la
-        z += 1
+        img_la = Sprite(mech_img_grid[2])
+        img_la.y = 4
+        self.img_la = img_la
 
-        aws_ra = Sprite(mech_img_grid[3])
-        aws_ra.y = 4
-        self.node.add(aws_ra, z=z)
-        self.aws_ra = aws_ra
-        z += 1
+        img_ra = Sprite(mech_img_grid[3])
+        img_ra.y = 4
+        self.img_ra = img_ra
 
     def timeBySize(self):
         times = {
@@ -82,7 +75,7 @@ class MechSprite(cocos.layer.Layer):
         return times.get(self.battle_mech.getSize(), times[4])
 
     def strut(self, reverse=False):
-        self.stop()
+        self.reset()
 
         # make smaller mechs move faster
         time = self.timeBySize()
@@ -92,25 +85,42 @@ class MechSprite(cocos.layer.Layer):
 
         if reverse:
             # start with raising the left leg/right arm first
-            self.aws_ra.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
-            self.aws_la.do(Repeat(Reverse(shift) + shift + shift + Reverse(shift)))
+            self.img_ra.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
+            self.img_la.do(Repeat(Reverse(shift) + shift + shift + Reverse(shift)))
 
-            self.aws_rl.do(Repeat(Delay(time * 2) + Reverse(move) + move))
-            self.aws_ll.do(Repeat(Reverse(move) + move + Delay(time * 2)))
+            self.img_rl.do(Repeat(Delay(time * 2) + Reverse(move) + move))
+            self.img_ll.do(Repeat(Reverse(move) + move + Delay(time * 2)))
 
         else:
             # start with raising the right leg/left arm first
-            self.aws_la.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
-            self.aws_ra.do(Repeat(Reverse(shift) + shift + shift + Reverse(shift)))
+            self.img_la.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
+            self.img_ra.do(Repeat(Reverse(shift) + shift + shift + Reverse(shift)))
 
-            self.aws_ll.do(Repeat(Delay(time * 2) + Reverse(move) + move))
-            self.aws_rl.do(Repeat(Reverse(move) + move + Delay(time * 2)))
+            self.img_ll.do(Repeat(Delay(time * 2) + Reverse(move) + move))
+            self.img_rl.do(Repeat(Reverse(move) + move + Delay(time * 2)))
 
         rise = MoveBy((0, 2), duration=time)
-        self.aws_ct.do(Repeat(rise + Reverse(rise) + rise + Reverse(rise)))
+        self.img_ct.do(Repeat(rise + Reverse(rise) + rise + Reverse(rise)))
 
     def sulk(self):
-        self.stop()
+        if not self.static:
+            self.stop()
+
+        if self.static:
+            self.static = False
+            for section in self.node.get_children():
+                section.kill()
+
+            z = 1
+            self.node.add(self.img_ct, z=z)
+            z += 1
+            self.node.add(self.img_ll, z=z)
+            z += 1
+            self.node.add(self.img_rl, z=z)
+            z += 1
+            self.node.add(self.img_la, z=z)
+            z += 1
+            self.node.add(self.img_ra, z=z)
 
         # TODO: adjust Z order only AFTER a Y position move
         # TODO: Z order should be based on the number of rows in the board
@@ -126,13 +136,18 @@ class MechSprite(cocos.layer.Layer):
         time = self.timeBySize()
 
         shift = MoveBy((0, 2), duration=time)
-        self.aws_la.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
-        self.aws_ra.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
+        self.img_la.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
+        self.img_ra.do(Repeat(shift + Reverse(shift) + Reverse(shift) + shift))
 
         sink = MoveBy((0, -2), duration=time)
-        self.aws_ct.do(Repeat(Delay(time * 2) + sink + Reverse(sink)))
+        self.img_ct.do(Repeat(Delay(time * 2) + sink + Reverse(sink)))
 
         # scroller.set_focus(self.x, self.y)
+
+    def reset(self):
+        for section in self.node.get_children():
+            section.stop()
+            section.position = 0, 4
 
     def stop(self):
         self.shadow.stop()
@@ -140,6 +155,13 @@ class MechSprite(cocos.layer.Layer):
         for section in self.node.get_children():
             section.stop()
             section.position = 0, 4
+
+        if not self.static:
+            self.static = True
+            for section in self.node.get_children():
+                section.kill()
+
+            self.node.add(self.img_static)
 
     def pause(self):
         self.shadow.pause()
@@ -169,8 +191,8 @@ class MechSprite(cocos.layer.Layer):
         shadow_rect = self.shadow.get_rect()
         shadow_rect.bottomleft = (col * 32), (row * 32) - self.shadow.height // 4
 
-        rect = self.aws_static.get_rect()
-        rect.bottomleft = (col * 32) - (self.aws_static.width // 2 - self.shadow.width // 2), (row * 32)
+        rect = self.img_static.get_rect()
+        rect.bottomleft = (col * 32) - (self.img_static.width // 2 - self.shadow.width // 2), (row * 32)
 
         actions = MoveTo(rect.center, duration=time)
         if func is not None:
