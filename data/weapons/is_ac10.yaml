@@ -5,4 +5,4 @@ range: medium
 type: ballistic
 speed: 450
 scale: 0.85
-projectiles: 3
+projectiles: 4

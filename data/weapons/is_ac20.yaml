@@ -5,4 +5,4 @@ range: short
 type: ballistic
 speed: 400
 scale: 1.0
-projectiles: 2
+projectiles: 5
