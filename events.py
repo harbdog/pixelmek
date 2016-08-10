@@ -405,6 +405,11 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             self.battle.board.add(ballistic, z=1000+i)
 
                     elif weapon.isMissile():
+                        # get another sound channel to use just for the explosions
+                        explosion_channel = pygame.mixer.find_channel()
+                        if explosion_channel is None:
+                            explosion_channel = pygame.mixer.Channel(1)
+
                         # fire test missile projectile
                         missile_img = Resources.missile_img
 
@@ -454,12 +459,12 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                                 + MoveTo((target_x, target_y), missile_t) \
                                 + CallFunc(create_missile_impact, self.battle.board, target_pos) \
                                 + CallFunc(missile.kill) \
-                                + CallFunc(weapon_channel.play, explosion_sound) \
+                                + CallFunc(explosion_channel.play, explosion_sound) \
                                 + Delay(0.5)
 
                             if i == num_missile - 1:
-                                # stop the sound channel after the last missile only
-                                action += CallFunc(weapon_channel.stop)
+                                # stop the sound channels after the last missile only
+                                action += CallFunc(weapon_channel.stop) + CallFunc(explosion_channel.stop)
 
                             missile.do(action)
 
