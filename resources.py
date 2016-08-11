@@ -27,3 +27,7 @@ class Resources(object):
         Resources.missile_sounds = []
         for i in range(8):
             Resources.missile_sounds.append(Sound("data/sounds/missile-shot-%s.ogg" % i))
+
+        Resources.stomp_sounds = []
+        for i in range(4):
+            Resources.stomp_sounds.append(Sound("data/sounds/mech-stomp-%s.ogg" % i))

@@ -36,3 +36,4 @@ The following art and sound resources used in this game are from various non-com
     * Flamer: http://www.freesound.org/people/Vosvoy/sounds/123632/
     * Missiles: http://www.freesound.org/people/Audionautics/sounds/171655/
     * Explosion: http://www.freesound.org/people/klankbeeld/sounds/344686/
+    * Stompy Mech: http://www.freesound.org/people/nabz871/sounds/324450/

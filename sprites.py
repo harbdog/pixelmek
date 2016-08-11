@@ -1,4 +1,5 @@
 import cocos
+import pygame
 import pyglet
 import battle
 
@@ -6,6 +7,7 @@ from board import Board
 from cocos.actions import *
 from cocos.batch import BatchNode
 from cocos.sprite import Sprite
+from resources import Resources
 
 
 class MechSprite(cocos.layer.Layer):
@@ -218,3 +220,17 @@ class MechSprite(cocos.layer.Layer):
 
         shadow_action = MoveTo(shadow_rect.center, duration=time)
         self.shadow.do(shadow_action)
+
+        # get sound channel to use just for this movement
+        stomp_channel = pygame.mixer.find_channel()
+        if stomp_channel is None:
+            stomp_channel = pygame.mixer.Channel(0)
+
+        sound_index = self.battle_mech.getSize() - 1
+
+        stomp_sound = Resources.stomp_sounds[sound_index]
+        sound_action = CallFunc(stomp_channel.play, stomp_sound) + Delay(time/3)
+        for i in range(2):
+            sound_action += CallFunc(stomp_channel.play, stomp_sound) + Delay(time / 3)
+
+        self.do(sound_action)
