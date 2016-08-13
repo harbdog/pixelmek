@@ -221,16 +221,14 @@ class MechSprite(cocos.layer.Layer):
         shadow_action = MoveTo(shadow_rect.center, duration=time)
         self.shadow.do(shadow_action)
 
-        # get sound channel to use just for this movement
-        stomp_channel = pygame.mixer.find_channel()
-        if stomp_channel is None:
-            stomp_channel = pygame.mixer.Channel(0)
-
+        # play movement sounds
         sound_index = self.battle_mech.getSize() - 1
 
         stomp_sound = Resources.stomp_sounds[sound_index]
-        sound_action = CallFunc(stomp_channel.play, stomp_sound) + Delay(time/3)
-        for i in range(2):
+        sound_action = Delay(0)
+        for i in range(3):
+            # use channel 0 and 1 for alternating steps
+            stomp_channel = pygame.mixer.Channel(i % 2)
             sound_action += CallFunc(stomp_channel.play, stomp_sound) + Delay(time / 3)
 
         self.do(sound_action)
