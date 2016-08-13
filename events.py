@@ -5,6 +5,8 @@ import random
 import cocos
 import pyglet
 import pygame
+from battle import Battle
+from board import Board
 from cocos.actions import *
 from cocos.sprite import Sprite
 from cocos.particle import Color
@@ -174,9 +176,30 @@ class MouseEvents(cocos.layer.ScrollableLayer):
         real_x, real_y = self.battle.scroller.screen_to_world(x, y)
 
         turn_unit = self.battle.getTurnUnit()
+        src_cell = turn_unit.col, turn_unit.row
+
+        dest_cell = Board.layer_to_board(real_x, real_y)
+        target_unit = self.battle.getUnitAtCell(*dest_cell)
+
         if buttons & mouse.RIGHT:
+            if target_unit is None:
+                return
+
+            # cell distance used to determine which range of weapons will fire
+            cell_distance = Battle.getCellDistance(src_cell, dest_cell)
+            print(str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
+
+            # determine actual target point based on the target unit sprite size
+            target_sprite = target_unit.getSprite()
+            real_x = (dest_cell[0] * Board.TILE_SIZE) + Board.TILE_SIZE//2
+            real_y = (dest_cell[1] * Board.TILE_SIZE) + (2*target_sprite.get_height()//3)
+
             for weaponMap in turn_unit.mech.weapons:
                 for weapon in weaponMap.iterkeys():
+
+                    if not weapon.inRange(cell_distance):
+                        continue
+
                     weapon_data = weaponMap[weapon]
 
                     # get sound channel to use just for this weapon

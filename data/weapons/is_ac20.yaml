@@ -1,7 +1,7 @@
 --- !Weapon
 name: Autocannon/20
 short_name: AC/20
-range: short
+range: medium
 type: ballistic
 speed: 400
 scale: 1.0

@@ -27,7 +27,7 @@ for root, dirs, f_names in os.walk(DATA_DIR+'/mechs/'):
 mech_list = sorted(mech_list, key=lambda x: x.name)
 
 # director must be initialized before any cocos elements can be created
-director.init(width=480, height=420, resizable=True, autoscale=False)
+director.init(width=1024, height=768, resizable=True, autoscale=False)
 director.show_FPS = True
 board = Board()
 battle = Battle()
@@ -60,9 +60,9 @@ for mech in mech_list:
     board.add(sprite, z=sprite_z+2)
 
 # only sulk during the unit's turn
-next_unit = battle.getTurnUnit()
-next_unit.sprite.sulk()
-next_unit.sprite.indicator.visible = True
+first_unit = battle.getTurnUnit()
+first_unit.sprite.sulk()
+first_unit.sprite.indicator.visible = True
 
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
@@ -72,7 +72,7 @@ scroller.add(mouse_events, z=1)
 battle.setScroller(scroller)
 
 # TODO: focus on an actual unit
-scroller.set_focus(150, 150)
+scroller.set_focus(*Board.board_to_layer(first_unit.col, first_unit.row))
 
 scene = cocos.scene.Scene()
 scene.add(scroller, z=1)

@@ -126,6 +126,16 @@ class Weapon(yaml.YAMLObject):
 
         return self.speed
 
+    def inRange(self, cell_distance):
+        if self.isShort():
+            return cell_distance <= 6
+
+        elif self.isMedium():
+            return cell_distance <= 24
+
+        elif self.isLong():
+            return cell_distance <= 42
+
     def isShort(self):
         return self.range == Weapon.RANGE_SHORT
 

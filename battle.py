@@ -1,5 +1,7 @@
 import model
+
 from board import Board
+from cocos.euclid import Point2
 
 
 class Battle(object):
@@ -26,11 +28,8 @@ class Battle(object):
         if self.unit_turn >= len(self.unit_list):
             self.unit_turn = 0
 
-    def getNumRows(self):
-        return Board.numRows
-
-    def getNumCols(self):
-        return Board.numCols
+        next_unit = self.getTurnUnit()
+        self.scroller.set_focus(*Board.board_to_layer(next_unit.col, next_unit.row))
 
     def isCellAvailable(self, col, row):
         if self.board is None:
@@ -53,6 +52,35 @@ class Battle(object):
         # TODO: check cell data to see if it is passable terrain object, such as trees, rocks, etc
 
         return False
+
+    def getUnitAtCell(self, col, row):
+        if self.board is None:
+            return None
+
+        if col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
+            return None
+
+        # find the unit that occupies the space
+        for battle_unit in self.unit_list:
+            if battle_unit.col == col and battle_unit.row == row:
+                return battle_unit
+
+        return None
+
+    @staticmethod
+    def getNumRows():
+        return Board.numRows
+
+    @staticmethod
+    def getNumCols():
+        return Board.numCols
+
+    @staticmethod
+    def getCellDistance(cell_1, cell_2):
+        point_1 = Point2(cell_1[0], cell_1[1])
+        point_2 = Point2(cell_2[0], cell_2[1])
+
+        return point_1.distance(point_2)
 
 
 class BattleMech(object):

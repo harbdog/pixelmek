@@ -75,6 +75,12 @@ class MechSprite(cocos.layer.Layer):
         img_ra.y = Board.TILE_SIZE//4
         self.img_ra = img_ra
 
+    def get_width(self):
+        return self.img_static.width
+
+    def get_height(self):
+        return self.img_static.height + int(self.img_static.y)
+
     def timeBySize(self):
         times = {
             4: 0.25,

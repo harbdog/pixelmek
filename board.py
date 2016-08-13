@@ -19,8 +19,8 @@ class Board(cocos.layer.ScrollableLayer):
 
     TYPE_BUILDING = 'building'
 
-    numCols = 10
-    numRows = 10
+    numCols = 20
+    numRows = 20
 
     def __init__(self):
         super(Board, self).__init__()
@@ -87,8 +87,10 @@ class Board(cocos.layer.ScrollableLayer):
 
                         cell_batch.add(cell_sprite)
 
-    def board_to_layer(self, *coords):
-        return (coords[0] * self.TILE_SIZE), (coords[1] * self.TILE_SIZE)
+    @staticmethod
+    def board_to_layer(*coords):
+        return (coords[0] * Board.TILE_SIZE), (coords[1] * Board.TILE_SIZE)
 
-    def layer_to_board(self, *point):
-        return (point[0] // self.TILE_SIZE), (point[1] // self.TILE_SIZE)
+    @staticmethod
+    def layer_to_board(*point):
+        return (point[0] // Board.TILE_SIZE), (point[1] // Board.TILE_SIZE)
