@@ -29,6 +29,8 @@ class Board(cocos.layer.ScrollableLayer):
 
         # add basic ground
         ground_img = pyglet.resource.image("images/board/ground-dark.png")
+        node = BatchNode()
+        self.add(node, z=0)
 
         for row in range(self.numRows):
             for col in range(self.numCols):
@@ -36,7 +38,7 @@ class Board(cocos.layer.ScrollableLayer):
                 rect = ground.get_rect()
                 rect.bottomleft = col * 32, row * 32
                 ground.position = rect.center
-                self.add(ground, z=0)
+                node.add(ground, z=0)
 
         # add buildings
         buildings_img = pyglet.resource.image("images/board/colony-buildings-32.png")
