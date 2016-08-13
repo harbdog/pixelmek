@@ -1,5 +1,7 @@
 import yaml
 
+import battle
+
 
 class Mech(yaml.YAMLObject):
     yaml_tag = u'!Mech'
@@ -78,6 +80,7 @@ class Weapon(yaml.YAMLObject):
     RANGE_SHORT = 'short'
     RANGE_MEDIUM = 'medium'
     RANGE_LONG = 'long'
+    RANGE_EXTREME = 'extreme'
 
     def __init__(self, name, short_name, _range, _type, color, speed, scale, projectiles):
         self.name = name
@@ -128,13 +131,15 @@ class Weapon(yaml.YAMLObject):
 
     def inRange(self, cell_distance):
         if self.isShort():
-            return cell_distance <= 6
+            return cell_distance <= battle.Battle.RANGE_SHORT
 
         elif self.isMedium():
-            return cell_distance <= 24
+            return cell_distance <= battle.Battle.RANGE_MEDIUM
 
         elif self.isLong():
-            return cell_distance <= 42
+            return cell_distance <= battle.Battle.RANGE_LONG
+
+        return False
 
     def isShort(self):
         return self.range == Weapon.RANGE_SHORT

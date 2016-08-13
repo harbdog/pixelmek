@@ -187,7 +187,8 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
             # cell distance used to determine which range of weapons will fire
             cell_distance = Battle.getCellDistance(src_cell, dest_cell)
-            print(str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
+            print(Battle.getDistanceRange(cell_distance)+": "
+                + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
 
             # determine actual target point based on the target unit sprite size
             target_sprite = target_unit.getSprite()

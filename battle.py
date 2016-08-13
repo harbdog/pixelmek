@@ -5,6 +5,10 @@ from cocos.euclid import Point2
 
 
 class Battle(object):
+    RANGE_SHORT = 6
+    RANGE_MEDIUM = 24
+    RANGE_LONG = 42
+
     def __init__(self):
         self.board = None
         self.scroller = None
@@ -81,6 +85,19 @@ class Battle(object):
         point_2 = Point2(cell_2[0], cell_2[1])
 
         return point_1.distance(point_2)
+
+    @staticmethod
+    def getDistanceRange(cell_distance):
+        if cell_distance <= Battle.RANGE_SHORT:
+            return model.Weapon.RANGE_SHORT
+
+        elif cell_distance <= Battle.RANGE_MEDIUM:
+            return model.Weapon.RANGE_MEDIUM
+
+        elif cell_distance <= Battle.RANGE_LONG:
+            return model.Weapon.RANGE_LONG
+
+        return model.Weapon.RANGE_EXTREME
 
 
 class BattleMech(object):
