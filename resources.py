@@ -31,3 +31,6 @@ class Resources(object):
         Resources.stomp_sounds = []
         for i in range(4):
             Resources.stomp_sounds.append(Sound(pyglet.resource.file("sounds/mech-stomp-%s.ogg" % i)))
+
+        # preload font
+        pyglet.font.add_file('images/ui/Convoy.ttf')
