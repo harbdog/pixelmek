@@ -523,13 +523,17 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                                 min_travel_time = travel_time
 
             if min_travel_time is not None:
+                # scroll focus over to the target area halfway through the travel time
+                target_area = Board.board_to_layer(target_unit.col, target_unit.row)
+
                 # show damage floater after the travel time of the first projectile to hit
                 floater = floaters.TextFloater("%s" % getattr(turn_unit, target_range))
                 floater.visible = False
                 floater.position = real_x, real_y + target_sprite.get_height()//3
                 self.battle.board.add(floater, z=2000)
 
-                action = Delay(min_travel_time) + ToggleVisibility() \
+                action = Delay(min_travel_time/2) + CallFunc(self.battle.scroller.set_focus, *target_area) \
+                    + Delay(min_travel_time/2) + ToggleVisibility() \
                     + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
                     + FadeOut(1.0) + CallFunc(floater.kill)
                 floater.do(action)
