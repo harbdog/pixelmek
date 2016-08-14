@@ -3,6 +3,7 @@ from __future__ import division
 import gl
 import random
 import cocos
+import floaters
 import pyglet
 import pygame
 from battle import Battle
@@ -185,10 +186,13 @@ class MouseEvents(cocos.layer.ScrollableLayer):
             if target_unit is None:
                 return
 
+            # minimum travel time to target used to determine when to show the damage floater
+            min_travel_time = None
+
             # cell distance used to determine which range of weapons will fire
             cell_distance = Battle.getCellDistance(src_cell, dest_cell)
-            print(Battle.getDistanceRange(cell_distance)+": "
-                + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
+            target_range = Battle.getDistanceRange(cell_distance)
+            print(target_range + ": " + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
 
             # determine actual target point based on the target unit sprite size
             target_sprite = target_unit.getSprite()
@@ -248,6 +252,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                         ppc.do(action)
 
+                        travel_time = 0.5 + ppc_t
+                        if min_travel_time is None or min_travel_time > travel_time:
+                            min_travel_time = travel_time
+
                     elif weapon.isFlamer():
                         # fire test flamer
                         flamer = Fire()
@@ -293,6 +301,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             + CallFunc(weapon_channel.stop)
 
                         flamer.do(action)
+
+                        travel_time = flamer_t
+                        if min_travel_time is None or min_travel_time > travel_time:
+                            min_travel_time = travel_time
 
                     elif weapon.isLaser():
                         # fire test laser
@@ -361,6 +373,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                         weapon_channel.play(las_sound)
                         las_duration_ms = int(las_action.duration * 1000)
                         weapon_channel.fadeout(las_duration_ms)
+
+                        travel_time = 0.5
+                        if min_travel_time is None or min_travel_time > travel_time:
+                            min_travel_time = travel_time
 
                     elif weapon.isBallistic():
                         # fire test ballistic projectile
@@ -432,6 +448,10 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
                             self.battle.board.add(ballistic, z=1000+i)
 
+                            travel_time = (i * 0.1) + ballistic_t
+                            if min_travel_time is None or min_travel_time > travel_time:
+                                min_travel_time = travel_time
+
                     elif weapon.isMissile():
                         # get another sound channel to use just for the explosions
                         explosion_channel = pygame.mixer.find_channel()
@@ -497,6 +517,22 @@ class MouseEvents(cocos.layer.ScrollableLayer):
                             missile.do(action)
 
                             self.battle.board.add(missile, z=1000 + i)
+
+                            travel_time = (i * 0.05) + missile_t
+                            if min_travel_time is None or min_travel_time > travel_time:
+                                min_travel_time = travel_time
+
+            if min_travel_time is not None:
+                # show damage floater after the travel time of the first projectile to hit
+                floater = floaters.TextFloater("%s" % getattr(turn_unit, target_range))
+                floater.visible = False
+                floater.position = real_x, real_y + target_sprite.get_height()//3
+                self.battle.board.add(floater, z=2000)
+
+                action = Delay(min_travel_time) + ToggleVisibility() \
+                    + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
+                    + FadeOut(1.0) + CallFunc(floater.kill)
+                floater.do(action)
 
         elif buttons & mouse.LEFT:
             # test movement to the specific cell
