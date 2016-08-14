@@ -33,4 +33,4 @@ class Resources(object):
             Resources.stomp_sounds.append(Sound(pyglet.resource.file("sounds/mech-stomp-%s.ogg" % i)))
 
         # preload font
-        pyglet.font.add_file('images/ui/Convoy.ttf')
+        pyglet.font.add_file(pyglet.resource.file('images/ui/Convoy.ttf'))
