@@ -4,6 +4,8 @@ import pyglet
 from cocos.batch import BatchNode
 from cocos.sprite import Sprite
 
+from resources import Resources
+
 
 class Board(cocos.layer.ScrollableLayer):
 
@@ -22,31 +24,33 @@ class Board(cocos.layer.ScrollableLayer):
     numCols = 20
     numRows = 20
 
+    BOARD = None
+
     def __init__(self):
         super(Board, self).__init__()
 
+        Board.BOARD = self
+
         self.boardMap = {}
+        self.cellMap = {}
 
         # add basic ground
-        ground_img = pyglet.resource.image("images/board/ground-dark.png")
+        ground_img = Resources.ground_img
         node = BatchNode()
         self.add(node, z=0)
 
         for row in range(self.numRows):
             for col in range(self.numCols):
-                ground = Sprite(ground_img)
-                rect = ground.get_rect()
+                cell = Cell(ground_img)
+                rect = cell.get_rect()
                 rect.bottomleft = col * 32, row * 32
-                ground.position = rect.center
-                node.add(ground, z=0)
+                cell.position = rect.center
+                node.add(cell, z=0)
+
+                self.cellMap[(col, row)] = cell
 
         # add buildings
-        buildings_img = pyglet.resource.image("images/board/colony-buildings-32.png")
-        buildings_grid = pyglet.image.ImageGrid(buildings_img,
-                                                columns=(buildings_img.width // self.TILE_SIZE),
-                                                rows=(buildings_img.height // self.TILE_SIZE))
-
-        buildings_tex = pyglet.image.TextureGrid(buildings_grid)
+        buildings_tex = Resources.buildings_tex
 
         self.boardMap[(1, 4)] = {self.KEY_TYPE: self.TYPE_BUILDING,
                                  self.KEY_COLUMNS: 3,
@@ -87,6 +91,13 @@ class Board(cocos.layer.ScrollableLayer):
 
                         cell_batch.add(cell_sprite)
 
+    def get_cell(self, col, row):
+        cell_pos = (col, row)
+        if cell_pos not in self.cellMap:
+            return None
+
+        return self.cellMap[cell_pos]
+
     @staticmethod
     def board_to_layer(*coords):
         return (coords[0] * Board.TILE_SIZE), (coords[1] * Board.TILE_SIZE)
@@ -94,3 +105,20 @@ class Board(cocos.layer.ScrollableLayer):
     @staticmethod
     def layer_to_board(*point):
         return (point[0] // Board.TILE_SIZE), (point[1] // Board.TILE_SIZE)
+
+
+class Cell(cocos.sprite.Sprite):
+
+    def __init__(self, image):
+        super(Cell, self).__init__(image)
+
+        self.indicator = Sprite(Resources.enemy_indicator_img)
+        self.indicator.visible = False
+        self.add(self.indicator, z=1)
+
+    def show_indicator(self):
+        self.indicator.position = self.position
+        self.indicator.visible = True
+
+    def hide_indicator(self):
+        self.indicator.visible = False

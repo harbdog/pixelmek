@@ -29,15 +29,19 @@ mech_list = sorted(mech_list, key=lambda x: x.name)
 # director must be initialized before any cocos elements can be created
 director.init(width=1024, height=768, resizable=True, autoscale=False)
 director.show_FPS = True
+
+# initialize the audio mixer
+pygame.mixer.init(44100, -16, 2, 2048)
+pygame.mixer.set_num_channels(32)
+
+# preload all sound and image resources
+Resources.preload()
+
 board = Board()
 battle = Battle()
 battle.setBoard(board)
 key_events = events.KeyboardEvents(battle)
 mouse_events = events.MouseEvents(battle)
-
-# initialize the audio mixer
-pygame.mixer.init(44100, -16, 2, 2048)
-pygame.mixer.set_num_channels(32)
 
 # fill out the test board with mechs
 col = randint(0, battle.getNumCols())
@@ -55,14 +59,17 @@ for mech in mech_list:
     battle_mech.setSprite(sprite)
     # TODO: Z order should be based on the number of rows in the board
     sprite_z = (battle.getNumRows() - row) * 10
-    board.add(sprite.indicator, z=sprite_z)
-    board.add(sprite.shadow, z=sprite_z+1)
-    board.add(sprite, z=sprite_z+2)
+    board.add(sprite.shadow, z=sprite_z)
+    board.add(sprite, z=sprite_z+1)
 
 # only sulk during the unit's turn
 first_unit = battle.getTurnUnit()
 first_unit.sprite.sulk()
 first_unit.sprite.indicator.visible = True
+
+for cell_pos in battle.getCellsInRange(first_unit.col, first_unit.row, first_unit.move):
+    cell = battle.getCellAt(*cell_pos)
+    cell.show_indicator()
 
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
@@ -76,8 +83,5 @@ scroller.set_focus(*Board.board_to_layer(first_unit.col, first_unit.row))
 
 scene = cocos.scene.Scene()
 scene.add(scroller, z=1)
-
-# preload all sound and image resources
-Resources.preload()
 
 director.run(scene)

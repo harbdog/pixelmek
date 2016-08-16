@@ -1,3 +1,4 @@
+import board
 import pyglet
 from pygame.mixer import Sound
 
@@ -7,6 +8,17 @@ class Resources(object):
     @staticmethod
     def preload():
         # Preload images
+        buildings_img = pyglet.resource.image("images/board/colony-buildings-32.png")
+        buildings_grid = pyglet.image.ImageGrid(buildings_img,
+                                                columns=(buildings_img.width // board.Board.TILE_SIZE),
+                                                rows=(buildings_img.height // board.Board.TILE_SIZE))
+
+        Resources.buildings_tex = pyglet.image.TextureGrid(buildings_grid)
+        Resources.ground_img = pyglet.resource.image("images/board/ground-dark.png")
+
+        Resources.player_indicator_img = pyglet.resource.image("images/ui/player-indicator.png")
+        Resources.enemy_indicator_img = pyglet.resource.image("images/ui/enemy-indicator.png")
+
         Resources.ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
         Resources.buckshot_img = pyglet.resource.image("images/weapons/buckshot.png")
         Resources.gauss_img = pyglet.resource.image("images/weapons/gauss.png")

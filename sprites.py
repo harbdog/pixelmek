@@ -30,10 +30,13 @@ class MechSprite(cocos.layer.Layer):
 
         img_static = Sprite(mech_img_grid[0])
 
-        indicator = cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
+        indicator = Sprite(Resources.player_indicator_img)
+        # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
         indicator.visible = False
-        indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)
+        # indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)
+        indicator.position = 0, -img_static.height // 2 + indicator.height // 2
         self.indicator = indicator
+        self.add(indicator, z=0)
 
         shadow = Sprite(MechSprite.shadow_img_grid[battle_mech.getSize() - 1])
         shadow_rect = shadow.get_rect()
@@ -47,9 +50,8 @@ class MechSprite(cocos.layer.Layer):
                           (self.battle_mech.row * Board.TILE_SIZE)
         self.position = rect.center
 
-        # batches do not allow different positions within, so separate the shadow from the mech images
         self.node = BatchNode()
-        self.add(self.node, z=1)
+        self.add(self.node, z=2)
 
         img_static.y = Board.TILE_SIZE//4
         self.node.add(img_static)
@@ -143,12 +145,12 @@ class MechSprite(cocos.layer.Layer):
         new_z = (Board.numRows - self.battle_mech.row) * 10
 
         parent = self.parent
-        parent.remove(self.indicator)
+        # parent.remove(self.indicator)
         parent.remove(self.shadow)
         parent.remove(self)
-        parent.add(self.indicator, z=new_z)
-        parent.add(self.shadow, z=new_z+1)
-        parent.add(self, z=new_z+2)
+        #parent.add(self.indicator, z=new_z)
+        parent.add(self.shadow, z=new_z)
+        parent.add(self, z=new_z+1)
 
         # make smaller mechs move faster
         time = self.timeBySize()
@@ -207,7 +209,6 @@ class MechSprite(cocos.layer.Layer):
         time = self.timeBySize() * 6
 
         self.indicator.visible = False
-        self.indicator.position = (col * 32), (row * 32)
         indicator_action = Delay(time) + ToggleVisibility()
         self.indicator.do(indicator_action)
 
