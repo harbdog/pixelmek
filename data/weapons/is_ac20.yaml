@@ -3,6 +3,6 @@ name: Autocannon/20
 short_name: AC/20
 range: medium
 type: ballistic
-speed: 400
+speed: 500
 scale: 1.0
 projectiles: 5

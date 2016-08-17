@@ -111,14 +111,17 @@ class Cell(cocos.sprite.Sprite):
 
     def __init__(self, image):
         super(Cell, self).__init__(image)
+        self.indicator = None
 
-        self.indicator = Sprite(Resources.enemy_indicator_img)
-        self.indicator.visible = False
+    def show_indicator(self, indicator_img=None):
+        if indicator_img is None:
+            indicator_img = Resources.player_indicator_img
+
+        self.indicator = Sprite(indicator_img)
+        self.indicator.position = self.position
         self.add(self.indicator, z=1)
 
-    def show_indicator(self):
-        self.indicator.position = self.position
-        self.indicator.visible = True
-
     def hide_indicator(self):
-        self.indicator.visible = False
+        if self.indicator is not None:
+            self.indicator.kill()
+            self.indicator = None

@@ -34,7 +34,7 @@ class MechSprite(cocos.layer.Layer):
         # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
         indicator.visible = False
         # indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)
-        indicator.position = 0, -img_static.height // 2 + indicator.height // 2
+        indicator.position = 0, -img_static.height // 2 + indicator.height // 2 + 1
         self.indicator = indicator
         self.add(indicator, z=0)
 

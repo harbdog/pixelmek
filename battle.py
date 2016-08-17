@@ -3,6 +3,8 @@ import model
 from board import Board
 from cocos.euclid import Point2
 
+from resources import Resources
+
 
 class Battle(object):
     RANGE_SHORT = 6
@@ -40,7 +42,10 @@ class Battle(object):
 
         for cell_pos in self.getCellsInRange(next_unit.col, next_unit.row, next_unit.move):
             cell = self.getCellAt(*cell_pos)
-            cell.show_indicator()
+            if self.isCellAvailable(*cell_pos):
+                cell.show_indicator(Resources.move_indicator_img)
+            else:
+                cell.show_indicator(Resources.enemy_indicator_img)
 
     def getCellsInRange(self, col, row, max_dist):
         cells = {}
@@ -53,14 +58,17 @@ class Battle(object):
                 or col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
             return
 
-        # TODO: make sure the cell can be entered
+        if dist > 0:
+            cells[cell] = dist
 
-        cells[cell] = dist
+        # TODO: distinguish between LOS related range and move related range recursion
 
-        self._recurseCellsInRange(col, row + 1, dist + 1, max_dist, cells)
-        self._recurseCellsInRange(col, row - 1, dist + 1, max_dist, cells)
-        self._recurseCellsInRange(col + 1, row, dist + 1, max_dist, cells)
-        self._recurseCellsInRange(col - 1, row, dist + 1, max_dist, cells)
+        # TODO: allow passing through friendly unit occupied cells
+        if dist == 0 or self.isCellAvailable(col, row):
+            self._recurseCellsInRange(col, row + 1, dist + 1, max_dist, cells)
+            self._recurseCellsInRange(col, row - 1, dist + 1, max_dist, cells)
+            self._recurseCellsInRange(col + 1, row, dist + 1, max_dist, cells)
+            self._recurseCellsInRange(col - 1, row, dist + 1, max_dist, cells)
 
     def isCellAvailable(self, col, row):
         if self.board is None:

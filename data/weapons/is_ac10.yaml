@@ -3,6 +3,6 @@ name: Autocannon/10
 short_name: AC/10
 range: medium
 type: ballistic
-speed: 450
+speed: 525
 scale: 0.85
 projectiles: 4

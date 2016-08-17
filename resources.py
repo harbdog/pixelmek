@@ -17,7 +17,9 @@ class Resources(object):
         Resources.ground_img = pyglet.resource.image("images/board/ground-dark.png")
 
         Resources.player_indicator_img = pyglet.resource.image("images/ui/player-indicator.png")
+        Resources.friendly_indicator_img = pyglet.resource.image("images/ui/friendly-indicator.png")
         Resources.enemy_indicator_img = pyglet.resource.image("images/ui/enemy-indicator.png")
+        Resources.move_indicator_img = pyglet.resource.image("images/ui/move-indicator.png")
 
         Resources.ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
         Resources.buckshot_img = pyglet.resource.image("images/weapons/buckshot.png")
