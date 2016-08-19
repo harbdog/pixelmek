@@ -1,5 +1,6 @@
 import events
 import include
+import menu
 import model
 import os
 import pygame
@@ -76,7 +77,6 @@ battle.setScroller(scroller)
 # TODO: focus on an actual unit
 scroller.set_focus(*Board.board_to_layer(first_unit.col, first_unit.row))
 
-scene = cocos.scene.Scene()
-scene.add(scroller, z=1)
+scene = cocos.scene.Scene(menu.MainMenu(scroller))
 
 director.run(scene)
