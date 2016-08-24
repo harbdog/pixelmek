@@ -540,18 +540,18 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
         elif buttons & mouse.LEFT:
             # test movement to the specific cell
-            # chk_colnum = turn_unit.col
-            # chk_rownum = turn_unit.row - 1
             chk_cell = self.battle.board.layer_to_board(real_x, real_y)
-            chk_colnum = chk_cell[0]
-            chk_rownum = chk_cell[1]
+            chk_col = chk_cell[0]
+            chk_row = chk_cell[1]
 
-            if self.battle.isCellAvailable(chk_colnum, chk_rownum):
-                turn_unit.col = chk_colnum
-                turn_unit.row = chk_rownum
+            if self.battle.isCellAvailable(chk_col, chk_row):
+                animate_reverse = (turn_unit.col - chk_col > 0) or (turn_unit.row - chk_row > 0)
 
-                turn_unit.sprite.strut()
-                turn_unit.sprite.moveToCell(chk_colnum, chk_rownum, turn_unit.sprite.sulk)
+                turn_unit.col = chk_col
+                turn_unit.row = chk_row
+
+                turn_unit.sprite.strut(reverse=animate_reverse)
+                turn_unit.sprite.moveToCell(chk_col, chk_row, turn_unit.sprite.sulk)
 
 
 class LaserImpact(cocos.sprite.Sprite):
