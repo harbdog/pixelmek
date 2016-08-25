@@ -1,4 +1,5 @@
 import cocos
+import math
 import pygame
 import pyglet
 import battle
@@ -6,6 +7,8 @@ import battle
 from board import Board
 from cocos.actions import *
 from cocos.batch import BatchNode
+from cocos.euclid import Point2
+from cocos.particle_systems import Meteor
 from cocos.sprite import Sprite
 from resources import Resources
 
@@ -145,12 +148,12 @@ class MechSprite(cocos.layer.Layer):
         new_z = (Board.numRows - self.battle_mech.row) * 10
 
         parent = self.parent
-        # parent.remove(self.indicator)
+
         parent.remove(self.shadow)
         parent.remove(self)
-        #parent.add(self.indicator, z=new_z)
+
         parent.add(self.shadow, z=new_z)
-        parent.add(self, z=new_z+1)
+        parent.add(self, z=new_z+2)
 
         # make smaller mechs move faster
         time = self.timeBySize()
@@ -161,8 +164,6 @@ class MechSprite(cocos.layer.Layer):
 
         sink = MoveBy((0, -2), duration=time)
         self.img_ct.do(Repeat(Delay(time * 2) + sink + Reverse(sink)))
-
-        # scroller.set_focus(self.x, self.y)
 
     def reset(self):
         for section in self.node.get_children():
@@ -205,8 +206,12 @@ class MechSprite(cocos.layer.Layer):
         self.do(actions)
         self.shadow.do(actions)
 
-    def moveToCell(self, col, row, func):
-        time = self.timeBySize() * 6
+    def moveToCell(self, col, row, reverse=False, func=None):
+        num_steps = 1 + int(math.ceil(Point2(col, row).distance(Point2(self.battle_mech.col, self.battle_mech.row))))
+        time = self.timeBySize() * (num_steps * 2)
+
+        self.battle_mech.col = col
+        self.battle_mech.row = row
 
         self.indicator.visible = False
         indicator_action = Delay(time) + ToggleVisibility()
@@ -232,10 +237,45 @@ class MechSprite(cocos.layer.Layer):
         sound_index = self.battle_mech.getSize() - 1
 
         stomp_sound = Resources.stomp_sounds[sound_index]
-        sound_action = Delay(0)
-        for i in range(3):
+        stomp_action = Delay(0)
+        for i in range(num_steps):
             # use channel 0 and 1 for alternating steps
             stomp_channel = pygame.mixer.Channel(i % 2)
-            sound_action += CallFunc(stomp_channel.play, stomp_sound) + Delay(time / 3)
 
-        self.do(sound_action)
+            stomp_reverse = True
+            if i % 2 == (1 if reverse else 0):
+                stomp_reverse = False
+
+            stomp_action += CallFunc(stomp_channel.play, stomp_sound) + Delay(time / num_steps) \
+                + CallFunc(self.spawnStompCloud, stomp_reverse)
+
+        self.do(stomp_action)
+
+    def spawnStompCloud(self, reverse):
+        # show cloud particles from stomps
+        stomp_cloud = Meteor()
+        stomp_cloud.start_color = cocos.particle.Color(0.3, 0.3, 0.3, 1.0)
+        stomp_cloud.end_color = cocos.particle.Color(0.5, 0.5, 0.5, 0.2)
+        stomp_cloud.duration = 0.1
+        stomp_cloud.blend_additive = False
+        stomp_cloud.size = 10 + (10 * self.battle_mech.getSize() / 4)
+        stomp_cloud.speed = 20
+        stomp_cloud.gravity = Point2(0, 0)
+        # TODO: offer decreased particle emission rate to improve performance
+        stomp_cloud.emission_rate = 100
+        stomp_cloud.life = 0.5
+        stomp_cloud.life_var = 0.1
+
+        if not reverse:
+            stomp_cloud.position = self.indicator.position[0] + (self.img_static.width // 4), \
+                self.indicator.position[1] - self.indicator.height // 5
+        else:
+            stomp_cloud.position = self.indicator.position[0] - (self.img_static.width // 4), \
+                self.indicator.position[1] - self.indicator.height // 5
+
+        self.add(stomp_cloud, z=1)
+
+        stomp_action = Delay(stomp_cloud.duration + stomp_cloud.life + stomp_cloud.life_var) \
+            + CallFunc(stomp_cloud.kill)
+
+        self.do(stomp_action)

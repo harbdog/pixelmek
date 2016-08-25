@@ -547,11 +547,8 @@ class MouseEvents(cocos.layer.ScrollableLayer):
             if self.battle.isCellAvailable(chk_col, chk_row):
                 animate_reverse = (turn_unit.col - chk_col > 0) or (turn_unit.row - chk_row > 0)
 
-                turn_unit.col = chk_col
-                turn_unit.row = chk_row
-
                 turn_unit.sprite.strut(reverse=animate_reverse)
-                turn_unit.sprite.moveToCell(chk_col, chk_row, turn_unit.sprite.sulk)
+                turn_unit.sprite.moveToCell(chk_col, chk_row, animate_reverse, turn_unit.sprite.sulk)
 
 
 class LaserImpact(cocos.sprite.Sprite):
