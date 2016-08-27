@@ -109,19 +109,69 @@ class Board(cocos.layer.ScrollableLayer):
 
 class Cell(cocos.sprite.Sprite):
 
+    INDICATOR_PLAYER = 'player'
+    INDICATOR_ENEMY = 'enemy'
+    INDICATOR_FRIENDLY = 'friendly'
+    INDICATOR_MOVE = 'move'
+    INDICATOR_ACTION = 'action'
+
     def __init__(self, image):
         super(Cell, self).__init__(image)
-        self.indicator = None
+        self.indicators = {}
 
-    def show_indicator(self, indicator_img=None):
-        if indicator_img is None:
-            indicator_img = Resources.player_indicator_img
+    def show_player_indicator(self, show=True):
+        indicator_name = Cell.INDICATOR_PLAYER
+        if show:
+            self._add_indicator(indicator_name, Resources.player_indicator_img)
+        else:
+            self._remove_indicator(indicator_name)
 
-        self.indicator = Sprite(indicator_img)
-        self.indicator.position = self.position
-        self.add(self.indicator, z=1)
+    def show_enemy_indicator(self, show=True):
+        indicator_name = Cell.INDICATOR_ENEMY
+        if show:
+            self._add_indicator(indicator_name, Resources.enemy_indicator_img)
+        else:
+            self._remove_indicator(indicator_name)
 
-    def hide_indicator(self):
-        if self.indicator is not None:
-            self.indicator.kill()
-            self.indicator = None
+    def show_friendly_indicator(self, show=True):
+        indicator_name = Cell.INDICATOR_FRIENDLY
+        if show:
+            self._add_indicator(indicator_name, Resources.friendly_indicator_img)
+        else:
+            self._remove_indicator(indicator_name)
+
+    def show_move_indicator(self, show=True):
+        indicator_name = Cell.INDICATOR_MOVE
+        if show:
+            self._add_indicator(indicator_name, Resources.move_indicator_img)
+        else:
+            self._remove_indicator(indicator_name)
+
+    def show_action_indicator(self, show=True):
+        indicator_name = Cell.INDICATOR_ACTION
+        if show:
+            self._add_indicator(indicator_name, Resources.action_indicator_img)
+        else:
+            self._remove_indicator(indicator_name)
+
+    def _add_indicator(self, indicator_name, indicator_img):
+        indicator = Sprite(indicator_img)
+        indicator.position = self.position
+
+        self.add(indicator, z=len(self.indicators))
+
+        self.indicators[indicator_name] = indicator
+
+    def _remove_indicator(self, indicator_name):
+        if indicator_name in self.indicators:
+            indicator = self.indicators[indicator_name]
+            indicator.kill()
+
+            del self.indicators[indicator_name]
+
+    def remove_indicators(self):
+        for indicator_name in self.indicators.keys():
+            indicator = self.indicators[indicator_name]
+            indicator.kill()
+
+            del self.indicators[indicator_name]

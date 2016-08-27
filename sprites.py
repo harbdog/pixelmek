@@ -26,14 +26,12 @@ class MechSprite(cocos.layer.Layer):
         mech_img = pyglet.resource.image(self.battle_mech.getImagePath())
         mech_img_grid = pyglet.image.ImageGrid(mech_img, 1, 6)
 
-        # TODO: add unit to model board by position, then keep updated as it moves
-        # board[aws_col, aws_row] = self.batch
-
         self.static = True
 
         img_static = Sprite(mech_img_grid[0])
 
-        indicator = Sprite(Resources.player_indicator_img)
+        # TODO: setup the non square friendly/enemy indicators based on team
+        indicator = Sprite(Resources.enemy_indicator_img)
         # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
         indicator.visible = False
         # indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)
@@ -85,6 +83,9 @@ class MechSprite(cocos.layer.Layer):
 
     def get_height(self):
         return self.img_static.height + int(self.img_static.y)
+
+    def showIndicator(self, visible=True):
+        self.indicator.visible = visible
 
     def timeBySize(self):
         times = {
@@ -212,10 +213,6 @@ class MechSprite(cocos.layer.Layer):
 
         self.battle_mech.col = col
         self.battle_mech.row = row
-
-        self.indicator.visible = False
-        indicator_action = Delay(time) + ToggleVisibility()
-        self.indicator.do(indicator_action)
 
         shadow_rect = self.shadow.get_rect()
         shadow_rect.bottomleft = (col * 32), (row * 32)

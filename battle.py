@@ -11,11 +11,16 @@ class Battle(object):
     RANGE_MEDIUM = 24
     RANGE_LONG = 42
 
+    BATTLE = None
+
     def __init__(self):
+        Battle.BATTLE = self
         self.board = None
         self.scroller = None
         self.unit_list = []
-        self.unit_turn = 0
+        self.unit_turn = -1
+
+        self.sel_cell_pos = None
 
     def setBoard(self, board):
         self.board = board
@@ -26,26 +31,102 @@ class Battle(object):
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
 
+    def clearSelectedCell(self):
+        prev_cell = self.getSelectedCell()
+        if prev_cell is not None:
+            prev_cell.remove_indicators()
+
+        self.sel_cell_pos = None
+
+    def setSelectedCellPosition(self, col, row):
+        if col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
+            return
+
+        prev_cell = self.getSelectedCell()
+        if prev_cell is not None:
+            prev_cell.show_action_indicator(show=False)
+
+        self.sel_cell_pos = col, row
+        new_cell = self.getSelectedCell()
+
+        if new_cell is not None:
+            new_cell.show_action_indicator()
+
+            # TODO: only refocus if getting too close to edge of display
+            # self.scroller.set_focus(*Board.board_to_layer(col, row))
+
+    def getSelectedCellPosition(self):
+        return self.sel_cell_pos
+
+    def getSelectedCell(self):
+        if self.sel_cell_pos is None:
+            return None
+
+        return self.board.get_cell(*self.sel_cell_pos)
+
     def getTurnUnit(self):
+        if self.unit_turn < 0:
+            return None
+
         return self.unit_list[self.unit_turn]
 
+    def isTurnUnit(self, battle_unit):
+        return battle_unit is not None and battle_unit is self.getTurnUnit()
+
+    def getTurnUnitCell(self):
+        turn_unit = self.getTurnUnit()
+        if turn_unit is not None:
+            return self.getCellAt(turn_unit.col, turn_unit.row)
+
+    def isTurnUnitCell(self, cell):
+        turn_unit = self.getTurnUnit()
+        if turn_unit is not None and cell is not None:
+            turn_unit_cell = self.getTurnUnitCell()
+            return cell is turn_unit_cell
+
+        return False
+
+    def getUnitCell(self, battle_unit):
+        if battle_unit is None:
+            return None
+
+        return self.board.get_cell(battle_unit.col, battle_unit.row)
+
     def nextTurn(self):
+        prev_unit = self.getTurnUnit()
+        if prev_unit is not None:
+            prev_unit.sprite.stop()
+
         self.unit_turn += 1
         if self.unit_turn >= len(self.unit_list):
             self.unit_turn = 0
 
         for cell in self.board.cellMap.itervalues():
-            cell.hide_indicator()
+            cell.remove_indicators()
 
         next_unit = self.getTurnUnit()
+        next_unit.sprite.sulk()
+
+        self.showRangeIndicators()
+        self.showUnitIndicators()
+
+        self.setSelectedCellPosition(next_unit.col, next_unit.row)
+
         self.scroller.set_focus(*Board.board_to_layer(next_unit.col, next_unit.row))
 
-        for cell_pos in self.getCellsInRange(next_unit.col, next_unit.row, next_unit.move):
+    def showRangeIndicators(self):
+        turn_unit = self.getTurnUnit()
+        for cell_pos in self.getCellsInRange(turn_unit.col, turn_unit.row, turn_unit.move):
             cell = self.getCellAt(*cell_pos)
             if self.isCellAvailable(*cell_pos):
-                cell.show_indicator(Resources.move_indicator_img)
-            else:
-                cell.show_indicator(Resources.enemy_indicator_img)
+                cell.show_move_indicator()
+            elif self.isTurnUnitCell(cell):
+                cell.show_player_indicator()
+
+    def showUnitIndicators(self):
+        for battle_unit in self.unit_list:
+            show_indicator = not self.isTurnUnit(battle_unit)
+            battle_unit.sprite.showIndicator(visible=show_indicator)
 
     def getCellsInRange(self, col, row, max_dist):
         cells = {}

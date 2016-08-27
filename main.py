@@ -63,19 +63,12 @@ for mech in mech_list:
     board.add(sprite.shadow, z=sprite_z)
     board.add(sprite, z=sprite_z+1)
 
-# only sulk during the unit's turn
-first_unit = battle.getTurnUnit()
-first_unit.sprite.sulk()
-
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
 scroller.add(key_events, z=-1)
 scroller.add(mouse_events, z=1)
 
 battle.setScroller(scroller)
-
-# TODO: focus on an actual unit
-scroller.set_focus(*Board.board_to_layer(first_unit.col, first_unit.row))
 
 scene = cocos.scene.Scene(menu.MainMenu(scroller))
 

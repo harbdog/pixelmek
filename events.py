@@ -48,15 +48,7 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
 
         elif char == "SPACE":
             # skip to next unit for testing purposes
-            prev_unit = self.battle.getTurnUnit()
-            prev_unit.sprite.stop()
-            prev_unit.sprite.indicator.visible = False
-
             self.battle.nextTurn()
-
-            next_unit = self.battle.getTurnUnit()
-            next_unit.sprite.sulk()
-            next_unit.sprite.indicator.visible = True
 
         elif char == "W":
             mech.sprite.strut()
@@ -65,56 +57,36 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
             mech.sprite.sulk()
 
         elif char == "LEFT":
-            # check for legal move first
-            turn_unit = self.battle.getTurnUnit()
-            chk_colnum = turn_unit.col - 1
-            chk_rownum = turn_unit.row
+            # move selection left
+            cell_pos = self.battle.getSelectedCellPosition()
+            if cell_pos is None:
+                return
 
-            if self.battle.isCellAvailable(chk_colnum, chk_rownum):
-                turn_unit.col = chk_colnum
-                turn_unit.row = chk_rownum
-
-                mech.sprite.strut(reverse=True)
-                mech.sprite.moveBy(-32, 0, mech.sprite.sulk)
+            self.battle.setSelectedCellPosition(cell_pos[0] - 1, cell_pos[1])
 
         elif char == "RIGHT":
-            # check for legal move first
-            turn_unit = self.battle.getTurnUnit()
-            chk_colnum = turn_unit.col + 1
-            chk_rownum = turn_unit.row
+            # move selection right
+            cell_pos = self.battle.getSelectedCellPosition()
+            if cell_pos is None:
+                return
 
-            if self.battle.isCellAvailable(chk_colnum, chk_rownum):
-                turn_unit.col = chk_colnum
-                turn_unit.row = chk_rownum
-
-                mech.sprite.strut()
-                mech.sprite.moveBy(32, 0, mech.sprite.sulk)
+            self.battle.setSelectedCellPosition(cell_pos[0] + 1, cell_pos[1])
 
         elif char == "UP":
-            # check for legal move first
-            turn_unit = self.battle.getTurnUnit()
-            chk_colnum = turn_unit.col
-            chk_rownum = turn_unit.row + 1
+            # move selection up
+            cell_pos = self.battle.getSelectedCellPosition()
+            if cell_pos is None:
+                return
 
-            if self.battle.isCellAvailable(chk_colnum, chk_rownum):
-                turn_unit.col = chk_colnum
-                turn_unit.row = chk_rownum
-
-                mech.sprite.strut(reverse=True)
-                mech.sprite.moveBy(0, 32, mech.sprite.sulk)
+            self.battle.setSelectedCellPosition(cell_pos[0], cell_pos[1] + 1)
 
         elif char == "DOWN":
-            # check for legal move first
-            turn_unit = self.battle.getTurnUnit()
-            chk_colnum = turn_unit.col
-            chk_rownum = turn_unit.row - 1
+            # move selection down
+            cell_pos = self.battle.getSelectedCellPosition()
+            if cell_pos is None:
+                return
 
-            if self.battle.isCellAvailable(chk_colnum, chk_rownum):
-                turn_unit.col = chk_colnum
-                turn_unit.row = chk_rownum
-
-                mech.sprite.strut()
-                mech.sprite.moveBy(0, -32, mech.sprite.sulk)
+            self.battle.setSelectedCellPosition(cell_pos[0], cell_pos[1] - 1)
 
     def on_key_release(self, key, modifiers):
         """This function is called when a key is released.
@@ -185,6 +157,8 @@ class MouseEvents(cocos.layer.ScrollableLayer):
         if buttons & mouse.RIGHT:
             if target_unit is None:
                 return
+
+            self.battle.setSelectedCellPosition(*dest_cell)
 
             # minimum travel time to target used to determine when to show the damage floater
             min_travel_time = None
@@ -543,6 +517,8 @@ class MouseEvents(cocos.layer.ScrollableLayer):
             chk_cell = self.battle.board.layer_to_board(real_x, real_y)
             chk_col = chk_cell[0]
             chk_row = chk_cell[1]
+
+            self.battle.setSelectedCellPosition(*chk_cell)
 
             if self.battle.isCellAvailable(chk_col, chk_row):
                 animate_reverse = (turn_unit.col - chk_col > 0) or (turn_unit.row - chk_row > 0)

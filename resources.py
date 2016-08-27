@@ -16,6 +16,8 @@ class Resources(object):
         Resources.buildings_tex = pyglet.image.TextureGrid(buildings_grid)
         Resources.ground_img = pyglet.resource.image("images/board/ground-dark.png")
 
+        Resources.action_indicator_img = pyglet.resource.animation("images/ui/action-indicator.gif")
+
         Resources.player_indicator_img = pyglet.resource.image("images/ui/player-indicator.png")
         Resources.friendly_indicator_img = pyglet.resource.image("images/ui/friendly-indicator.png")
         Resources.enemy_indicator_img = pyglet.resource.image("images/ui/enemy-indicator.png")

@@ -2,6 +2,7 @@ import cocos
 import pyglet
 import settings
 
+from battle import Battle
 from cocos.director import director
 from cocos.menu import *
 from cocos.scenes import *
@@ -38,6 +39,8 @@ class MainMenu(Menu):
         scene = cocos.scene.Scene()
         scene.add(self.scroller)
         director.push(scene)
+
+        Battle.BATTLE.nextTurn()
 
     def on_settings(self):
         print("Settings...")
