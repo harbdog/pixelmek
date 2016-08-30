@@ -1,4 +1,5 @@
 import cocos
+import floaters
 import pyglet
 
 from cocos.batch import BatchNode
@@ -114,10 +115,24 @@ class Cell(cocos.sprite.Sprite):
     INDICATOR_FRIENDLY = 'friendly'
     INDICATOR_MOVE = 'move'
     INDICATOR_ACTION = 'action'
+    INDICATOR_RANGE = 'range'
 
     def __init__(self, image):
         super(Cell, self).__init__(image)
         self.indicators = {}
+        self.range_to_display = 0
+
+    def show_range_to_display(self, show=True):
+        indicator_name = Cell.INDICATOR_RANGE
+        if show and self.range_to_display > 0:
+            indicator = floaters.TextFloater(str(self.range_to_display))
+            indicator.position = self.position[0], self.position[1] - self.height//4
+
+            Board.BOARD.add(indicator, z=1000)
+
+            self.indicators[indicator_name] = indicator
+        else:
+            self._remove_indicator(indicator_name)
 
     def show_player_indicator(self, show=True):
         indicator_name = Cell.INDICATOR_PLAYER
@@ -170,6 +185,8 @@ class Cell(cocos.sprite.Sprite):
             del self.indicators[indicator_name]
 
     def remove_indicators(self):
+        self.range_to_display = 0
+
         for indicator_name in self.indicators.keys():
             indicator = self.indicators[indicator_name]
             indicator.kill()
