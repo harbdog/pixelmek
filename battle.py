@@ -45,12 +45,14 @@ class Battle(object):
         prev_cell = self.getSelectedCell()
         if prev_cell is not None:
             prev_cell.show_action_indicator(show=False)
+            prev_cell.show_range_to_display(show=False)
 
         self.sel_cell_pos = col, row
         new_cell = self.getSelectedCell()
 
         if new_cell is not None:
             new_cell.show_action_indicator()
+            new_cell.show_range_to_display()
 
             # TODO: only refocus if getting too close to edge of display
             # self.scroller.set_focus(*Board.board_to_layer(col, row))
@@ -116,10 +118,13 @@ class Battle(object):
 
     def showRangeIndicators(self):
         turn_unit = self.getTurnUnit()
-        for cell_pos in self.getCellsInRange(turn_unit.col, turn_unit.row, turn_unit.move):
+        cells_in_range = self.getCellsInRange(turn_unit.col, turn_unit.row, turn_unit.move)
+        for cell_pos in cells_in_range:
             cell = self.getCellAt(*cell_pos)
+            cell_range = cells_in_range[cell_pos]
             if self.isCellAvailable(*cell_pos):
                 cell.show_move_indicator()
+                cell.range_to_display = cell_range
             elif self.isTurnUnitCell(cell):
                 cell.show_player_indicator()
 
@@ -139,7 +144,7 @@ class Battle(object):
                 or col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
             return
 
-        if dist > 0:
+        if dist >= 0:
             cells[cell] = dist
 
         # TODO: distinguish between LOS related range and move related range recursion

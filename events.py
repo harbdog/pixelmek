@@ -46,9 +46,48 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
         if char == "P":
             mech.sprite.pause()
 
-        elif char == "SPACE":
-            # skip to next unit for testing purposes
-            self.battle.nextTurn()
+        elif char == "SPACE" or char == "RETURN":
+            cell_pos = self.battle.getSelectedCellPosition()
+            if cell_pos is None:
+                return
+
+            sel_cell = self.battle.getCellAt(*cell_pos)
+            if sel_cell is None:
+                return
+
+            if sel_cell.range_to_display == 0:
+                # skip to next unit for testing purposes
+                self.battle.nextTurn()
+                return
+
+            chk_col = cell_pos[0]
+            chk_row = cell_pos[1]
+
+            turn_unit = self.battle.getTurnUnit()
+
+            if self.battle.isCellAvailable(chk_col, chk_row):
+                turn_unit.move -= sel_cell.range_to_display
+
+                for cell in self.battle.board.cellMap.itervalues():
+                    cell.remove_indicators()
+
+                animate_reverse = (turn_unit.col - chk_col > 0) or (turn_unit.row - chk_row > 0)
+                battle = self.battle
+
+                def ready_next_move():
+                    turn_unit.sprite.sulk()
+                    for chk_cell in battle.board.cellMap.itervalues():
+                        chk_cell.remove_indicators()
+
+                    battle.showRangeIndicators()
+                    battle.showUnitIndicators()
+
+                    battle.setSelectedCellPosition(turn_unit.col, turn_unit.row)
+
+                    battle.scroller.set_focus(*Board.board_to_layer(turn_unit.col, turn_unit.row))
+
+                turn_unit.sprite.strut(reverse=animate_reverse)
+                turn_unit.sprite.moveToCell(chk_col, chk_row, animate_reverse, ready_next_move)
 
         elif char == "W":
             mech.sprite.strut()
@@ -87,6 +126,9 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
                 return
 
             self.battle.setSelectedCellPosition(cell_pos[0], cell_pos[1] - 1)
+
+        else:
+            print("unused binding: " + char)
 
     def on_key_release(self, key, modifiers):
         """This function is called when a key is released.
