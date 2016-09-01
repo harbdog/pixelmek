@@ -19,6 +19,9 @@ from resources import Resources
 
 
 def actOnCell(battle, col, row):
+    if not battle.isActionReady():
+        return
+
     # perform an action based on the given cell and/or its occupants
     turn_unit = battle.getTurnUnit()
 
@@ -38,19 +41,15 @@ def actOnCell(battle, col, row):
 
     cell_unit = battle.getUnitAtCell(col, row)
 
-    if cell_unit is not None:
-        # TODO: make sure it is an enemy unit
+    if col == turn_unit.col and row == turn_unit.row:
+        # TODO: ask confirmation to end the turn without firing
+        print("Skipping remainder of the turn!")
 
-        battle.showUnitIndicators(visible=False)
-        for chk_cell in battle.board.cellMap.itervalues():
-            chk_cell.remove_indicators()
-
-        attack_time = performAttackOnUnit(battle, cell_unit)
-
-        # start the next turn when the attack is completed
-        battle.board.do(Delay(attack_time) + CallFunc(battle.nextTurn))
+        battle.nextTurn()
 
     elif battle.isCellAvailable(col, row) and cell.range_to_display > 0:
+        battle.setActionReady(False)
+
         turn_unit.move -= cell.range_to_display
 
         for cell in battle.board.cellMap.itervalues():
@@ -67,11 +66,28 @@ def actOnCell(battle, col, row):
             battle.showUnitIndicators()
 
             battle.setSelectedCellPosition(turn_unit.col, turn_unit.row)
-
             battle.scroller.set_focus(*Board.board_to_layer(turn_unit.col, turn_unit.row))
+
+            battle.setActionReady(True)
 
         turn_unit.sprite.strut(reverse=animate_reverse)
         turn_unit.sprite.moveToCell(col, row, animate_reverse, _ready_next_move)
+
+    elif cell_unit is not None \
+            and not cell_unit.isDestroyed() \
+            and cell_unit is not turn_unit:
+        battle.setActionReady(False)
+
+        # TODO: make sure it is an enemy unit
+
+        battle.showUnitIndicators(visible=False)
+        for chk_cell in battle.board.cellMap.itervalues():
+            chk_cell.remove_indicators()
+
+        attack_time = performAttackOnUnit(battle, cell_unit)
+
+        # start the next turn when the attack is completed
+        battle.board.do(Delay(attack_time) + CallFunc(battle.nextTurn))
 
 
 def moveSelectionTo(battle, col, row):
@@ -91,15 +107,16 @@ def moveSelectionBy(battle, col_amt, row_amt):
 def performAttackOnUnit(battle, target_unit):
     # perform an attack on the given target BattleUnit
     turn_unit = battle.getTurnUnit()
-    if turn_unit is None or target_unit is None:
+    if turn_unit is None or target_unit is None\
+            or turn_unit.isDestroyed() or target_unit.isDestroyed():
         # TODO: make sure it is a player unit's turn
-        return
+        return 0
 
     src_cell = turn_unit.col, turn_unit.row
     dest_cell = target_unit.col, target_unit.row
 
     # minimum travel time to target used to determine when to show the damage floater
-    min_travel_time = None
+    min_travel_time = 0
     # maximum travel time to target used to determine when all animations are finished
     max_travel_time = 0
 
@@ -107,6 +124,12 @@ def performAttackOnUnit(battle, target_unit):
     cell_distance = Battle.getCellDistance(src_cell, dest_cell)
     target_range = Battle.getDistanceRange(cell_distance)
     print(target_range + ": " + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
+
+    # TODO: introduce dynamic damage (optional?)
+    attack_damage = int(getattr(turn_unit, target_range))
+
+    # apply damage to model before animating
+    attack_remainder = target_unit.applyDamage(attack_damage)
 
     # determine actual target point based on the target unit sprite size
     target_sprite = target_unit.getSprite()
@@ -167,7 +190,7 @@ def performAttackOnUnit(battle, target_unit):
                 ppc.do(action)
 
                 travel_time = 0.5 + ppc_t
-                if min_travel_time is None or min_travel_time > travel_time:
+                if min_travel_time == 0 or min_travel_time > travel_time:
                     min_travel_time = travel_time
 
                 if travel_time > max_travel_time:
@@ -220,7 +243,7 @@ def performAttackOnUnit(battle, target_unit):
                 flamer.do(action)
 
                 travel_time = flamer_t
-                if min_travel_time is None or min_travel_time > travel_time:
+                if min_travel_time == 0 or min_travel_time > travel_time:
                     min_travel_time = travel_time
 
                 if travel_time > max_travel_time:
@@ -296,7 +319,7 @@ def performAttackOnUnit(battle, target_unit):
                 weapon_channel.fadeout(las_duration_ms)
 
                 travel_time = 0.5
-                if min_travel_time is None or min_travel_time > travel_time:
+                if min_travel_time == 0 or min_travel_time > travel_time:
                     min_travel_time = travel_time
 
                 if travel_time > max_travel_time:
@@ -373,7 +396,7 @@ def performAttackOnUnit(battle, target_unit):
                     battle.board.add(ballistic, z=1000 + i)
 
                     travel_time = (i * 0.1) + ballistic_t
-                    if min_travel_time is None or min_travel_time > travel_time:
+                    if min_travel_time == 0 or min_travel_time > travel_time:
                         min_travel_time = travel_time
 
                     if travel_time > max_travel_time:
@@ -446,30 +469,39 @@ def performAttackOnUnit(battle, target_unit):
                     battle.board.add(missile, z=1000 + i)
 
                     travel_time = (i * 0.05) + missile_t
-                    if min_travel_time is None or min_travel_time > travel_time:
+                    if min_travel_time == 0 or min_travel_time > travel_time:
                         min_travel_time = travel_time
 
                     if travel_time > max_travel_time:
                         max_travel_time = travel_time
 
-    if min_travel_time is not None:
-        # scroll focus over to the target area halfway through the travel time
-        target_area = Board.board_to_layer(target_unit.col, target_unit.row)
+    # scroll focus over to the target area halfway through the travel time
+    target_area = Board.board_to_layer(target_unit.col, target_unit.row)
 
-        # show damage floater after the travel time of the first projectile to hit
-        floater = floaters.TextFloater("%s" % getattr(turn_unit, target_range))
-        floater.visible = False
-        floater.position = real_x, real_y + target_sprite.get_height() // 3
-        battle.board.add(floater, z=2000)
+    # show damage floater after the travel time of the first projectile to hit
+    floater = floaters.TextFloater("%i" % attack_damage)
+    floater.visible = False
+    floater.position = real_x, real_y + target_sprite.get_height() // 3
+    battle.board.add(floater, z=2000)
 
-        action = Delay(min_travel_time / 2) + CallFunc(battle.scroller.set_focus, *target_area) \
-            + Delay(min_travel_time / 2) + ToggleVisibility() \
-            + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
-            + FadeOut(1.0) + CallFunc(floater.kill)
-        floater.do(action)
+    action = Delay(min_travel_time / 2) + CallFunc(battle.scroller.set_focus, *target_area) \
+        + Delay(min_travel_time / 2) + ToggleVisibility() \
+        + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
+        + FadeOut(1.0) + CallFunc(floater.kill)
+    floater.do(action)
 
-        if action.duration > max_travel_time:
-            max_travel_time = action.duration
+    if action.duration > max_travel_time:
+        max_travel_time = action.duration
+
+    if attack_remainder > 0:
+        print("Overkill by %i!" % attack_remainder)
+
+    if target_unit.structure > 0:
+        print("Remaining %i/%i" % (target_unit.armor, target_unit.structure))
+    else:
+        print("Target destroyed!")
+        action = Delay(max_travel_time) + CallFunc(target_sprite.destroy)
+        target_sprite.do(action)
 
     return max_travel_time
 

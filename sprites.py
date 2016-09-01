@@ -96,6 +96,13 @@ class MechSprite(cocos.layer.Layer):
         }
         return times.get(self.battle_mech.getSize(), times[4])
 
+    def destroy(self):
+        # TODO: animate the destruction and show a wreckage
+        self.node.kill()
+        self.shadow.kill()
+        self.indicator.kill()
+        self.kill()
+
     def strut(self, reverse=False):
         self.reset()
 
@@ -247,6 +254,8 @@ class MechSprite(cocos.layer.Layer):
                 + CallFunc(self.spawnStompCloud, stomp_reverse)
 
         self.do(stomp_action)
+
+        return time
 
     def spawnStompCloud(self, reverse):
         # show cloud particles from stomps

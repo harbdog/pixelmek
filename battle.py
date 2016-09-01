@@ -22,11 +22,20 @@ class Battle(object):
 
         self.sel_cell_pos = None
 
+        # indicator for when an action can be performed or waiting on animation
+        self.action_ready = False
+
     def setBoard(self, board):
         self.board = board
 
     def setScroller(self, scroller):
         self.scroller = scroller
+
+    def isActionReady(self):
+        return self.action_ready
+
+    def setActionReady(self, is_ready):
+        self.action_ready = is_ready
 
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
@@ -95,18 +104,29 @@ class Battle(object):
         return self.board.get_cell(battle_unit.col, battle_unit.row)
 
     def nextTurn(self):
+        self.setActionReady(False)
+
         prev_unit = self.getTurnUnit()
         if prev_unit is not None:
             prev_unit.sprite.stop()
+
+        for cell in self.board.cellMap.itervalues():
+            cell.remove_indicators()
 
         self.unit_turn += 1
         if self.unit_turn >= len(self.unit_list):
             self.unit_turn = 0
 
-        for cell in self.board.cellMap.itervalues():
-            cell.remove_indicators()
-
         next_unit = self.getTurnUnit()
+
+        if next_unit.isDestroyed():
+            while next_unit.isDestroyed():
+                self.unit_turn += 1
+                if self.unit_turn >= len(self.unit_list):
+                    self.unit_turn = 0
+
+                next_unit = self.getTurnUnit()
+
         next_unit.sprite.sulk()
 
         self.showRangeIndicators()
@@ -115,6 +135,8 @@ class Battle(object):
         self.setSelectedCellPosition(next_unit.col, next_unit.row)
 
         self.scroller.set_focus(*Board.board_to_layer(next_unit.col, next_unit.row))
+
+        self.setActionReady(True)
 
     def showRangeIndicators(self):
         turn_unit = self.getTurnUnit()
@@ -165,7 +187,8 @@ class Battle(object):
 
         # check to see if any units occupy the space
         for battle_unit in self.unit_list:
-            if battle_unit.col == col and battle_unit.row == row:
+            if battle_unit.col == col and battle_unit.row == row \
+                    and not battle_unit.isDestroyed():
                 return False
 
         loc = (col, row)
@@ -190,7 +213,8 @@ class Battle(object):
 
         # find the unit that occupies the space
         for battle_unit in self.unit_list:
-            if battle_unit.col == col and battle_unit.row == row:
+            if battle_unit.col == col and battle_unit.row == row \
+                    and not battle_unit.isDestroyed():
                 return battle_unit
 
         return None
@@ -240,8 +264,8 @@ class BattleMech(object):
         self.medium = mech.medium
         self.long = mech.long
         self.heat = 0
-        self.armor = mech.armor
-        self.structure = mech.structure
+        self.armor = int(mech.armor)
+        self.structure = int(mech.structure)
 
     def __repr__(self):
         return "%s(name='%s %s', location=[%s,%s])" % (
@@ -259,3 +283,37 @@ class BattleMech(object):
 
     def getSize(self):
         return self.mech.size
+
+    def isDestroyed(self):
+        return self.structure <= 0
+
+    def applyDamage(self, damage):
+        # returns a number >0 only if there is excess damage after being destroyed
+        if damage <= 0:
+            return 0
+        elif self.armor == 0 and self.structure == 0:
+            return damage
+
+        remaining_damage = damage
+
+        if self.armor > 0:
+            if remaining_damage > self.armor:
+                # all armor will be destroyed
+                remaining_damage -= self.armor
+                self.armor = 0
+            else:
+                # only some armor is destroyed
+                self.armor -= remaining_damage
+                remaining_damage = 0
+
+        if remaining_damage > 0 and self.structure > 0:
+            if remaining_damage > self.structure:
+                # all structure will be destroyed
+                remaining_damage -= self.structure
+                self.structure = 0
+            else:
+                # only some structure is destroyed
+                self.structure -= remaining_damage
+                remaining_damage = 0
+
+        return remaining_damage
