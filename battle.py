@@ -22,20 +22,11 @@ class Battle(object):
 
         self.sel_cell_pos = None
 
-        # indicator for when an action can be performed or waiting on animation
-        self.action_ready = False
-
     def setBoard(self, board):
         self.board = board
 
     def setScroller(self, scroller):
         self.scroller = scroller
-
-    def isActionReady(self):
-        return self.action_ready
-
-    def setActionReady(self, is_ready):
-        self.action_ready = is_ready
 
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
@@ -104,8 +95,6 @@ class Battle(object):
         return self.board.get_cell(battle_unit.col, battle_unit.row)
 
     def nextTurn(self):
-        self.setActionReady(False)
-
         prev_unit = self.getTurnUnit()
         if prev_unit is not None:
             prev_unit.sprite.stop()
@@ -139,8 +128,6 @@ class Battle(object):
         self.setSelectedCellPosition(next_unit.col, next_unit.row)
 
         self.scroller.set_focus(*Board.board_to_layer(next_unit.col, next_unit.row))
-
-        self.setActionReady(True)
 
     def showRangeIndicators(self):
         turn_unit = self.getTurnUnit()

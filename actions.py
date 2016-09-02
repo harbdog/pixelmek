@@ -18,8 +18,21 @@ from math import atan2, degrees, pi
 from resources import Resources
 
 
+class Actions(object):
+    # indicator for when an action can be performed or waiting on animation
+    action_ready = False
+
+
+def isActionReady():
+    return Actions.action_ready
+
+
+def setActionReady(is_ready):
+    Actions.action_ready = is_ready
+
+
 def actOnCell(battle, col, row):
-    if not battle.isActionReady():
+    if not isActionReady():
         return
 
     # perform an action based on the given cell and/or its occupants
@@ -36,19 +49,24 @@ def actOnCell(battle, col, row):
     # if the cell is not already selected, select it instead
     sel_pos = battle.getSelectedCellPosition()
     if sel_pos is None or col != sel_pos[0] or row != sel_pos[1]:
+        print(str(sel_pos)+" ? "+str(col)+", "+str(row))
         moveSelectionTo(battle, col, row)
         return
 
     cell_unit = battle.getUnitAtCell(col, row)
 
     if col == turn_unit.col and row == turn_unit.row:
+        setActionReady(False)
+
         # TODO: ask confirmation to end the turn without firing
         print("Skipping remainder of the turn!")
 
         battle.nextTurn()
 
+        setActionReady(True)
+
     elif battle.isCellAvailable(col, row) and cell.range_to_display > 0:
-        battle.setActionReady(False)
+        setActionReady(False)
 
         turn_unit.move -= cell.range_to_display
 
@@ -68,7 +86,7 @@ def actOnCell(battle, col, row):
             battle.setSelectedCellPosition(turn_unit.col, turn_unit.row)
             battle.scroller.set_focus(*Board.board_to_layer(turn_unit.col, turn_unit.row))
 
-            battle.setActionReady(True)
+            setActionReady(True)
 
         turn_unit.sprite.strut(reverse=animate_reverse)
         turn_unit.sprite.moveToCell(col, row, animate_reverse, _ready_next_move)
@@ -76,7 +94,7 @@ def actOnCell(battle, col, row):
     elif cell_unit is not None \
             and not cell_unit.isDestroyed() \
             and cell_unit is not turn_unit:
-        battle.setActionReady(False)
+        setActionReady(False)
 
         # TODO: make sure it is an enemy unit
 
@@ -86,8 +104,13 @@ def actOnCell(battle, col, row):
 
         attack_time = performAttackOnUnit(battle, cell_unit)
 
+        def _ready_next_turn():
+            setActionReady(False)
+            battle.nextTurn()
+            setActionReady(True)
+
         # start the next turn when the attack is completed
-        battle.board.do(Delay(attack_time) + CallFunc(battle.nextTurn))
+        battle.board.do(Delay(attack_time) + CallFunc(_ready_next_turn))
 
 
 def moveSelectionTo(battle, col, row):

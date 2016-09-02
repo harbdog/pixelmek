@@ -1,6 +1,7 @@
 import cocos
 import pyglet
 import settings
+import actions
 
 from battle import Battle
 from cocos.director import director
@@ -41,6 +42,7 @@ class MainMenu(Menu):
         director.push(scene)
 
         Battle.BATTLE.nextTurn()
+        actions.setActionReady(True)
 
     def on_settings(self):
         print("Settings...")
