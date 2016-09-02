@@ -127,6 +127,10 @@ class Battle(object):
 
                 next_unit = self.getTurnUnit()
 
+        # initialize the unit for its next turn
+        # TODO: account for critical and heat effects on move
+        next_unit.move = next_unit.mech.move
+
         next_unit.sprite.sulk()
 
         self.showRangeIndicators()
