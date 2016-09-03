@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/2697/rifleman-rfl-3n
 name: Rifleman
 variant: RFL-3N
+tech: is
 image_path: images/mechs/rifleman.png
 cost: 4,852,800
 pv: 26

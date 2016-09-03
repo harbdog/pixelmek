@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/1985/mad-cat-timber-wolf-prime
 name: Mad Cat (Timber Wolf)
 variant: Prime
+tech: cl
 image_path: images/mechs/timberwolf.png
 cost: 24,099,688
 pv: 49

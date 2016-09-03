@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/74/archer-arc-2r
 name: Archer
 variant: ARC-2R
+tech: is
 image_path: images/mechs/archer.png
 cost: 6,180,974
 pv: 39

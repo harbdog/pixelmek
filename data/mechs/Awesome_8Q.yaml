@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/174/awesome-aws-8q
 name: Awesome
 variant: AWS-8Q
+tech: is
 image_path: images/mechs/awesome.png
 cost: 6,598,170
 pv: 39

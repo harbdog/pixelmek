@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/2598/puma-adder-prime
 name: Puma (Adder)
 variant: Prime
+tech: cl
 image_path: images/mechs/adder.png
 cost: 7,021,688
 pv: 27

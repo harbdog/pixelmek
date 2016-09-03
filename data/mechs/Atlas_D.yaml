@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/140/atlas-as7-d
 name: Atlas
 variant: AS7-D
+tech: is
 image_path: images/mechs/atlas.png
 cost: 9,412,000
 pv: 52

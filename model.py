@@ -6,10 +6,14 @@ import battle
 class Mech(yaml.YAMLObject):
     yaml_tag = u'!Mech'
 
-    def __init__(self, name, variant, cost, pv, _type, size, tmm, move, jump, role, skill,
+    TECH_CLAN = 'cl'
+    TECH_IS = 'is'
+
+    def __init__(self, name, variant, tech, cost, pv, _type, size, tmm, move, jump, role, skill,
                  short, medium, _long, overheat, armor, structure, specials, weapons, image_path):
         self.name = name
         self.variant = variant
+        self.tech = tech
         self.cost = cost
         self.pv = pv
         self.type = _type

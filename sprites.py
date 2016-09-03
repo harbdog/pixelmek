@@ -11,6 +11,7 @@ from cocos.euclid import Point2
 from cocos.particle_systems import Meteor
 from cocos.sprite import Sprite
 from resources import Resources
+from model import Mech
 
 
 class MechSprite(cocos.layer.Layer):
@@ -34,7 +35,11 @@ class MechSprite(cocos.layer.Layer):
         self.height = img_static.height
 
         # TODO: setup the non square friendly/enemy indicators based on team
-        indicator = Sprite(Resources.enemy_indicator_img)
+        if battle_mech.mech.tech == Mech.TECH_IS:
+            indicator = Sprite(Resources.friendly_indicator_img)
+        else:
+            indicator = Sprite(Resources.enemy_indicator_img)
+
         # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
         indicator.visible = False
         # indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)

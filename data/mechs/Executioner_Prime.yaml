@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/1211/gladiator-executioner-prime
 name: Gladiator (Executioner)
 variant: Prime
+tech: cl
 image_path: images/mechs/executioner.png
 cost: 35,613,135
 pv: 50

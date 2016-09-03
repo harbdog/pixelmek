@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/1552/hunchback-hbk-4g
 name: Hunchback
 variant: HBK-4G
+tech: is
 image_path: images/mechs/hunchback.png
 cost: 3,437,875
 pv: 28

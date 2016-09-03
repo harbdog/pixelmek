@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/516/centurion-cn9-a
 name: Centurion
 variant: CN9-A
+tech: is
 image_path: images/mechs/centurion.png
 cost: 3,383,500
 pv: 28

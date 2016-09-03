@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/1692/jenner-jr7-d
 name: Jenner
 variant: JR7-D
+tech: is
 image_path: images/mechs/jenner.png
 cost: 3,161,925
 pv: 20

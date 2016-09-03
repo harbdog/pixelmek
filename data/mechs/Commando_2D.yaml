@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/670/commando-com-2d
 name: Commando
 variant: COM-2D
+tech: is
 image_path: images/mechs/commando.png
 cost: 1,823,750
 pv: 15

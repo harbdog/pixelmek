@@ -2,6 +2,7 @@
 # http://www.masterunitlist.info/Unit/Details/2892/shadow-cat-prime
 name: Shadow Cat
 variant: Prime
+tech: cl
 image_path: images/mechs/shadowcat.png
 cost: 11,713,010
 pv: 32
