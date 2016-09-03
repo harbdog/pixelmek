@@ -49,7 +49,6 @@ def actOnCell(battle, col, row):
     # if the cell is not already selected, select it instead
     sel_pos = battle.getSelectedCellPosition()
     if sel_pos is None or col != sel_pos[0] or row != sel_pos[1]:
-        print(str(sel_pos)+" ? "+str(col)+", "+str(row))
         moveSelectionTo(battle, col, row)
         return
 
@@ -523,8 +522,19 @@ def performAttackOnUnit(battle, target_unit):
         print("Remaining %i/%i" % (target_unit.armor, target_unit.structure))
     else:
         print("Target destroyed!")
-        action = Delay(max_travel_time) + CallFunc(target_sprite.destroy)
-        target_sprite.do(action)
+        # show destroyed floater after the travel time of the first projectile to hit
+        destroyed = floaters.TextFloater("DESTROYED")
+        destroyed.visible = False
+        destroyed.position = real_x, real_y + target_sprite.get_height() // 3
+        battle.board.add(destroyed, z=5000)
+
+        action = Delay(max_travel_time) + ToggleVisibility() \
+            + (MoveBy((0, Board.TILE_SIZE), 1.0) | CallFunc(create_destruction_explosions, battle.board, target_unit)) \
+            + Delay(0.5) + CallFunc(target_sprite.destroy) + FadeOut(2.0) + CallFunc(destroyed.kill)
+        destroyed.do(action)
+
+        # give a bit of extra time to explode
+        max_travel_time = action.duration
 
     return max_travel_time
 
@@ -605,6 +615,35 @@ def create_lbx_impact(weapon, board, pos):
         ballistic_impact.scale = 0.5 * weapon.scale
         ballistic_impact.rotation = random.randint(0, 360)
         board.add(ballistic_impact, z=1000)
+
+
+def create_destruction_explosions(board, battle_unit):
+    unit_sprite = battle_unit.getSprite()
+    pos = unit_sprite.position[0], unit_sprite.position[1] + (unit_sprite.height // 3)
+
+    actions = Delay(0)
+
+    def _add_random_explosion():
+        offset_x = random.randint(-unit_sprite.width // 3, unit_sprite.width // 3)
+        offset_y = random.randint(-unit_sprite.height // 4, unit_sprite.height // 4)
+
+        rand_pos = pos[0] + offset_x, pos[1] + offset_y
+
+        coin_flip = random.randint(0, 1)
+
+        if coin_flip == 0:
+            missile_impact = MissileImpact(rand_pos)
+            missile_impact.rotation = random.randint(0, 360)
+            board.add(missile_impact, z=1000)
+        else:
+            ballistic_impact = BallisticImpact(rand_pos)
+            ballistic_impact.rotation = random.randint(0, 360)
+            board.add(ballistic_impact, z=1000)
+
+    for i in range(20):
+        actions += CallFunc(_add_random_explosion) + Delay(0.1)
+
+    board.do(actions)
 
 
 def random_offset(max_offset=12):

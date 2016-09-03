@@ -30,6 +30,9 @@ class MechSprite(cocos.layer.Layer):
 
         img_static = Sprite(mech_img_grid[0])
 
+        self.width = img_static.width
+        self.height = img_static.height
+
         # TODO: setup the non square friendly/enemy indicators based on team
         indicator = Sprite(Resources.enemy_indicator_img)
         # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
