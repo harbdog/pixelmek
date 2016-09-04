@@ -1,0 +1,31 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/2757/ryoken-stormcrow-prime
+name: Ryoken (Stormcrow)
+variant: Prime
+tech: cl
+image_path: images/mechs/stormcrow.png
+tonnage: 55
+cost: 11,713,010
+pv: 32
+type: BM
+size: 2
+tmm: 3
+move: 16
+jump: 12
+role: Striker
+skill: 4
+short: 3
+medium: 3
+long: 2
+overheat: 0
+armor: 4
+structure: 2
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/prb.yaml: True
+- !include ../specials/rcn.yaml: True
+weapons:
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [16, 24]}
+- !include ../weapons/cl_erml.yaml: {location: RT, offset: [-8, 28]}
+- !include ../weapons/cl_gauss.yaml: {location: RA, offset: [-18, 24]}

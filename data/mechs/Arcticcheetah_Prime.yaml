@@ -1,0 +1,36 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1384/hankyu-arctic-cheetah-prime
+name: Hankyi (Arctic Cheetah)
+variant: Prime
+tech: cl
+image_path: images/mechs/arctic_cheetah.png
+tonnage: 30
+cost: 7,160,238
+pv: 29
+type: BM
+size: 1
+tmm: 3
+move: 16
+jump: 12
+role: Striker
+skill: 4
+short: 3
+medium: 2
+long: 1
+overheat: 0
+armor: 3
+structure: 2
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/ecm.yaml: True
+- !include ../specials/idf.yaml: True
+- !include ../specials/prb.yaml: True
+- !include ../specials/rcn.yaml: True
+- !include ../specials/tag.yaml: True
+weapons:
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 14]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-12, 14]}
+- !include ../weapons/cl_lrm.yaml: {location: LA, count: 5, offset: [10, 32]}
+- !include ../weapons/cl_lrm.yaml: {location: RA, count: 5, offset: [-12, 32]}
+- !include ../weapons/cl_flamer.yaml: {location: RT, offset: [-10, 24]}

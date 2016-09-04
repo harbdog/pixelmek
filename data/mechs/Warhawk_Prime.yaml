@@ -1,0 +1,31 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/2097/masakari-warhawk-prime
+name: Masakari (Warhawk)
+variant: Prime
+tech: cl
+image_path: images/mechs/warhawk.png
+tonnage: 85
+cost: 35,613,135
+pv: 50
+type: BM
+size: 4
+tmm: 2
+move: 10
+jump: 8
+role: Sniper
+skill: 4
+short: 4
+medium: 4
+long: 4
+overheat: 0
+armor: 9
+structure: 5
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+weapons:
+- !include ../weapons/cl_gauss.yaml: {location: LA, offset: [18, 13]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-20, 11]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 11]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 22]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 24]}

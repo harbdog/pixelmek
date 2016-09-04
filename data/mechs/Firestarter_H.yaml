@@ -1,0 +1,29 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1096/firestarter-fs9-h
+name: Firestarter
+variant: FS9-H
+tech: is
+image_path: images/mechs/firestarter.png
+tonnage: 35
+cost: 3,161,925
+pv: 20
+type: BM
+size: 1
+tmm: 3
+move: 14
+jump: 10
+role: Striker
+skill: 4
+short: 2
+medium: 2
+long: 0
+overheat: 1
+armor: 2
+structure: 3
+specials:
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 16]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 19]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 16]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 19]}
+- !include ../weapons/is_srm.yaml: {location: CT, count: 4, offset: [0, 19]}
