@@ -1,0 +1,8 @@
+--- !Weapon
+name: Machine Gun
+short_name: MG
+range: short
+type: ballistic
+speed: 400
+scale: 0.4
+projectiles: 6

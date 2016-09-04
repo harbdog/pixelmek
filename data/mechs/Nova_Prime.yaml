@@ -5,27 +5,34 @@ variant: Prime
 tech: cl
 image_path: images/mechs/nova.png
 tonnage: 50
-cost: 11,713,010
-pv: 32
+cost: 11,586,250
+pv: 37
 type: BM
 size: 2
-tmm: 3
-move: 16
-jump: 12
-role: Striker
+tmm: 2
+move: 10
+jump: 10
+role: Skirmisher
 skill: 4
-short: 3
-medium: 3
-long: 2
-overheat: 0
-armor: 4
+short: 5
+medium: 5
+long: 0
+overheat: 4
+armor: 5
 structure: 2
 specials:
-- !include ../specials/case.yaml: True
+- !include ../specials/ene.yaml: True
 - !include ../specials/omni.yaml: True
-- !include ../specials/prb.yaml: True
-- !include ../specials/rcn.yaml: True
 weapons:
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [16, 24]}
-- !include ../weapons/cl_erml.yaml: {location: RT, offset: [-8, 28]}
-- !include ../weapons/cl_gauss.yaml: {location: RA, offset: [-18, 24]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [20, 19]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [23, 19]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [25, 17]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [25, 16]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [20, 14]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [23, 14]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-20, 19]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-23, 19]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-25, 17]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-25, 16]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-20, 14]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-23, 14]}

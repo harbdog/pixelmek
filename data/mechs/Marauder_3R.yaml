@@ -5,8 +5,8 @@ variant: MAD-3R
 tech: is
 image_path: images/mechs/marauder.png
 tonnage: 75
-cost: 4,852,800
-pv: 26
+cost: 6,627,250
+pv: 35
 type: BM
 size: 3
 tmm: 1
@@ -14,16 +14,15 @@ move: 8
 role: Sniper
 skill: 4
 short: 2
-medium: 2
-long: 1
-overheat: 2
-armor: 4
-structure: 5
+medium: 3
+long: 3
+overheat: 1
+armor: 6
+structure: 6
 specials:
 weapons:
-- !include ../weapons/is_ac5.yaml:  {location: LA, offset: [18, 22]}
-- !include ../weapons/is_ac5.yaml:  {location: RA, offset: [-18, 22]}
-- !include ../weapons/is_llas.yaml: {location: LA, offset: [18, 26]}
-- !include ../weapons/is_llas.yaml: {location: RA, offset: [-18, 26]}
-- !include ../weapons/is_mlas.yaml: {location: LT, offset: [8, 22]}
-- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-8, 22]}
+- !include ../weapons/is_ppc.yaml:  {location: LA, offset: [20, 16]}
+- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-20, 16]}
+- !include ../weapons/is_ac5.yaml:  {location: RT, offset: [-4, 36]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [18, 13]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-18, 13]}

@@ -5,25 +5,28 @@ variant: WHM-6R
 tech: is
 image_path: images/mechs/warhammer.png
 tonnage: 70
-cost: 4,852,800
-pv: 26
+cost: 6,023,384
+pv: 32
 type: BM
 size: 3
 tmm: 1
 move: 8
-role: Sniper
+role: Brawler
 skill: 4
-short: 2
-medium: 2
-long: 1
-overheat: 2
-armor: 4
-structure: 5
+short: 3
+medium: 3
+long: 2
+overheat: 1
+armor: 5
+structure: 6
 specials:
 weapons:
-- !include ../weapons/is_ac5.yaml:  {location: LA, offset: [18, 22]}
-- !include ../weapons/is_ac5.yaml:  {location: RA, offset: [-18, 22]}
-- !include ../weapons/is_llas.yaml: {location: LA, offset: [18, 26]}
-- !include ../weapons/is_llas.yaml: {location: RA, offset: [-18, 26]}
-- !include ../weapons/is_mlas.yaml: {location: LT, offset: [8, 22]}
-- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-8, 22]}
+- !include ../weapons/is_ppc.yaml:  {location: LA, offset: [18, 14]}
+- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-18, 14]}
+- !include ../weapons/is_mlas.yaml: {location: LT, offset: [8, 16]}
+- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-8, 16]}
+- !include ../weapons/is_slas.yaml: {location: LT, offset: [10, 16]}
+- !include ../weapons/is_slas.yaml: {location: RT, offset: [-10, 16]}
+- !include ../weapons/is_srm.yaml: {location: RT, count: 6, offset: [-10, 32]}
+- !include ../weapons/is_mg.yaml: {location: LT, offset: [-5, 16]}
+- !include ../weapons/is_mg.yaml: {location: RT, offset: [-5, 16]}

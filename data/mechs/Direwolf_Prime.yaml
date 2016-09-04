@@ -5,27 +5,33 @@ variant: Prime
 tech: cl
 image_path: images/mechs/dire_wolf.png
 tonnage: 100
-cost: 35,613,135
-pv: 50
+cost: 29,230,000
+pv: 55
 type: BM
 size: 4
-tmm: 2
-move: 10
-jump: 8
-role: Sniper
+tmm: 1
+move: 6
+role: Juggernaut
 skill: 4
-short: 4
-medium: 4
+short: 6
+medium: 6
 long: 4
-overheat: 0
-armor: 9
+overheat: 3
+armor: 10
 structure: 5
 specials:
 - !include ../specials/case.yaml: True
 - !include ../specials/omni.yaml: True
+- !include ../specials/ovl.yaml: True
 weapons:
-- !include ../weapons/cl_gauss.yaml: {location: LA, offset: [18, 13]}
-- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-20, 11]}
-- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 11]}
-- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 22]}
-- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 24]}
+- !include ../weapons/cl_erll.yaml: {location: LA, offset: [20, 13]}
+- !include ../weapons/cl_erll.yaml: {location: LA, offset: [18, 13]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-20, 13]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 13]}
+- !include ../weapons/cl_mpl.yaml: {location: LA, offset: [20, 15]}
+- !include ../weapons/cl_mpl.yaml: {location: LA, offset: [18, 15]}
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-20, 15]}
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-18, 15]}
+- !include ../weapons/cl_uac5.yaml:  {location: LA, offset: [18, 20]}
+- !include ../weapons/cl_uac5.yaml:  {location: RA, offset: [-18, 20]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 10, offset: [10, 38]}

@@ -5,30 +5,25 @@ variant: KGC-000
 tech: is
 image_path: images/mechs/king_crab.png
 tonnage: 100
-cost: 9,412,000
-pv: 52
+cost: 10,022,000
+pv: 46
 type: BM
 size: 4
 tmm: 1
 move: 6
 role: Juggernaut
 skill: 4
-short: 5
-medium: 5
-long: 2
-overheat: 0
-armor: 10
+short: 3
+medium: 3
+long: 1
+overheat: 3
+armor: 9
 structure: 8
 specials:
 - !include ../specials/idf.yaml: 1
-- !include ../specials/lrm.yaml: [1, 1, 1]
-- !include ../specials/rear.yaml: [1, 1, 0]
 - !include ../specials/ac.yaml: [2, 2, 0]
 weapons:
-- !include ../weapons/is_mlas.yaml: {location: LA, offset: [20, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-20, 16]}
-- !include ../weapons/is_mlas.yaml: {location: CT, offset: [2, 19]}
-- !include ../weapons/is_mlas.yaml: {location: CT, offset: [-2, 19]}
-- !include ../weapons/is_ac20.yaml:  {location: RT, offset: [-9, 22]}
-- !include ../weapons/is_lrm.yaml: {location: LT, count: 20, offset: [10, 32]}
-- !include ../weapons/is_srm.yaml: {location: LT, count: 6, offset: [10, 19]}
+- !include ../weapons/is_ac20.yaml:  {location: LA, offset: [24, 18]}
+- !include ../weapons/is_ac20.yaml:  {location: RA, offset: [-24, 18]}
+- !include ../weapons/is_llas.yaml: {location: RT, offset: [-12, 34]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 15, offset: [12, 34]}

@@ -1,0 +1,7 @@
+--- !Weapon
+name: Flamer
+short_name: FLAMR
+range: short
+type: energy
+color: [204, 102, 51]
+speed: 200
