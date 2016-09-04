@@ -4,6 +4,7 @@ name: Shadow Cat
 variant: Prime
 tech: cl
 image_path: images/mechs/shadowcat.png
+tonnage: 45
 cost: 11,713,010
 pv: 32
 type: BM

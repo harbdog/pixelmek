@@ -4,6 +4,7 @@ name: Archer
 variant: ARC-2R
 tech: is
 image_path: images/mechs/archer.png
+tonnage: 70
 cost: 6,180,974
 pv: 39
 type: BM

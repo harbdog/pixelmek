@@ -4,6 +4,7 @@ name: Puma (Adder)
 variant: Prime
 tech: cl
 image_path: images/mechs/adder.png
+tonnage: 35
 cost: 7,021,688
 pv: 27
 type: BM

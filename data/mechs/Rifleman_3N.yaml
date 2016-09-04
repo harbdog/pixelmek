@@ -4,6 +4,7 @@ name: Rifleman
 variant: RFL-3N
 tech: is
 image_path: images/mechs/rifleman.png
+tonnage: 60
 cost: 4,852,800
 pv: 26
 type: BM

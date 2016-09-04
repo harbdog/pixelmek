@@ -4,6 +4,7 @@ name: Mad Cat (Timber Wolf)
 variant: Prime
 tech: cl
 image_path: images/mechs/timberwolf.png
+tonnage: 75
 cost: 24,099,688
 pv: 49
 type: BM

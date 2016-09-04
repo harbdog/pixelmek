@@ -4,6 +4,7 @@ name: Hunchback
 variant: HBK-4G
 tech: is
 image_path: images/mechs/hunchback.png
+tonnage: 50
 cost: 3,437,875
 pv: 28
 type: BM

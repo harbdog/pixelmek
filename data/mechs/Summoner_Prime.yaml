@@ -4,6 +4,7 @@ name: Thor (Summoner)
 variant: Prime
 tech: cl
 image_path: images/mechs/summoner.png
+tonnage: 70
 cost: 21,150,834
 pv: 41
 type: BM

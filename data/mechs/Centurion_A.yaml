@@ -4,6 +4,7 @@ name: Centurion
 variant: CN9-A
 tech: is
 image_path: images/mechs/centurion.png
+tonnage: 50
 cost: 3,383,500
 pv: 28
 type: BM

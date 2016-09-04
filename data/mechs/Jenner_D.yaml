@@ -4,6 +4,7 @@ name: Jenner
 variant: JR7-D
 tech: is
 image_path: images/mechs/jenner.png
+tonnage: 35
 cost: 3,161,925
 pv: 20
 type: BM

@@ -4,6 +4,7 @@ name: Awesome
 variant: AWS-8Q
 tech: is
 image_path: images/mechs/awesome.png
+tonnage: 80
 cost: 6,598,170
 pv: 39
 type: BM

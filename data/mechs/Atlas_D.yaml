@@ -4,6 +4,7 @@ name: Atlas
 variant: AS7-D
 tech: is
 image_path: images/mechs/atlas.png
+tonnage: 100
 cost: 9,412,000
 pv: 52
 type: BM
