@@ -50,6 +50,12 @@ class Mech(yaml.YAMLObject):
 
         return self.jump
 
+    def isClan(self):
+        return self.tech == Mech.TECH_CLAN
+
+    def isInnerSphere(self):
+        return self.tech == Mech.TECH_IS
+
 
 class Weapon(yaml.YAMLObject):
     yaml_tag = u'!Weapon'

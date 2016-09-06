@@ -44,6 +44,13 @@ battle.setBoard(board)
 key_events = events.KeyboardEvents(battle)
 mouse_events = events.MouseEvents(battle)
 
+# set up test players
+player = Player("Human", team=0)
+bot = Player("Bot", team=1, is_bot=True)
+
+battle.addPlayer(player)
+battle.addPlayer(bot)
+
 # fill out the test board with mechs
 col = randint(0, battle.getNumCols())
 row = randint(0, battle.getNumRows())
@@ -53,7 +60,12 @@ for mech in mech_list:
         col = randint(0, battle.getNumCols()-1)
         row = randint(0, battle.getNumRows()-1)
 
-    battle_mech = BattleMech(mech, col, row)
+    owner = player
+    if mech.isClan():
+        # TODO: use menu system to determine which mechs the players get
+        owner = bot
+
+    battle_mech = BattleMech(owner, mech, col, row)
     battle.addUnit(battle_mech)
 
     sprite = sprites.MechSprite(battle_mech)

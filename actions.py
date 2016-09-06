@@ -37,6 +37,7 @@ def actOnCell(battle, col, row):
 
     # perform an action based on the given cell and/or its occupants
     turn_unit = battle.getTurnUnit()
+    turn_player = turn_unit.getPlayer()
 
     if turn_unit is None:
         # TODO: make sure it is a player unit's turn or do something else
@@ -90,12 +91,16 @@ def actOnCell(battle, col, row):
         turn_unit.sprite.strut(reverse=animate_reverse)
         turn_unit.sprite.moveToCell(col, row, animate_reverse, _ready_next_move)
 
+    elif Battle.isFriendlyUnit(turn_player, cell_unit):
+        # TODO: interact with friendly unit somehow, like swap cells with it if it has move remaining?
+        print("Friendly: " + str(cell_unit))
+
     elif cell_unit is not None \
             and not cell_unit.isDestroyed() \
             and cell_unit is not turn_unit:
         setActionReady(False)
 
-        # TODO: make sure it is an enemy unit
+        print("Enemy: " + str(cell_unit))
 
         battle.showUnitIndicators(visible=False)
         for chk_cell in battle.board.cellMap.itervalues():

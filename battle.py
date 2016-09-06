@@ -3,8 +3,6 @@ import model
 from board import Board
 from cocos.euclid import Point2
 
-from resources import Resources
-
 
 class Battle(object):
     RANGE_SHORT = 6
@@ -17,6 +15,9 @@ class Battle(object):
         Battle.BATTLE = self
         self.board = None
         self.scroller = None
+
+        self.player_list = []
+
         self.unit_list = []
         self.unit_turn = -1
 
@@ -30,6 +31,9 @@ class Battle(object):
 
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
+
+    def addPlayer(self, player):
+        self.player_list.append(player)
 
     def clearSelectedCell(self):
         prev_cell = self.getSelectedCell()
@@ -238,9 +242,22 @@ class Battle(object):
 
         return model.Weapon.RANGE_EXTREME
 
+    @staticmethod
+    def isFriendlyUnit(player, battle_unit):
+        if player is None or battle_unit is None \
+                or player.team == -1:
+            return False
+
+        return player.team == battle_unit.getTeam()
+
+    @staticmethod
+    def isEnemyUnit(player, battle_unit):
+        return not Battle.isFriendlyUnit(player, battle_unit)
+
 
 class BattleMech(object):
-    def __init__(self, mech, col, row):
+    def __init__(self, player, mech, col, row):
+        self.player = player
         self.mech = mech
         self.sprite = None
 
@@ -262,6 +279,15 @@ class BattleMech(object):
         return "%s(name='%s %s', location=[%s,%s])" % (
             self.__class__.__name__, self.mech.name, self.mech.variant, self.col, self.row
         )
+
+    def getPlayer(self):
+        return self.player
+
+    def getTeam(self):
+        if self.player is None:
+            return -1
+
+        return self.player.team
 
     def setSprite(self, sprite):
         self.sprite = sprite
@@ -308,3 +334,11 @@ class BattleMech(object):
                 remaining_damage = 0
 
         return remaining_damage
+
+
+class Player(object):
+
+    def __init__(self, callsign, team=-1, is_bot=False):
+        self.callsign = callsign
+        self.team = team
+        self.is_bot = is_bot

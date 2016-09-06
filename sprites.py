@@ -34,11 +34,11 @@ class MechSprite(cocos.layer.Layer):
         self.width = img_static.width
         self.height = img_static.height
 
-        # TODO: setup the non square friendly/enemy indicators based on team
-        if battle_mech.mech.tech == Mech.TECH_IS:
-            indicator = Sprite(Resources.friendly_indicator_img)
-        else:
+        # TODO: setup the non square friendly/enemy indicators based on team of current player's turn
+        if battle_mech.player.is_bot:
             indicator = Sprite(Resources.enemy_indicator_img)
+        else:
+            indicator = Sprite(Resources.friendly_indicator_img)
 
         # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
         indicator.visible = False
