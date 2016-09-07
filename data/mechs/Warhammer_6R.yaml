@@ -9,7 +9,6 @@ cost: 6,023,384
 pv: 32
 type: BM
 size: 3
-tmm: 1
 move: 8
 role: Brawler
 skill: 4

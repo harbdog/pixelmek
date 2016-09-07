@@ -9,7 +9,7 @@ class Mech(yaml.YAMLObject):
     TECH_CLAN = 'cl'
     TECH_IS = 'is'
 
-    def __init__(self, name, variant, tech, tonnage, cost, pv, _type, size, tmm, move, jump, role, skill,
+    def __init__(self, name, variant, tech, tonnage, cost, pv, _type, size, move, jump, role, skill,
                  short, medium, _long, overheat, armor, structure, specials, weapons, image_path):
         self.name = name
         self.variant = variant
@@ -19,7 +19,6 @@ class Mech(yaml.YAMLObject):
         self.pv = pv
         self.type = _type
         self.size = size
-        self.tmm = tmm
         self.move = move
         self.jump = jump
         self.role = role
