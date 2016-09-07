@@ -271,9 +271,18 @@ class BattleMech(object):
         self.short = mech.short
         self.medium = mech.medium
         self.long = mech.long
+
         self.heat = 0
+        self.shutdown = False
+
         self.armor = int(mech.armor)
         self.structure = int(mech.structure)
+
+        # critical hit effects
+        self.crit_engine = 0    # +1 Heat when weapons fire, 2nd hit: Unit destroyed
+        self.crit_mp = 0        # 1/2 Move (MV), minimum loss of 2 MV each, can be 0 (immobile)
+        self.crit_to_hit = 0    # +2 To-Hit each for weapons fire
+        self.crit_weapons = 0   # -1 Damage each for weapons fire
 
     def __repr__(self):
         return "%s(name='%s %s', location=[%s,%s])" % (
@@ -301,8 +310,37 @@ class BattleMech(object):
     def getSize(self):
         return self.mech.size
 
+    def getTurnMove(self):
+        turn_move = self.mech.move
+
+        if self.crit_mp > 0:
+            # reduce move based on critical hits
+            for i in range(self.crit_mp):
+                if turn_move > 0:
+                    move_reduce = round(turn_move / 2.0)
+                    if move_reduce < 2.0:
+                        # minimum of 2 MV reduction per critical
+                        move_reduce = 2.0
+
+                    turn_move -= int(move_reduce)
+
+        if self.heat > 0:
+            # reduce move based on heat
+            turn_move -= (self.heat * 2)
+
+        if turn_move < 0:
+            return 0
+
+        return turn_move
+
+    def getTurnJump(self):
+        return self.mech.get_jump()
+
     def isDestroyed(self):
         return self.structure <= 0
+
+    def isShutdown(self):
+        return self.shutdown
 
     def applyDamage(self, damage):
         # returns a number >0 only if there is excess damage after being destroyed

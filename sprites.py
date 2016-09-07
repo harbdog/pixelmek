@@ -3,6 +3,7 @@ import math
 import pygame
 import pyglet
 import battle
+import random
 
 from board import Board
 from cocos.actions import *
@@ -40,12 +41,33 @@ class MechSprite(cocos.layer.Layer):
         else:
             indicator = Sprite(Resources.friendly_indicator_img)
 
-        # cocos.layer.ColorLayer(0, 250, 0, 150, width=Board.TILE_SIZE, height=Board.TILE_SIZE)
         indicator.visible = False
-        # indicator.position = (self.battle_mech.col * Board.TILE_SIZE), (self.battle_mech.row * Board.TILE_SIZE)
         indicator.position = 0, -img_static.height // 2 + indicator.height // 2 + 1
         self.indicator = indicator
         self.add(indicator, z=0)
+
+        # TODO: Just testing pips on the indicator, it should be put on a new UI layer on top of everything
+        pip_height = 6 - (indicator.height // 2)
+        for i in range(self.battle_mech.armor):
+            pip = Sprite(Resources.armor_pip_img)
+            pip.position = (i * pip.width) - (self.battle_mech.armor * pip.width) // 2, pip_height
+            indicator.add(pip, z=1)
+
+        pip_height -= 4
+
+        for i in range(self.battle_mech.structure):
+            pip = Sprite(Resources.structure_pip_img)
+            pip.position = (i * pip.width) - (self.battle_mech.structure * pip.width) // 2, pip_height
+            indicator.add(pip, z=1)
+
+        pip_height -= 4
+
+        # TESTING: Use actual heat!!!
+        rand_heat = random.randint(0, 4)
+        for i in range(rand_heat):
+            pip = Sprite(Resources.heat_pip_img)
+            pip.position = (i * pip.width) - (rand_heat * pip.width) // 2, pip_height
+            indicator.add(pip, z=1)
 
         shadow = Sprite(MechSprite.shadow_img_grid[battle_mech.getSize() - 1])
         shadow_rect = shadow.get_rect()
