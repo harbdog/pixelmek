@@ -25,6 +25,7 @@ class Resources(object):
 
         Resources.armor_pip_img = pyglet.resource.image("images/ui/armor-pip.png")
         Resources.structure_pip_img = pyglet.resource.image("images/ui/structure-pip.png")
+        Resources.empty_pip_img = pyglet.resource.image("images/ui/empty-pip.png")
         Resources.heat_pip_img = pyglet.resource.image("images/ui/heat-pip.png")
 
         Resources.ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")

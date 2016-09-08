@@ -520,11 +520,15 @@ def performAttackOnUnit(battle, target_unit):
     if action.duration > max_travel_time:
         max_travel_time = action.duration
 
+    stats_action = Delay(min_travel_time) + CallFunc(target_sprite.updateStatsIndicators)
+    target_sprite.do(stats_action)
+
     if attack_remainder > 0:
         print("Overkill by %i!" % attack_remainder)
 
     if target_unit.structure > 0:
         print("Remaining %i/%i" % (target_unit.armor, target_unit.structure))
+
     else:
         print("Target destroyed!")
         # show destroyed floater after the travel time of the first projectile to hit

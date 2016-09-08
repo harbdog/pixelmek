@@ -46,29 +46,6 @@ class MechSprite(cocos.layer.Layer):
         self.indicator = indicator
         self.add(indicator, z=0)
 
-        # TODO: Just testing pips on the indicator, it should be put on a new UI layer on top of everything
-        pip_height = 6 - (indicator.height // 2)
-        for i in range(self.battle_mech.armor):
-            pip = Sprite(Resources.armor_pip_img)
-            pip.position = (i * pip.width) - (self.battle_mech.armor * pip.width) // 2, pip_height
-            indicator.add(pip, z=1)
-
-        pip_height -= 4
-
-        for i in range(self.battle_mech.structure):
-            pip = Sprite(Resources.structure_pip_img)
-            pip.position = (i * pip.width) - (self.battle_mech.structure * pip.width) // 2, pip_height
-            indicator.add(pip, z=1)
-
-        pip_height -= 4
-
-        # TESTING: Use actual heat!!!
-        rand_heat = random.randint(0, 4)
-        for i in range(rand_heat):
-            pip = Sprite(Resources.heat_pip_img)
-            pip.position = (i * pip.width) - (rand_heat * pip.width) // 2, pip_height
-            indicator.add(pip, z=1)
-
         shadow = Sprite(MechSprite.shadow_img_grid[battle_mech.getSize() - 1])
         shadow_rect = shadow.get_rect()
         shadow_rect.bottomleft = (self.battle_mech.col * Board.TILE_SIZE), \
@@ -108,6 +85,10 @@ class MechSprite(cocos.layer.Layer):
         img_ra.y = Board.TILE_SIZE//4
         self.img_ra = img_ra
 
+        # testing the stats stuff
+        self.stats = BatchNode()
+        self.updateStatsIndicators()
+
     def get_width(self):
         return self.img_static.width
 
@@ -116,6 +97,9 @@ class MechSprite(cocos.layer.Layer):
 
     def showIndicator(self, visible=True):
         self.indicator.visible = visible
+
+    def showStats(self, visible=True):
+        self.stats.visible = visible
 
     def timeBySize(self):
         times = {
@@ -315,3 +299,44 @@ class MechSprite(cocos.layer.Layer):
             + CallFunc(stomp_cloud.kill)
 
         self.do(stomp_action)
+
+    def updateStatsIndicators(self):
+        # TODO: Just testing pips on the indicator, it should be put on a new UI layer on top of everything
+        for child in self.stats.get_children():
+            child.kill()
+
+        pip_height = 6 - (self.indicator.height // 2)
+
+        orig_armor = self.battle_mech.mech.armor
+        for i in range(orig_armor):
+            pip_img = Resources.armor_pip_img
+            if i >= self.battle_mech.armor:
+                pip_img = Resources.empty_pip_img
+
+            pip = Sprite(pip_img)
+            pip.position = (i * pip.width) - (orig_armor * pip.width) // 2, pip_height
+            self.stats.add(pip, z=1)
+
+        pip_height -= 4
+
+        orig_structure = self.battle_mech.mech.structure
+        for i in range(orig_structure):
+            pip_img = Resources.structure_pip_img
+            if i >= self.battle_mech.structure:
+                pip_img = Resources.empty_pip_img
+
+            pip = Sprite(pip_img)
+            pip.position = (i * pip.width) - (orig_structure * pip.width) // 2, pip_height
+            self.stats.add(pip, z=1)
+
+        pip_height -= 4
+
+        # TESTING: Use actual heat!!!
+        rand_heat = random.randint(0, 4)
+        for i in range(rand_heat):
+            pip = Sprite(Resources.heat_pip_img)
+            pip.position = (i * pip.width) - (rand_heat * pip.width) // 2, pip_height
+            self.stats.add(pip, z=1)
+
+        self.stats.position = 0, -self.img_static.height // 2 + self.indicator.height // 2 + 1
+        self.add(self.stats, z=1)
