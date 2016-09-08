@@ -51,19 +51,26 @@ bot = Player("Bot", team=1, is_bot=True)
 battle.addPlayer(player)
 battle.addPlayer(bot)
 
-# fill out the test board with mechs
-col = randint(0, battle.getNumCols())
-row = randint(0, battle.getNumRows())
-
 for mech in mech_list:
-    while not battle.isCellAvailable(col, row):
-        col = randint(0, battle.getNumCols()-1)
-        row = randint(0, battle.getNumRows()-1)
-
     owner = player
     if mech.isClan():
         # TODO: use menu system to determine which mechs the players get
         owner = bot
+
+    # fill out the test board with mechs
+    side_col = 1
+    row = 0
+    if owner is bot:
+        side_col = battle.getNumCols() - 2
+
+    rand_col = randint(-1, 1)
+    col = side_col + rand_col
+    row = randint(0, battle.getNumRows())
+
+    while not battle.isCellAvailable(col, row):
+        rand_col = randint(-1, 1)
+        col = side_col + rand_col
+        row = randint(0, battle.getNumRows()-1)
 
     battle_mech = BattleMech(owner, mech, col, row)
     battle.addUnit(battle_mech)
