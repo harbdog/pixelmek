@@ -18,7 +18,7 @@ medium: 5
 long: 0
 overheat: 4
 armor: 5
-structure: 2
+structure: 3
 specials:
 - !include ../specials/ene.yaml: True
 - !include ../specials/omni.yaml: True
