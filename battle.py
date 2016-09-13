@@ -70,6 +70,13 @@ class Battle(object):
 
         return self.board.get_cell(*self.sel_cell_pos)
 
+    def getTurnPlayer(self):
+        turn_unit = self.getTurnUnit()
+        if turn_unit is None:
+            return None
+
+        return turn_unit.getPlayer()
+
     def getTurnUnit(self):
         if self.unit_turn < 0:
             return None
@@ -166,8 +173,17 @@ class Battle(object):
 
         # TODO: distinguish between LOS related range and move related range recursion
 
-        # TODO: allow passing through friendly unit occupied cells
-        if dist == 0 or self.isCellAvailable(col, row):
+        # allow passing through friendly unit occupied cells
+        turn_unit = self.getTurnUnit()
+        turn_player = turn_unit.getPlayer()
+
+        cell_unit = self.getUnitAtCell(col, row)
+        is_friendly_occupied = False
+        if cell_unit is not None:
+            is_friendly_occupied = self.isFriendlyUnit(turn_player, cell_unit)
+
+        if dist == 0 or self.isCellAvailable(col, row) or \
+                (cell_unit is not None and is_friendly_occupied):
             self._recurseCellsInRange(col, row + 1, dist + 1, max_dist, cells)
             self._recurseCellsInRange(col, row - 1, dist + 1, max_dist, cells)
             self._recurseCellsInRange(col + 1, row, dist + 1, max_dist, cells)
