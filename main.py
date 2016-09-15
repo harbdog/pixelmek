@@ -10,6 +10,7 @@ from battle import *
 from board import *
 from cocos.director import director
 from random import randint
+from ui import Interface
 
 from resources import Resources
 
@@ -40,6 +41,7 @@ Resources.preload()
 
 board = Board()
 battle = Battle()
+ui = Interface()
 battle.setBoard(board)
 key_events = events.KeyboardEvents(battle)
 mouse_events = events.MouseEvents(battle)

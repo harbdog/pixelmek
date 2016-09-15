@@ -7,6 +7,7 @@ from battle import Battle
 from cocos.director import director
 from cocos.menu import *
 from cocos.scenes import *
+from ui import Interface
 
 
 class MainMenu(Menu):
@@ -39,6 +40,7 @@ class MainMenu(Menu):
         print("Battle!")
         scene = cocos.scene.Scene()
         scene.add(self.scroller)
+        scene.add(Interface.UI)
         director.push(scene)
 
         Battle.BATTLE.nextTurn()

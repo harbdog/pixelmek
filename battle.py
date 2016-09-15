@@ -138,7 +138,11 @@ class Battle(object):
 
         self.setSelectedCellPosition(next_unit.col, next_unit.row)
 
-        self.scroller.set_focus(*Board.board_to_layer(next_unit.col, next_unit.row))
+        turn_cell_pos = Board.board_to_layer(next_unit.col, next_unit.row)
+        if turn_cell_pos is not None:
+            turn_cell_pos = turn_cell_pos[0] + Board.TILE_SIZE // 2, turn_cell_pos[1] + Board.TILE_SIZE // 2
+
+        self.scroller.set_focus(*turn_cell_pos)
 
     def showRangeIndicators(self):
         turn_unit = self.getTurnUnit()
