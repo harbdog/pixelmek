@@ -2,11 +2,12 @@
 
 1. Install Python 2.7.x (https://www.python.org/downloads/)
 2. Install pygame (http://www.pygame.org/download.shtml)
-2. Install the following extensions from command line using pip:
+2. Install the following Python extensions from command line using pip:
     1. pip install pyglet
     2. pip install cocos2d
     3. pip install pyyaml
     4. pip install numpy
+    5. pip install pillow
 3. Run from command line using python:
     * python main.py
 

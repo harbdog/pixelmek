@@ -2,7 +2,7 @@ import model
 
 from board import Board
 from cocos.euclid import Point2
-
+from ui import Interface
 
 class Battle(object):
     RANGE_SHORT = 6
@@ -57,6 +57,12 @@ class Battle(object):
         if new_cell is not None:
             new_cell.show_action_indicator()
             new_cell.show_range_to_display()
+
+            cell_unit = self.getUnitAtCell(col, row)
+            if cell_unit == self.getTurnUnit():
+                Interface.UI.updateTargetUnitStats(None)
+            else:
+                Interface.UI.updateTargetUnitStats(cell_unit, is_friendly=self.isFriendlyUnit(self.getTurnPlayer(), cell_unit))
 
             # TODO: only refocus if getting too close to edge of display
             # self.scroller.set_focus(*Board.board_to_layer(col, row))
@@ -143,6 +149,8 @@ class Battle(object):
             turn_cell_pos = turn_cell_pos[0] + Board.TILE_SIZE // 2, turn_cell_pos[1] + Board.TILE_SIZE // 2
 
         self.scroller.set_focus(*turn_cell_pos)
+
+        Interface.UI.updatePlayerUnitStats(next_unit)
 
     def showRangeIndicators(self):
         turn_unit = self.getTurnUnit()
@@ -320,6 +328,12 @@ class BattleMech(object):
 
     def setSprite(self, sprite):
         self.sprite = sprite
+
+    def getName(self):
+        return self.mech.name
+
+    def getVariant(self):
+        return self.mech.variant
 
     def getSprite(self):
         return self.sprite

@@ -53,10 +53,18 @@ bot = Player("Bot", team=1, is_bot=True)
 battle.addPlayer(player)
 battle.addPlayer(bot)
 
+# TODO: use menu system to determine which mechs the players get
+player_mechs = 'Archer', 'Atlas', 'Awesome', 'Centurion', \
+               'Commando', 'Firestarter', 'Hunchback', 'Jenner', \
+               'King Crab', 'Marauder', 'Rifleman', 'Warhammer'
+
+bot_mechs = 'Puma (Adder)', 'Hankyu (Arctic Cheetah)', 'Daishi (Dire Wolf)', 'Gladiator (Executioner)', \
+            'Black Hawk (Nova)', 'Ryoken (Stormcrow)', 'Shadow Cat', 'Thor (Summoner)', 'Mad Cat (Timber Wolf)', \
+            'Masakari (Warhawk)'
+
 for mech in mech_list:
     owner = player
-    if mech.isClan():
-        # TODO: use menu system to determine which mechs the players get
+    if mech.name in bot_mechs:
         owner = bot
 
     # fill out the test board with mechs

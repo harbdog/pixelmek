@@ -206,7 +206,7 @@ class Cell(cocos.sprite.Sprite):
         indicator_name = Cell.INDICATOR_RANGE
         if show and self.range_to_display > 0:
             indicator = floaters.TextFloater(str(self.range_to_display))
-            indicator.position = self.position[0], self.position[1] - self.height//4
+            indicator.position = self.position[0], self.position[1]
 
             Board.BOARD.add(indicator, z=1000)
 
