@@ -62,11 +62,16 @@ bot_mechs = 'Puma (Adder)', 'Hankyu (Arctic Cheetah)', 'Daishi (Dire Wolf)', 'Gl
             'Black Hawk (Nova)', 'Ryoken (Stormcrow)', 'Shadow Cat', 'Thor (Summoner)', 'Mad Cat (Timber Wolf)', \
             'Masakari (Warhawk)'
 
-for mech in mech_list:
-    owner = player
-    if mech.name in bot_mechs:
-        owner = bot
 
+def get_mech_by_name(mech_name):
+    for mech in mech_list:
+        if mech.name == mech_name:
+            return mech
+
+    return None
+
+
+def add_mech_for_player(mech, owner):
     # fill out the test board with mechs
     side_col = 1
     row = 0
@@ -80,7 +85,7 @@ for mech in mech_list:
     while not battle.isCellAvailable(col, row):
         rand_col = randint(-1, 1)
         col = side_col + rand_col
-        row = randint(0, battle.getNumRows()-1)
+        row = randint(0, battle.getNumRows() - 1)
 
     battle_mech = BattleMech(owner, mech, col, row)
     battle.addUnit(battle_mech)
@@ -90,7 +95,20 @@ for mech in mech_list:
     # Z order is based on the number of rows in the board
     sprite_z = (battle.getNumRows() - row) * 10
     board.add(sprite.shadow, z=sprite_z)
-    board.add(sprite, z=sprite_z+1)
+    board.add(sprite, z=sprite_z + 1)
+
+
+for mech_name in player_mechs:
+    mech = get_mech_by_name(mech_name)
+
+    if mech is not None:
+        add_mech_for_player(mech, player)
+
+for mech_name in bot_mechs:
+    mech = get_mech_by_name(mech_name)
+
+    if mech is not None:
+        add_mech_for_player(mech, bot)
 
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
