@@ -32,6 +32,10 @@ class Battle(object):
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
 
+    def updateUnitsTurnOrder(self):
+        # TODO: implement a better way to determine initiative for unit turn order
+        self.unit_list = sorted(self.unit_list, key=lambda x: x.getTurnMove(), reverse=True)
+
     def addPlayer(self, player):
         self.player_list.append(player)
 

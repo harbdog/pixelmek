@@ -110,6 +110,9 @@ for mech_name in bot_mechs:
     if mech is not None:
         add_mech_for_player(mech, bot)
 
+# mix up the turn order
+battle.updateUnitsTurnOrder()
+
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
 scroller.add(key_events, z=-1)
