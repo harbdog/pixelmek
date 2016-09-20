@@ -40,3 +40,4 @@ The following art and sound resources used in this game are from various non-com
     * Stompy Mech: http://www.freesound.org/people/nabz871/sounds/324450/
 * Fonts:
     * Convoy: http://www.1001freefonts.com/convoy.font
+    * Transcends Games: https://fontlibrary.org/en/font/transcends-games

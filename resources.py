@@ -55,3 +55,4 @@ class Resources(object):
 
         # preload font
         pyglet.font.add_file(pyglet.resource.file('images/ui/Convoy.ttf'))
+        pyglet.font.add_file(pyglet.resource.file('images/ui/TranscendsGames.otf'))
