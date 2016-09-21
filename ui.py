@@ -1,6 +1,7 @@
 import cocos
 import pyglet
 import floaters
+import random
 
 from board import Board
 from cocos.batch import BatchNode
@@ -19,14 +20,15 @@ class Interface(cocos.layer.Layer):
 
         Interface.UI = self
 
-        self.unit_stats = None
+        self.unit_display = None
         self.unit_name = None
         self.unit_variant = None
-        self.unit_armor = None
+        self.unit_stats = None
 
-        self.target_stats = None
+        self.target_display = None
         self.target_name = None
         self.target_variant = None
+        self.target_stats = None
 
         # size = director.get_window_size()
         # width = size[0]
@@ -50,26 +52,26 @@ class Interface(cocos.layer.Layer):
         # self.add(test4)
 
     def updatePlayerUnitStats(self, battle_unit):
-        if self.unit_stats is not None:
-            self.unit_stats.kill()
+        if self.unit_display is not None:
+            self.unit_display.kill()
             self.unit_name.kill()
             self.unit_variant.kill()
-            self.unit_armor.kill()
+            self.unit_stats.kill()
 
         if battle_unit is None:
             # Hide player unit stats at bottom left
-            self.unit_stats = None
+            self.unit_display = None
             self.unit_name = None
             self.unit_variant = None
-            self.unit_armor = None
+            self.unit_stats = None
             return
 
         size = director.get_window_size()
         width = size[0]
         height = size[1]
 
-        self.unit_stats = BatchNode()
-        self.unit_stats.position = 0, 0
+        self.unit_display = BatchNode()
+        self.unit_display.position = 0, 0
 
         mech_img_grid = pyglet.image.ImageGrid(pyglet.resource.image(battle_unit.getImagePath()), 1, 6)
         mech_img_static = mech_img_grid[0]
@@ -82,10 +84,10 @@ class Interface(cocos.layer.Layer):
 
         mask = Image.frombytes('RGBA', (mech_img_static.width, damage_height), data)
         # the first image is the color that the stamp will be
-        img1 = Image.new("RGBA", mask.size, color=(0, 0, 0, 255))
+        img1 = Image.new('RGBA', mask.size, color=(0, 0, 0, 255))
         # second image is the background
-        img2 = Image.new("RGBA", mask.size, color=(225, 225, 225, 200))
-        img1 = img1.convert("RGBA")
+        img2 = Image.new('RGBA', mask.size, color=(225, 225, 225, 200))
+        img1 = img1.convert('RGBA')
 
         # apply mask to background image
         img = Image.composite(img1, img2, mask)
@@ -99,8 +101,8 @@ class Interface(cocos.layer.Layer):
         mech_sprite.position = Board.TILE_SIZE // 2 + mech_sprite.width // 2, \
                                Board.TILE_SIZE + mech_sprite.height // 2
 
-        self.unit_stats.add(mech_sprite)
-        self.add(self.unit_stats)
+        self.unit_display.add(mech_sprite)
+        self.add(self.unit_display)
 
         # Show unit name above the image
         self.unit_name = floaters.TextFloater(battle_unit.getName(), font_name='TranscendsGames',
@@ -112,40 +114,28 @@ class Interface(cocos.layer.Layer):
         self.unit_variant = floaters.TextFloater(battle_unit.getVariant().upper(), font_name='TranscendsGames',
                                                  font_size=Board.TILE_SIZE // 3, anchor_x='left', anchor_y='top')
 
-        self.unit_variant.position = Board.TILE_SIZE // 2, Board.TILE_SIZE
+        self.unit_variant.position = Board.TILE_SIZE // 2, Board.TILE_SIZE - 4
         self.add(self.unit_variant)
 
-        # Show armor, structure, heat levels next to the image
-        self.unit_armor = BatchNode()
-
-        pip = None
-        pip_height = 0
-
-        orig_armor = battle_unit.mech.armor
-        for i in range(orig_armor):
-            pip_img = Resources.armor_pip_img
-            if i >= battle_unit.armor:
-                pip_img = Resources.empty_pip_img
-
-            pip = Sprite(pip_img)
-            pip.scale = 2.0
-            pip.position = mech_sprite.get_rect().bottomright[0] + (i * pip.width) + pip.width // 2, \
-                           mech_sprite.get_rect().bottomright[1] + pip_height + pip.height // 2
-            self.unit_armor.add(pip, z=1)
-
-        self.add(self.unit_armor)
+        # Show armor, structure, heat stats next to the image
+        self.unit_stats = UnitStats(battle_unit)
+        stats_pos = mech_sprite.get_rect().topright
+        self.unit_stats.position = 4 + stats_pos[0], stats_pos[1] - self.unit_stats.height
+        self.add(self.unit_stats)
 
     def updateTargetUnitStats(self, target_unit, is_friendly=False):
-        if self.target_stats is not None:
-            self.target_stats.kill()
+        if self.target_display is not None:
+            self.target_display.kill()
             self.target_name.kill()
             self.target_variant.kill()
+            self.target_stats.kill()
 
         if target_unit is None:
             # Hide player unit stats at bottom left
-            self.target_stats = None
+            self.target_display = None
             self.target_name = None
             self.target_variant = None
+            self.target_stats = None
             return
 
         size = director.get_window_size()
@@ -159,8 +149,8 @@ class Interface(cocos.layer.Layer):
 
         self.add(self.target_name)
 
-        self.target_stats = BatchNode()
-        self.target_stats.position = 0, 0
+        self.target_display = BatchNode()
+        self.target_display.position = 0, 0
 
         mech_img_grid = pyglet.image.ImageGrid(pyglet.resource.image(target_unit.getImagePath()), 1, 6)
         mech_img_static = mech_img_grid[0]
@@ -173,13 +163,13 @@ class Interface(cocos.layer.Layer):
 
         mask = Image.frombytes('RGBA', (mech_img_static.width, damage_height), data)
         # the first image is the color that the stamp will be
-        img1 = Image.new("RGBA", mask.size, color=(0, 0, 0, 255))
+        img1 = Image.new('RGBA', mask.size, color=(0, 0, 0, 255))
         # second image is the background
         bg_color = (200, 75, 75, 200)
         if is_friendly:
             bg_color = (225, 225, 225, 200)
-        img2 = Image.new("RGBA", mask.size, color=bg_color)
-        img1 = img1.convert("RGBA")
+        img2 = Image.new('RGBA', mask.size, color=bg_color)
+        img1 = img1.convert('RGBA')
 
         # apply mask to background image
         img = Image.composite(img1, img2, mask)
@@ -193,12 +183,82 @@ class Interface(cocos.layer.Layer):
         mech_sprite.position = width - mech_sprite.width // 2 - Board.TILE_SIZE // 2, \
                                height - mech_sprite.height // 2 - Board.TILE_SIZE
 
-        self.target_stats.add(mech_sprite)
-        self.add(self.target_stats)
+        self.target_display.add(mech_sprite)
+        self.add(self.target_display)
 
         # Show target variant below the image
         self.target_variant = floaters.TextFloater(target_unit.getVariant().upper(), font_name='TranscendsGames',
                                                    font_size=Board.TILE_SIZE // 3, anchor_x='right', anchor_y='top')
-
-        self.target_variant.position = mech_sprite.get_rect().bottomright
+        variant_rect = mech_sprite.get_rect().bottomright
+        self.target_variant.position = variant_rect[0], variant_rect[1] - 4
         self.add(self.target_variant)
+
+        # Show armor, structure, heat stats next to the image
+        self.target_stats = UnitStats(target_unit, reverse=True)
+        stats_pos = mech_sprite.get_rect().topleft
+        self.target_stats.position = stats_pos[0] - self.target_stats.width - 4, stats_pos[1] - self.target_stats.height
+        self.add(self.target_stats)
+
+
+class UnitStats(cocos.batch.BatchNode):
+
+    def __init__(self, battle_unit, reverse=False):
+        super(UnitStats, self).__init__()
+
+        self.reverse = reverse
+        self.width = 0
+        self.height = 0
+
+        # TESTING: Use actual heat!!!
+        rand_heat = random.randint(0, 4)
+        for i in range(rand_heat):
+            pip = Sprite(Resources.heat_pip_img)
+            pip.scale = 2.0
+            if reverse:
+                pip.position = -(i * pip.width) - pip.width // 2, self.height + pip.height // 2
+            else:
+                pip.position = (i * pip.width) + pip.width // 2, self.height + pip.height // 2
+            self.add(pip, z=1)
+
+            if pip.x + pip.width > self.width:
+                self.width = pip.x + pip.width
+
+        self.height += 8
+
+        orig_structure = battle_unit.mech.structure
+        for i in range(orig_structure):
+            pip_img = Resources.structure_pip_img
+            if i >= battle_unit.structure:
+                pip_img = Resources.empty_pip_img
+
+            pip = Sprite(pip_img)
+            pip.scale = 2.0
+            if reverse:
+                pip.position = -(i * pip.width) - pip.width // 2, self.height + pip.height // 2
+            else:
+                pip.position = (i * pip.width) + pip.width // 2, self.height + pip.height // 2
+            self.add(pip, z=1)
+
+            if pip.x + pip.width > self.width:
+                self.width = pip.x + pip.width
+
+        self.height += 8
+
+        orig_armor = battle_unit.mech.armor
+        for i in range(orig_armor):
+            pip_img = Resources.armor_pip_img
+            if i >= battle_unit.armor:
+                pip_img = Resources.empty_pip_img
+
+            pip = Sprite(pip_img)
+            pip.scale = 2.0
+            if reverse:
+                pip.position = -(i * pip.width) - pip.width // 2, self.height + pip.height // 2
+            else:
+                pip.position = (i * pip.width) + pip.width // 2, self.height + pip.height // 2
+            self.add(pip, z=1)
+
+            if pip.x + pip.width > self.width:
+                self.width = pip.x + pip.width
+
+        self.height += 8

@@ -16,6 +16,7 @@ from cocos.euclid import Point2
 from math import atan2, degrees, pi
 
 from resources import Resources
+from ui import Interface
 
 
 class Actions(object):
@@ -525,7 +526,8 @@ def performAttackOnUnit(battle, target_unit):
     if action.duration > max_travel_time:
         max_travel_time = action.duration
 
-    stats_action = Delay(min_travel_time) + CallFunc(target_sprite.updateStatsIndicators)
+    stats_action = Delay(min_travel_time) + CallFunc(target_sprite.updateStatsIndicators) \
+                   + CallFunc(Interface.UI.updateTargetUnitStats, target_unit)
     target_sprite.do(stats_action)
 
     if attack_remainder > 0:
