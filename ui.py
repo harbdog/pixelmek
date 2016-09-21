@@ -209,21 +209,37 @@ class UnitStats(cocos.batch.BatchNode):
         self.width = 0
         self.height = 0
 
+        # create heat icon and bars
+        heat_icon = Sprite(Resources.heat_icon_img)
+        if reverse:
+            heat_icon.position = -heat_icon.width // 2, self.height + heat_icon.height // 2
+        else:
+            heat_icon.position = heat_icon.width // 2, self.height + heat_icon.height // 2
+        self.add(heat_icon, z=2)
+
         # TESTING: Use actual heat!!!
         rand_heat = random.randint(0, 4)
         for i in range(rand_heat):
             pip = Sprite(Resources.heat_pip_img)
             pip.scale = 2.0
             if reverse:
-                pip.position = -(i * pip.width) - pip.width // 2, self.height + pip.height // 2
+                pip.position = -heat_icon.width - (i * pip.width) - pip.width, self.height + pip.height // 2
             else:
-                pip.position = (i * pip.width) + pip.width // 2, self.height + pip.height // 2
+                pip.position = heat_icon.width + (i * pip.width) + pip.width // 2, self.height + pip.height // 2
             self.add(pip, z=1)
 
             if pip.x + pip.width > self.width:
                 self.width = pip.x + pip.width
 
         self.height += 8
+
+        # create structure icon and bars
+        structure_icon = Sprite(Resources.structure_icon_img)
+        if reverse:
+            structure_icon.position = -structure_icon.width // 2, self.height + structure_icon.height // 2
+        else:
+            structure_icon.position = structure_icon.width // 2, self.height + structure_icon.height // 2
+        self.add(structure_icon, z=2)
 
         orig_structure = battle_unit.mech.structure
         for i in range(orig_structure):
@@ -234,15 +250,23 @@ class UnitStats(cocos.batch.BatchNode):
             pip = Sprite(pip_img)
             pip.scale = 2.0
             if reverse:
-                pip.position = -(i * pip.width) - pip.width // 2, self.height + pip.height // 2
+                pip.position = -structure_icon.width - (i * pip.width) - pip.width, self.height + pip.height // 2
             else:
-                pip.position = (i * pip.width) + pip.width // 2, self.height + pip.height // 2
+                pip.position = structure_icon.width + (i * pip.width) + pip.width // 2, self.height + pip.height // 2
             self.add(pip, z=1)
 
             if pip.x + pip.width > self.width:
                 self.width = pip.x + pip.width
 
         self.height += 8
+
+        # create armor icon and bars
+        armor_icon = Sprite(Resources.armor_icon_img)
+        if reverse:
+            armor_icon.position = -armor_icon.width // 2, self.height + armor_icon.height // 2
+        else:
+            armor_icon.position = armor_icon.width // 2, self.height + armor_icon.height // 2
+        self.add(armor_icon, z=2)
 
         orig_armor = battle_unit.mech.armor
         for i in range(orig_armor):
@@ -253,9 +277,9 @@ class UnitStats(cocos.batch.BatchNode):
             pip = Sprite(pip_img)
             pip.scale = 2.0
             if reverse:
-                pip.position = -(i * pip.width) - pip.width // 2, self.height + pip.height // 2
+                pip.position = -armor_icon.width - (i * pip.width) - pip.width, self.height + pip.height // 2
             else:
-                pip.position = (i * pip.width) + pip.width // 2, self.height + pip.height // 2
+                pip.position = armor_icon.width + (i * pip.width) + pip.width // 2, self.height + pip.height // 2
             self.add(pip, z=1)
 
             if pip.x + pip.width > self.width:
