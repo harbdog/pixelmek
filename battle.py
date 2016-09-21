@@ -1,8 +1,11 @@
 import model
 
 from board import Board
+from cocos.director import director
 from cocos.euclid import Point2
+from cocos.rect import Rect
 from ui import Interface
+
 
 class Battle(object):
     RANGE_SHORT = 6
@@ -66,10 +69,23 @@ class Battle(object):
             if cell_unit == self.getTurnUnit():
                 Interface.UI.updateTargetUnitStats(None)
             else:
-                Interface.UI.updateTargetUnitStats(cell_unit, is_friendly=self.isFriendlyUnit(self.getTurnPlayer(), cell_unit))
+                Interface.UI.updateTargetUnitStats(cell_unit,
+                                                   is_friendly=self.isFriendlyUnit(self.getTurnPlayer(), cell_unit))
 
-            # TODO: only refocus if getting too close to edge of display
-            # self.scroller.set_focus(*Board.board_to_layer(col, row))
+            # only refocus if getting too close to edge of display (within 3 Tiles of each side)
+            window_size = director.get_window_size()
+            view_width = window_size[0] - Board.BOARD.TILE_SIZE * 6
+            view_height = window_size[1] - Board.BOARD.TILE_SIZE * 6
+
+            view_bottom_left = self.scroller.screen_to_world(Board.BOARD.TILE_SIZE * 3, Board.BOARD.TILE_SIZE * 3)
+            view_rect = Rect(view_bottom_left[0], view_bottom_left[1], view_width, view_height)
+
+            cell_screen_pos = Board.board_to_layer(col, row)
+            cell_rect = Rect(cell_screen_pos[0], cell_screen_pos[1], Board.BOARD.TILE_SIZE, Board.BOARD.TILE_SIZE)
+
+            if not cell_rect.intersects(view_rect):
+                self.scroller.set_focus(cell_screen_pos[0] + Board.BOARD.TILE_SIZE // 2,
+                                        cell_screen_pos[1] + Board.BOARD.TILE_SIZE // 2)
 
     def getSelectedCellPosition(self):
         return self.sel_cell_pos
