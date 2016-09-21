@@ -43,6 +43,8 @@ class Resources(object):
         # Preload sound effects
         Resources.cannon_sound = Sound(pyglet.resource.file("sounds/autocannon-shot.ogg"))
         Resources.explosion_sound = Sound(pyglet.resource.file("sounds/explosion-single.ogg"))
+        Resources.explosion_multiple_sound = Sound(pyglet.resource.file("sounds/explosion-multiple.ogg"))
+
         Resources.flamer_sound = Sound(pyglet.resource.file("sounds/flamer-shot.ogg"))
         Resources.gauss_sound = Sound(pyglet.resource.file("sounds/gauss-shot.ogg"))
         Resources.las_sound = Sound(pyglet.resource.file("sounds/laser-blast-long.ogg"))

@@ -544,7 +544,15 @@ def performAttackOnUnit(battle, target_unit):
         destroyed.position = real_x, real_y + target_sprite.get_height() // 3
         battle.board.add(destroyed, z=5000)
 
+        # get another sound channel to use just for the explosions
+        explosion_channel = pygame.mixer.find_channel()
+        if explosion_channel is None:
+            explosion_channel = pygame.mixer.Channel(1)
+
+        explosion_sound = Resources.explosion_multiple_sound
+
         action = Delay(max_travel_time) + ToggleVisibility() \
+            + CallFunc(explosion_channel.play, explosion_sound) \
             + (MoveBy((0, Board.TILE_SIZE), 1.0) | CallFunc(create_destruction_explosions, battle.board, target_unit)) \
             + Delay(0.5) + CallFunc(target_sprite.destroy) + FadeOut(2.0) + CallFunc(destroyed.kill)
         destroyed.do(action)
