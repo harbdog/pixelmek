@@ -21,6 +21,8 @@ The following art and sound resources used in this game are from various non-com
     * http://mwomercs.com/forums/topic/184415-x-mas-2014-free-clan-pixel-mechs/
 * Pixel Mechs by Luscious Dan:
     * http://mwomercs.com/forums/topic/231592-luscious-dans-pixel-mechs/
+* Mouse Pointer:
+    * http://opengameart.org/content/bw-ornamental-cursor-19x19
 * Various OpenGameArt.org hosted sprite sheets:
     * http://opengameart.org/content/colony-sim-extended-version
     * http://opengameart.org/content/explosions-0

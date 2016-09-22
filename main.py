@@ -39,6 +39,11 @@ pygame.mixer.set_num_channels(32)
 # preload all sound and image resources
 Resources.preload()
 
+
+# setup custom mouse cursor
+cursor = pyglet.window.ImageMouseCursor(Resources.mouse_pointer, 1, 17)
+director.window.set_mouse_cursor(cursor)
+
 board = Board()
 battle = Battle()
 ui = Interface()
@@ -74,7 +79,6 @@ def get_mech_by_name(mech_name):
 def add_mech_for_player(mech, owner):
     # fill out the test board with mechs
     side_col = 1
-    row = 0
     if owner is bot:
         side_col = battle.getNumCols() - 2
 

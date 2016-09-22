@@ -8,6 +8,8 @@ class Resources(object):
     @staticmethod
     def preload():
         # Preload images
+        Resources.mouse_pointer = pyglet.resource.image("images/ui/mouse-pointer-0.png")
+
         buildings_img = pyglet.resource.image("images/board/colony-buildings-32.png")
         buildings_grid = pyglet.image.ImageGrid(buildings_img,
                                                 columns=(buildings_img.width // board.Board.TILE_SIZE),
