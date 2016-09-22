@@ -24,11 +24,13 @@ class Interface(cocos.layer.Layer):
         self.unit_name = None
         self.unit_variant = None
         self.unit_stats = None
+        self.unit_values = None
 
         self.target_display = None
         self.target_name = None
         self.target_variant = None
         self.target_stats = None
+        self.target_values = None
 
         # size = director.get_window_size()
         # width = size[0]
@@ -57,6 +59,7 @@ class Interface(cocos.layer.Layer):
             self.unit_name.kill()
             self.unit_variant.kill()
             self.unit_stats.kill()
+            self.unit_values.kill()
 
         if battle_unit is None:
             # Hide player unit stats at bottom left
@@ -64,6 +67,7 @@ class Interface(cocos.layer.Layer):
             self.unit_name = None
             self.unit_variant = None
             self.unit_stats = None
+            self.unit_values = None
             return
 
         size = director.get_window_size()
@@ -117,11 +121,20 @@ class Interface(cocos.layer.Layer):
         self.unit_variant.position = Board.TILE_SIZE // 2, Board.TILE_SIZE - 4
         self.add(self.unit_variant)
 
-        # Show armor, structure, heat stats next to the image
+        # Show armor, structure, heat stats next to the image (top)
         self.unit_stats = UnitStats(battle_unit)
         stats_pos = mech_sprite.get_rect().topright
         self.unit_stats.position = 4 + stats_pos[0], stats_pos[1] - self.unit_stats.height
         self.add(self.unit_stats)
+
+        # Show move and attack numbers next to the image (bottom)
+        values = "MV %i  ATK %i/%i/%i" % (battle_unit.getTurnMove(),
+                                          battle_unit.short, battle_unit.medium, battle_unit.long)
+        self.unit_values = floaters.TextFloater(values, font_name='TranscendsGames',
+                                                font_size=Board.TILE_SIZE // 4, anchor_x='left', anchor_y='bottom')
+        values_pos = mech_sprite.get_rect().bottomright
+        self.unit_values.position = 4 + values_pos[0], values_pos[1] - 2
+        self.add(self.unit_values)
 
     def updateTargetUnitStats(self, target_unit, is_friendly=False):
         if self.target_display is not None:
@@ -129,6 +142,7 @@ class Interface(cocos.layer.Layer):
             self.target_name.kill()
             self.target_variant.kill()
             self.target_stats.kill()
+            self.target_values.kill()
 
         if target_unit is None:
             # Hide player unit stats at bottom left
@@ -136,6 +150,7 @@ class Interface(cocos.layer.Layer):
             self.target_name = None
             self.target_variant = None
             self.target_stats = None
+            self.target_values = None
             return
 
         size = director.get_window_size()
@@ -193,11 +208,20 @@ class Interface(cocos.layer.Layer):
         self.target_variant.position = variant_rect[0], variant_rect[1] - 4
         self.add(self.target_variant)
 
-        # Show armor, structure, heat stats next to the image
+        # Show armor, structure, heat stats next to the image (top)
         self.target_stats = UnitStats(target_unit, reverse=True)
         stats_pos = mech_sprite.get_rect().topleft
         self.target_stats.position = stats_pos[0] - self.target_stats.width - 4, stats_pos[1] - self.target_stats.height
         self.add(self.target_stats)
+
+        # Show move and attack numbers next to the image (bottom)
+        values = "MV %i  ATK %i/%i/%i" % (target_unit.getTurnMove(),
+                                          target_unit.short, target_unit.medium, target_unit.long)
+        self.target_values = floaters.TextFloater(values, font_name='TranscendsGames',
+                                                  font_size=Board.TILE_SIZE // 4, anchor_x='right', anchor_y='bottom')
+        values_pos = mech_sprite.get_rect().bottomleft
+        self.target_values.position = values_pos[0] - 4, values_pos[1]
+        self.add(self.target_values)
 
 
 class UnitStats(cocos.batch.BatchNode):
