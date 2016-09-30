@@ -33,6 +33,8 @@ class Resources(object):
         Resources.armor_icon_img = pyglet.resource.image("images/ui/armor-icon.png")
         Resources.structure_icon_img = pyglet.resource.image("images/ui/structure-icon.png")
         Resources.heat_icon_img = pyglet.resource.image("images/ui/heat-icon.png")
+        Resources.move_icon_img = pyglet.resource.image("images/ui/move-icon.png")
+        Resources.weapon_icon_img = pyglet.resource.image("images/ui/weapon-icon.png")
 
         Resources.ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
         Resources.buckshot_img = pyglet.resource.image("images/weapons/buckshot.png")
