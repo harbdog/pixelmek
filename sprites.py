@@ -13,6 +13,7 @@ from cocos.particle_systems import Meteor
 from cocos.sprite import Sprite
 from resources import Resources
 from model import Mech
+from settings import Settings
 
 
 class MechSprite(cocos.layer.Layer):
@@ -259,6 +260,7 @@ class MechSprite(cocos.layer.Layer):
         for i in range(num_steps):
             # use channel 0 and 1 for alternating steps
             stomp_channel = pygame.mixer.Channel(i % 2)
+            stomp_channel.set_volume(Settings.VOLUME_FX)
 
             stomp_reverse = True
             if i % 2 == (1 if reverse else 0):

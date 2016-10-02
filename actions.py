@@ -16,6 +16,7 @@ from cocos.euclid import Point2
 from math import atan2, degrees, pi
 
 from resources import Resources
+from settings import Settings
 from ui import Interface
 
 
@@ -181,6 +182,7 @@ def performAttackOnUnit(battle, target_unit):
             weapon_channel = pygame.mixer.find_channel()
             if weapon_channel is None:
                 weapon_channel = pygame.mixer.Channel(0)
+            weapon_channel.set_volume(Settings.VOLUME_FX)
 
             weapon_offset = weapon_data.get('offset', [0, 0])
             weapon_x = turn_unit.sprite.position[0] + weapon_offset[0]
@@ -440,6 +442,7 @@ def performAttackOnUnit(battle, target_unit):
                 explosion_channel = pygame.mixer.find_channel()
                 if explosion_channel is None:
                     explosion_channel = pygame.mixer.Channel(1)
+                explosion_channel.set_volume(Settings.VOLUME_FX)
 
                 # fire test missile projectile
                 missile_img = Resources.missile_img
@@ -483,7 +486,7 @@ def performAttackOnUnit(battle, target_unit):
                     rand_missile_sound = random.randint(0, 7)
                     missile_sound = Resources.missile_sounds[rand_missile_sound]
 
-                    explosion_sound = Resources.explosion_sound
+                    explosion_sound = Resources.impact_sound
 
                     action = Delay(i * 0.05) + ToggleVisibility() \
                              + CallFunc(weapon_channel.play, missile_sound) \
@@ -544,15 +547,7 @@ def performAttackOnUnit(battle, target_unit):
         destroyed.position = real_x, real_y + target_sprite.get_height() // 3
         battle.board.add(destroyed, z=5000)
 
-        # get another sound channel to use just for the explosions
-        explosion_channel = pygame.mixer.find_channel()
-        if explosion_channel is None:
-            explosion_channel = pygame.mixer.Channel(1)
-
-        explosion_sound = Resources.explosion_multiple_sound
-
         action = Delay(max_travel_time) + ToggleVisibility() \
-            + CallFunc(explosion_channel.play, explosion_sound) \
             + (MoveBy((0, Board.TILE_SIZE), 1.0) | CallFunc(create_destruction_explosions, battle.board, target_unit)) \
             + Delay(0.5) + CallFunc(target_sprite.destroy) + FadeOut(2.0) + CallFunc(destroyed.kill)
         destroyed.do(action)
@@ -665,6 +660,19 @@ def create_destruction_explosions(board, battle_unit):
             board.add(ballistic_impact, z=1000)
 
     for i in range(20):
+        if i % 2 == 0:
+            # get another sound channel to use just for the explosions
+            explosion_channel = pygame.mixer.find_channel()
+            if explosion_channel is None:
+                explosion_channel = pygame.mixer.Channel(random.randint(0, 8))
+            explosion_channel.set_volume(Settings.VOLUME_FX)
+
+            # add random explosion sounds with the effect
+            rand_index = random.randint(0, len(Resources.explosion_sounds)-1)
+            explosion_sound = Resources.explosion_sounds[rand_index]
+
+            actions += CallFunc(explosion_channel.play, explosion_sound)
+
         actions += CallFunc(_add_random_explosion) + Delay(0.1)
 
     board.do(actions)

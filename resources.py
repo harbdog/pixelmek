@@ -46,8 +46,7 @@ class Resources(object):
 
         # Preload sound effects
         Resources.cannon_sound = Sound(pyglet.resource.file("sounds/autocannon-shot.ogg"))
-        Resources.explosion_sound = Sound(pyglet.resource.file("sounds/explosion-single.ogg"))
-        Resources.explosion_multiple_sound = Sound(pyglet.resource.file("sounds/explosion-multiple.ogg"))
+        Resources.impact_sound = Sound(pyglet.resource.file("sounds/explosion-single.ogg"))
 
         Resources.flamer_sound = Sound(pyglet.resource.file("sounds/flamer-shot.ogg"))
         Resources.gauss_sound = Sound(pyglet.resource.file("sounds/gauss-shot.ogg"))
@@ -62,6 +61,13 @@ class Resources(object):
         Resources.stomp_sounds = []
         for i in range(4):
             Resources.stomp_sounds.append(Sound(pyglet.resource.file("sounds/mech-stomp-%s.ogg" % i)))
+
+        Resources.explosion_sounds = []
+        for i in range(4):
+            Resources.explosion_sounds.append(Sound(pyglet.resource.file("sounds/cannon-%s.ogg" % i)))
+
+        for i in range(2):
+            Resources.explosion_sounds.append(Sound(pyglet.resource.file("sounds/sparks-%s.ogg" % i)))
 
         # preload font
         pyglet.font.add_file(pyglet.resource.file('images/ui/Convoy.ttf'))

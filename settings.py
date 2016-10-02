@@ -2,6 +2,18 @@ from cocos.director import director
 from cocos.menu import *
 
 
+class Settings:
+
+    VOLUME_FX = 0.5
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def set_volume_fx(volume):
+        Settings.VOLUME_FX = volume
+
+
 class SettingsMenu(Menu):
 
     RESOLUTIONS = ['320x200', '640x480', '800x600', '1024x768', '1280x1024',
