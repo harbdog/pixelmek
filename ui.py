@@ -1,5 +1,8 @@
 import cocos
 import pyglet
+from cocos.euclid import Point2
+from cocos.rect import Rect
+
 import floaters
 
 from board import Board
@@ -21,6 +24,14 @@ class Interface(cocos.layer.Layer):
         self.unit_display = None
 
         self.target_display = None
+
+        # TESTING: clickable UI buttons
+        size = director.get_window_size()
+        width = size[0]
+        height = size[1]
+        btn = Button()
+        btn.position = width//2, Board.TILE_SIZE
+        self.add(btn)
 
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:
@@ -56,3 +67,23 @@ class Interface(cocos.layer.Layer):
         self.target_display.position = width - self.target_display.width - Board.TILE_SIZE // 2, \
                                        height - self.target_display.height - Board.TILE_SIZE // 2
         self.add(self.target_display)
+
+
+class Button(cocos.layer.ColorLayer):
+
+    def __init__(self, r=225, g=225, b=225, a=255//2):
+        super(Button, self).__init__(r, g, b, a)
+
+        self.width = Board.TILE_SIZE
+        self.height = Board.TILE_SIZE
+
+        director.window.push_handlers(self.on_mouse_press)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        p = Rect(x, y, 0.1, 0.1)
+        r = Rect(self.x, self.y, self.width, self.height)
+
+        if p.intersect(r) is not None:
+            print("Pressed Button!")
+        else:
+            print("Missed Button")
