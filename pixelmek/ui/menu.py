@@ -1,13 +1,13 @@
 import cocos
 import pyglet
-import settings
-import actions
-
-from battle import Battle
 from cocos.director import director
 from cocos.menu import *
 from cocos.scenes import *
-from ui import Interface
+
+import actions
+import settings
+from pixelmek.model.battle import Battle
+from interface import Interface
 
 
 class MainMenu(Menu):
@@ -43,7 +43,7 @@ class MainMenu(Menu):
         scene.add(Interface.UI)
         director.push(scene)
 
-        Battle.BATTLE.nextTurn()
+        actions.nextTurn()
         actions.setActionReady(True)
 
     def on_settings(self):

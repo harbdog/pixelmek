@@ -1,5 +1,4 @@
 import cocos
-from cocos.euclid import Point2
 from pyglet.gl import *
 
 

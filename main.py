@@ -1,18 +1,15 @@
-import events
-import include
-import menu
-import model
 import os
 import pygame
-import sprites
-
-from battle import *
-from board import *
-from cocos.director import director
+import pyglet
 from random import randint
-from ui import Interface
 
-from resources import Resources
+from pixelmek.misc import include
+from pixelmek.misc import resources
+from pixelmek.model.battle import *
+from pixelmek.ui import events
+from pixelmek.ui import menu
+from pixelmek.ui import sprites
+from pixelmek.ui.board import *
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
@@ -37,19 +34,21 @@ pygame.mixer.init(44100, -16, 2, 2048)
 pygame.mixer.set_num_channels(32)
 
 # preload all sound and image resources
-Resources.preload()
+resources.Resources.preload()
 
 
 # setup custom mouse cursor
-cursor = pyglet.window.ImageMouseCursor(Resources.mouse_pointer, 1, 17)
+cursor = pyglet.window.ImageMouseCursor(resources.Resources.mouse_pointer, 1, 17)
 director.window.set_mouse_cursor(cursor)
 
-board = Board()
 battle = Battle()
+map_model = Map()
+battle.setMap(map_model)
+
+board = Board(battle)
 ui = Interface()
-battle.setBoard(board)
-key_events = events.KeyboardEvents(battle)
-mouse_events = events.MouseEvents(battle)
+key_events = events.KeyboardEvents(board)
+mouse_events = events.MouseEvents(board)
 
 # set up test players
 player = Player("Human", team=0)
@@ -122,7 +121,7 @@ scroller.add(board, z=0)
 scroller.add(key_events, z=-1)
 scroller.add(mouse_events, z=1)
 
-battle.setScroller(scroller)
+board.setScroller(scroller)
 
 scene = cocos.scene.Scene(menu.MainMenu(scroller))
 

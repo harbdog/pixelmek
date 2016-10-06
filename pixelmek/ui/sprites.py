@@ -1,18 +1,18 @@
-import cocos
 import math
 import pygame
 import pyglet
-import battle
 import random
+import cocos
 
-from board import Board
 from cocos.actions import *
 from cocos.batch import BatchNode
 from cocos.euclid import Point2
 from cocos.particle_systems import Meteor
 from cocos.sprite import Sprite
-from resources import Resources
-from model import Mech
+
+from pixelmek.misc.resources import Resources
+from pixelmek.model.map import Map
+from board import Board
 from settings import Settings
 
 
@@ -168,7 +168,7 @@ class MechSprite(cocos.layer.Layer):
 
         # TODO: adjust Z order only AFTER a Y position move
         # TODO: Z order should be based on the number of rows in the board
-        new_z = (Board.numRows - self.battle_mech.row) * 10
+        new_z = (Map.numRows - self.battle_mech.row) * 10
 
         parent = self.parent
 

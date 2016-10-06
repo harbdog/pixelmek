@@ -1,23 +1,63 @@
 from __future__ import division
 
-import gl
-import random
-import cocos
-import floaters
-import pyglet
 import pygame
-from battle import Battle
-from board import Board
-from cocos.actions import *
-from cocos.sprite import Sprite
-from cocos.particle import Color
-from cocos.particle_systems import Meteor, Galaxy, Fire
-from cocos.euclid import Point2
+import random
 from math import atan2, degrees, pi
 
-from resources import Resources
+import cocos
+import pyglet
+import floaters
+import gl
+
+from cocos.actions import *
+from cocos.euclid import Point2
+from cocos.particle import Color
+from cocos.particle_systems import Meteor, Galaxy, Fire
+from cocos.sprite import Sprite
+
+from pixelmek.misc.resources import Resources
+from pixelmek.model.battle import Battle
+from board import Board
 from settings import Settings
-from ui import Interface
+from interface import Interface
+
+
+def nextTurn():
+    battle = Battle.BATTLE
+    board = Board.BOARD
+    if battle is None or board is None:
+        return
+
+    # do some things on the UI to end the previous unit's turn
+    prev_unit = battle.getTurnUnit()
+    if prev_unit is not None:
+        prev_unit.sprite.stop()
+
+    for cell in board.cellMap.itervalues():
+        cell.remove_indicators()
+
+    # make the model update to the next turn
+    battle.nextTurn()
+
+    # do some things on the UI to start the next unit's turn
+    next_unit = battle.getTurnUnit()
+    if next_unit is None:
+        return
+
+    next_unit.sprite.sulk()
+
+    board.showRangeIndicators()
+    board.showUnitIndicators()
+
+    board.setSelectedCellPosition(next_unit.col, next_unit.row)
+
+    turn_cell_pos = Board.board_to_layer(next_unit.col, next_unit.row)
+    if turn_cell_pos is not None:
+        turn_cell_pos = turn_cell_pos[0] + Board.TILE_SIZE // 2, turn_cell_pos[1] + Board.TILE_SIZE // 2
+
+    board.scroller.set_focus(*turn_cell_pos)
+
+    Interface.UI.updatePlayerUnitStats(next_unit)
 
 
 class Actions(object):
@@ -33,9 +73,11 @@ def setActionReady(is_ready):
     Actions.action_ready = is_ready
 
 
-def actOnCell(battle, col, row):
+def actOnCell(board, col, row):
     if not isActionReady():
         return
+
+    battle = board.battle
 
     # perform an action based on the given cell and/or its occupants
     turn_unit = battle.getTurnUnit()
@@ -45,17 +87,17 @@ def actOnCell(battle, col, row):
         # TODO: make sure it is a player unit's turn or do something else
         return
 
-    cell = battle.getCellAt(col, row)
+    cell = board.getCellAt(col, row)
     if cell is None:
         return
 
     # if the cell is not already selected, select it instead
     sel_pos = battle.getSelectedCellPosition()
     if sel_pos is None or col != sel_pos[0] or row != sel_pos[1]:
-        moveSelectionTo(battle, col, row)
+        moveSelectionTo(board, col, row)
         return
 
-    cell_unit = battle.getUnitAtCell(col, row)
+    cell_unit = battle.getUnitAt(col, row)
 
     if col == turn_unit.col and row == turn_unit.row:
         setActionReady(False)
@@ -63,7 +105,7 @@ def actOnCell(battle, col, row):
         # TODO: ask confirmation to end the turn without firing
         print("Skipping remainder of the turn!")
 
-        battle.nextTurn()
+        nextTurn()
 
         setActionReady(True)
 
@@ -72,26 +114,26 @@ def actOnCell(battle, col, row):
 
         turn_unit.move -= cell.range_to_display
 
-        for cell in battle.board.cellMap.itervalues():
+        for cell in board.cellMap.itervalues():
             cell.remove_indicators()
 
         animate_reverse = (turn_unit.col - col > 0) or (turn_unit.row - row > 0)
 
         def _ready_next_move():
             turn_unit.sprite.sulk()
-            for chk_cell in battle.board.cellMap.itervalues():
+            for chk_cell in board.cellMap.itervalues():
                 chk_cell.remove_indicators()
 
-            battle.showRangeIndicators()
-            battle.showUnitIndicators()
+            board.showRangeIndicators()
+            board.showUnitIndicators()
 
-            battle.setSelectedCellPosition(turn_unit.col, turn_unit.row)
+            board.setSelectedCellPosition(turn_unit.col, turn_unit.row)
 
             turn_cell_pos = Board.board_to_layer(turn_unit.col, turn_unit.row)
             if turn_cell_pos is not None:
                 turn_cell_pos = turn_cell_pos[0] + Board.TILE_SIZE//2, turn_cell_pos[1] + Board.TILE_SIZE//2
 
-            battle.scroller.set_focus(*turn_cell_pos)
+            board.scroller.set_focus(*turn_cell_pos)
 
             setActionReady(True)
 
@@ -109,28 +151,30 @@ def actOnCell(battle, col, row):
 
         print("Enemy: " + str(cell_unit))
 
-        battle.showUnitIndicators(visible=False)
-        for chk_cell in battle.board.cellMap.itervalues():
+        board.showUnitIndicators(visible=False)
+        for chk_cell in board.cellMap.itervalues():
             chk_cell.remove_indicators()
 
-        attack_time = performAttackOnUnit(battle, cell_unit)
+        attack_time = performAttackOnUnit(board, cell_unit)
 
         def _ready_next_turn():
             setActionReady(False)
-            battle.nextTurn()
+            nextTurn()
             setActionReady(True)
 
         # start the next turn when the attack is completed
-        battle.board.do(Delay(attack_time) + CallFunc(_ready_next_turn))
+        board.do(Delay(attack_time) + CallFunc(_ready_next_turn))
 
 
-def moveSelectionTo(battle, col, row):
+def moveSelectionTo(board, col, row):
     # move selection to the given cell
-    battle.setSelectedCellPosition(col, row)
+    board.setSelectedCellPosition(col, row)
 
 
-def moveSelectionBy(battle, col_amt, row_amt):
+def moveSelectionBy(board, col_amt, row_amt):
     # move selection cell by given amount
+    battle = board.battle
+
     cell_pos = battle.getSelectedCellPosition()
     if cell_pos is None:
         return
@@ -138,8 +182,10 @@ def moveSelectionBy(battle, col_amt, row_amt):
     battle.setSelectedCellPosition(cell_pos[0] + col_amt, cell_pos[1] + row_amt)
 
 
-def performAttackOnUnit(battle, target_unit):
+def performAttackOnUnit(board, target_unit):
     # perform an attack on the given target BattleUnit
+    battle = board.battle
+
     turn_unit = battle.getTurnUnit()
     if turn_unit is None or target_unit is None\
             or turn_unit.isDestroyed() or target_unit.isDestroyed():
@@ -202,7 +248,7 @@ def performAttackOnUnit(battle, target_unit):
                 ppc.life_var = 0.1
 
                 ppc.position = weapon_x, weapon_y
-                battle.board.add(ppc, z=1000)
+                board.add(ppc, z=1000)
 
                 target_x = real_x + random_offset()
                 target_y = real_y + random_offset()
@@ -252,7 +298,7 @@ def performAttackOnUnit(battle, target_unit):
                 flamer.pos_var = Point2(5, 5)
 
                 flamer.position = weapon_x, weapon_y
-                battle.board.add(flamer, z=1000)
+                board.add(flamer, z=1000)
 
                 target_x = real_x + random_offset()
                 target_y = real_y + random_offset()
@@ -320,7 +366,7 @@ def performAttackOnUnit(battle, target_unit):
                 node.add(las_outer, z=1)
                 node.add(las_middle, z=2)
                 node.add(las_inner, z=3)
-                battle.board.add(node, z=1000)
+                board.add(node, z=1000)
 
                 # give lasers a small particle pre-fire effect
                 laser_charge = Galaxy()
@@ -341,7 +387,7 @@ def performAttackOnUnit(battle, target_unit):
                 laser_drift = random.uniform(-15.0, 15.0), random.uniform(-15.0, 15.0)
 
                 las_action = Delay(0.5) + ToggleVisibility() \
-                             + CallFunc(create_laser_impact, battle.board, target_pos, laser_drift, las_life) \
+                             + CallFunc(create_laser_impact, board, target_pos, laser_drift, las_life) \
                              + gl.LineDriftBy(laser_drift, las_life) \
                              + CallFunc(laser_charge.stop_system) + CallFunc(node.kill)
                 las_outer.do(las_action)
@@ -415,7 +461,7 @@ def performAttackOnUnit(battle, target_unit):
                     action = Delay(i * 0.1) + ToggleVisibility() \
                              + CallFunc(weapon_channel.play, cannon_sound) \
                              + MoveTo((target_x, target_y), ballistic_t) \
-                             + CallFunc(impact_func, weapon, battle.board, target_pos) \
+                             + CallFunc(impact_func, weapon, board, target_pos) \
                              + CallFunc(ballistic.kill)
 
                     if weapon.isGauss():
@@ -428,7 +474,7 @@ def performAttackOnUnit(battle, target_unit):
 
                     ballistic.do(action)
 
-                    battle.board.add(ballistic, z=1000 + i)
+                    board.add(ballistic, z=1000 + i)
 
                     travel_time = (i * 0.1) + ballistic_t
                     if min_travel_time == 0 or min_travel_time > travel_time:
@@ -491,7 +537,7 @@ def performAttackOnUnit(battle, target_unit):
                     action = Delay(i * 0.05) + ToggleVisibility() \
                              + CallFunc(weapon_channel.play, missile_sound) \
                              + MoveTo((target_x, target_y), missile_t) \
-                             + CallFunc(create_missile_impact, battle.board, target_pos) \
+                             + CallFunc(create_missile_impact, board, target_pos) \
                              + CallFunc(missile.kill) \
                              + CallFunc(explosion_channel.play, explosion_sound) \
                              + Delay(0.5)
@@ -502,7 +548,7 @@ def performAttackOnUnit(battle, target_unit):
 
                     missile.do(action)
 
-                    battle.board.add(missile, z=1000 + i)
+                    board.add(missile, z=1000 + i)
 
                     travel_time = (i * 0.05) + missile_t
                     if min_travel_time == 0 or min_travel_time > travel_time:
@@ -518,9 +564,9 @@ def performAttackOnUnit(battle, target_unit):
     floater = floaters.TextFloater("%i" % attack_damage)
     floater.visible = False
     floater.position = real_x, real_y + target_sprite.get_height() // 3
-    battle.board.add(floater, z=2000)
+    board.add(floater, z=2000)
 
-    action = Delay(min_travel_time / 2) + CallFunc(battle.scroller.set_focus, *target_area) \
+    action = Delay(min_travel_time / 2) + CallFunc(board.scroller.set_focus, *target_area) \
         + Delay(min_travel_time / 2) + ToggleVisibility() \
         + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
         + FadeOut(1.0) + CallFunc(floater.kill)
@@ -545,10 +591,10 @@ def performAttackOnUnit(battle, target_unit):
         destroyed = floaters.TextFloater("DESTROYED")
         destroyed.visible = False
         destroyed.position = real_x, real_y + target_sprite.get_height() // 3
-        battle.board.add(destroyed, z=5000)
+        board.add(destroyed, z=5000)
 
         action = Delay(max_travel_time) + ToggleVisibility() \
-            + (MoveBy((0, Board.TILE_SIZE), 1.0) | CallFunc(create_destruction_explosions, battle.board, target_unit)) \
+            + (MoveBy((0, Board.TILE_SIZE), 1.0) | CallFunc(create_destruction_explosions, board, target_unit)) \
             + Delay(0.5) + CallFunc(target_sprite.destroy) + FadeOut(2.0) + CallFunc(destroyed.kill)
         destroyed.do(action)
 

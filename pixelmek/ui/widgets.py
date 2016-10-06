@@ -1,19 +1,19 @@
 import cocos
 import pyglet
-import floaters
 import random
-
-from board import Board
 from cocos.batch import BatchNode
 from cocos.sprite import Sprite
-from resources import Resources
 from PIL import Image
+
+import floaters
+from pixelmek.misc.resources import Resources
 
 
 class UnitCard(cocos.layer.Layer):
 
     def __init__(self, battle_unit, is_friendly=True, reverse=False):
         super(UnitCard, self).__init__()
+        from board import Board
 
         self.reverse = reverse
         self.width = 0

@@ -1,10 +1,6 @@
 import model
 
-from board import Board
-from cocos.director import director
 from cocos.euclid import Point2
-from cocos.rect import Rect
-from ui import Interface
 
 
 class Battle(object):
@@ -16,8 +12,7 @@ class Battle(object):
 
     def __init__(self):
         Battle.BATTLE = self
-        self.board = None
-        self.scroller = None
+        self.map = None
 
         self.player_list = []
 
@@ -26,11 +21,8 @@ class Battle(object):
 
         self.sel_cell_pos = None
 
-    def setBoard(self, board):
-        self.board = board
-
-    def setScroller(self, scroller):
-        self.scroller = scroller
+    def setMap(self, map_model):
+        self.map = map_model
 
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
@@ -43,58 +35,16 @@ class Battle(object):
         self.player_list.append(player)
 
     def clearSelectedCell(self):
-        prev_cell = self.getSelectedCell()
-        if prev_cell is not None:
-            prev_cell.remove_indicators()
-
         self.sel_cell_pos = None
 
     def setSelectedCellPosition(self, col, row):
-        if col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
+        if col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
             return
 
-        prev_cell = self.getSelectedCell()
-        if prev_cell is not None:
-            prev_cell.show_action_indicator(show=False)
-            prev_cell.show_range_to_display(show=False)
-
         self.sel_cell_pos = col, row
-        new_cell = self.getSelectedCell()
-
-        if new_cell is not None:
-            new_cell.show_action_indicator()
-            new_cell.show_range_to_display()
-
-            cell_unit = self.getUnitAtCell(col, row)
-            if cell_unit == self.getTurnUnit():
-                Interface.UI.updateTargetUnitStats(None)
-            else:
-                Interface.UI.updateTargetUnitStats(cell_unit,
-                                                   is_friendly=self.isFriendlyUnit(self.getTurnPlayer(), cell_unit))
-
-            # only refocus if getting too close to edge of display (within 3 Tiles of each side)
-            window_size = director.get_window_size()
-            view_width = window_size[0] - Board.BOARD.TILE_SIZE * 6
-            view_height = window_size[1] - Board.BOARD.TILE_SIZE * 6
-
-            view_bottom_left = self.scroller.screen_to_world(Board.BOARD.TILE_SIZE * 3, Board.BOARD.TILE_SIZE * 3)
-            view_rect = Rect(view_bottom_left[0], view_bottom_left[1], view_width, view_height)
-
-            cell_screen_pos = Board.board_to_layer(col, row)
-            cell_rect = Rect(cell_screen_pos[0], cell_screen_pos[1], Board.BOARD.TILE_SIZE, Board.BOARD.TILE_SIZE)
-
-            if not cell_rect.intersects(view_rect):
-                self.scroller.set_focus(cell_screen_pos[0] + Board.BOARD.TILE_SIZE // 2,
-                                        cell_screen_pos[1] + Board.BOARD.TILE_SIZE // 2)
 
     def getSelectedCellPosition(self):
         return self.sel_cell_pos
-
-    def getSelectedCell(self):
-        if self.sel_cell_pos is None:
-            return None
-
-        return self.board.get_cell(*self.sel_cell_pos)
 
     def getTurnPlayer(self):
         turn_unit = self.getTurnUnit()
@@ -112,33 +62,7 @@ class Battle(object):
     def isTurnUnit(self, battle_unit):
         return battle_unit is not None and battle_unit is self.getTurnUnit()
 
-    def getTurnUnitCell(self):
-        turn_unit = self.getTurnUnit()
-        if turn_unit is not None:
-            return self.getCellAt(turn_unit.col, turn_unit.row)
-
-    def isTurnUnitCell(self, cell):
-        turn_unit = self.getTurnUnit()
-        if turn_unit is not None and cell is not None:
-            turn_unit_cell = self.getTurnUnitCell()
-            return cell is turn_unit_cell
-
-        return False
-
-    def getUnitCell(self, battle_unit):
-        if battle_unit is None:
-            return None
-
-        return self.board.get_cell(battle_unit.col, battle_unit.row)
-
     def nextTurn(self):
-        prev_unit = self.getTurnUnit()
-        if prev_unit is not None:
-            prev_unit.sprite.stop()
-
-        for cell in self.board.cellMap.itervalues():
-            cell.remove_indicators()
-
         self.unit_turn += 1
         if self.unit_turn >= len(self.unit_list):
             self.unit_turn = 0
@@ -157,38 +81,6 @@ class Battle(object):
         # TODO: account for critical and heat effects on move
         next_unit.move = next_unit.mech.move
 
-        next_unit.sprite.sulk()
-
-        self.showRangeIndicators()
-        self.showUnitIndicators()
-
-        self.setSelectedCellPosition(next_unit.col, next_unit.row)
-
-        turn_cell_pos = Board.board_to_layer(next_unit.col, next_unit.row)
-        if turn_cell_pos is not None:
-            turn_cell_pos = turn_cell_pos[0] + Board.TILE_SIZE // 2, turn_cell_pos[1] + Board.TILE_SIZE // 2
-
-        self.scroller.set_focus(*turn_cell_pos)
-
-        Interface.UI.updatePlayerUnitStats(next_unit)
-
-    def showRangeIndicators(self):
-        turn_unit = self.getTurnUnit()
-        cells_in_range = self.getCellsInRange(turn_unit.col, turn_unit.row, turn_unit.move)
-        for cell_pos in cells_in_range:
-            cell = self.getCellAt(*cell_pos)
-            cell_range = cells_in_range[cell_pos]
-            if self.isCellAvailable(*cell_pos):
-                cell.show_move_indicator()
-                cell.range_to_display = cell_range
-            elif self.isTurnUnitCell(cell):
-                cell.show_player_indicator()
-
-    def showUnitIndicators(self, visible=True):
-        for battle_unit in self.unit_list:
-            show_indicator = visible and not self.isTurnUnit(battle_unit)
-            battle_unit.sprite.showIndicator(visible=show_indicator)
-
     def getCellsInRange(self, col, row, max_dist):
         cells = {}
         self._recurseCellsInRange(col, row, 0, max_dist, cells)
@@ -197,7 +89,7 @@ class Battle(object):
     def _recurseCellsInRange(self, col, row, dist, max_dist, cells):
         cell = (col, row)
         if dist > max_dist or (cell in cells and dist >= cells[cell]) \
-                or col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
+                or col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
             return
 
         if dist >= 0:
@@ -209,7 +101,7 @@ class Battle(object):
         turn_unit = self.getTurnUnit()
         turn_player = turn_unit.getPlayer()
 
-        cell_unit = self.getUnitAtCell(col, row)
+        cell_unit = self.getUnitAt(col, row)
         is_friendly_occupied = False
         if cell_unit is not None:
             is_friendly_occupied = self.isFriendlyUnit(turn_player, cell_unit)
@@ -222,10 +114,10 @@ class Battle(object):
             self._recurseCellsInRange(col - 1, row, dist + 1, max_dist, cells)
 
     def isCellAvailable(self, col, row):
-        if self.board is None:
+        if self.map is None:
             return False
 
-        if col < 0 or row < 0 or col >= self.board.numCols or row >= self.board.numRows:
+        if col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
             return False
 
         # check to see if any units occupy the space
@@ -235,7 +127,7 @@ class Battle(object):
                 return False
 
         loc = (col, row)
-        cell_data = self.board.boardMap.get(loc)
+        cell_data = self.map.boardMap.get(loc)
 
         if cell_data is None:
             return True
@@ -244,14 +136,11 @@ class Battle(object):
 
         return False
 
-    def getCellAt(self, col, row):
-        return self.board.get_cell(col, row)
-
-    def getUnitAtCell(self, col, row):
-        if self.board is None:
+    def getUnitAt(self, col, row):
+        if self.map is None:
             return None
 
-        if col < 0 or row < 0 or col >= Board.numCols or row >= Board.numRows:
+        if col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
             return None
 
         # find the unit that occupies the space
@@ -262,13 +151,11 @@ class Battle(object):
 
         return None
 
-    @staticmethod
-    def getNumRows():
-        return Board.numRows
+    def getNumRows(self):
+        return self.map.numRows
 
-    @staticmethod
-    def getNumCols():
-        return Board.numCols
+    def getNumCols(self):
+        return self.map.numCols
 
     @staticmethod
     def getCellDistance(cell_1, cell_2):

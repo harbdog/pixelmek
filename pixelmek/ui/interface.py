@@ -1,14 +1,7 @@
 import cocos
-import pyglet
-from cocos.euclid import Point2
+from cocos.director import director
 from cocos.rect import Rect
 
-import floaters
-
-from board import Board
-from cocos.batch import BatchNode
-from cocos.director import director
-from cocos.sprite import Sprite
 from widgets import UnitCard
 
 
@@ -18,6 +11,7 @@ class Interface(cocos.layer.Layer):
 
     def __init__(self):
         super(Interface, self).__init__()
+        from board import Board
 
         Interface.UI = self
 
@@ -42,6 +36,7 @@ class Interface(cocos.layer.Layer):
             self.unit_display = None
             return
 
+        from board import Board
         # size = director.get_window_size()
         # width = size[0]
         # height = size[1]
@@ -59,6 +54,8 @@ class Interface(cocos.layer.Layer):
             self.target_display = None
             return
 
+        from board import Board
+
         size = director.get_window_size()
         width = size[0]
         height = size[1]
@@ -73,6 +70,8 @@ class Button(cocos.layer.ColorLayer):
 
     def __init__(self, r=225, g=225, b=225, a=255//2):
         super(Button, self).__init__(r, g, b, a)
+
+        from board import Board
 
         self.width = Board.TILE_SIZE
         self.height = Board.TILE_SIZE

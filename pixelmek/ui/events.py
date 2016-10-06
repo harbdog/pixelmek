@@ -1,33 +1,22 @@
 from __future__ import division
 
-import gl
-import random
 import cocos
-import floaters
 import pyglet
-import pygame
-import actions
-from battle import Battle
-from board import Board
-from cocos.actions import *
-from cocos.sprite import Sprite
-from cocos.particle import Color
-from cocos.particle_systems import Meteor, Galaxy, Fire
-from cocos.euclid import Point2
 from pyglet.window import mouse
-from math import atan2, degrees, pi
 
-from resources import Resources
+import actions
+from board import Board
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
     is_event_handler = True
 
-    def __init__(self, battle):
+    def __init__(self, board):
         super(KeyboardEvents, self).__init__()
 
         # keep track of battle objects being controlled by events
-        self.battle = battle
+        self.board = board
+        self.battle = board.battle
 
         # To keep track of which keys are pressed:
         self.keys_pressed = set()
@@ -52,7 +41,7 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
             if cell_pos is None:
                 return
 
-            actions.actOnCell(self.battle, cell_pos[0], cell_pos[1])
+            actions.actOnCell(self.board, cell_pos[0], cell_pos[1])
 
         elif char == "W":
             mech.sprite.strut()
@@ -62,19 +51,19 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
 
         elif char == "LEFT":
             # move selection left
-            actions.moveSelectionBy(self.battle, -1, 0)
+            actions.moveSelectionBy(self.board, -1, 0)
 
         elif char == "RIGHT":
             # move selection right
-            actions.moveSelectionBy(self.battle, 1, 0)
+            actions.moveSelectionBy(self.board, 1, 0)
 
         elif char == "UP":
             # move selection up
-            actions.moveSelectionBy(self.battle, 0, 1)
+            actions.moveSelectionBy(self.board, 0, 1)
 
         elif char == "DOWN":
             # move selection down
-            actions.moveSelectionBy(self.battle, 0, -1)
+            actions.moveSelectionBy(self.board, 0, -1)
 
         else:
             print("unused binding: " + char)
@@ -103,10 +92,11 @@ class MouseEvents(cocos.layer.ScrollableLayer):
 
     is_event_handler = True     #: enable director.window events
 
-    def __init__(self, battle):
+    def __init__(self, board):
         super(MouseEvents, self).__init__()
 
-        self.battle = battle
+        self.board = board
+        self.battle = board.battle
 
     def on_mouse_motion(self, x, y, dx, dy):
         """Called when the mouse moves over the app window with no button pressed
@@ -137,13 +127,13 @@ class MouseEvents(cocos.layer.ScrollableLayer):
         'modifiers' is a bitwise or of pyglet.window.key modifier constants
            (values like 'SHIFT', 'OPTION', 'ALT')
         """
-        real_x, real_y = self.battle.scroller.screen_to_world(x, y)
+        real_x, real_y = self.board.scroller.screen_to_world(x, y)
         dest_cell = Board.layer_to_board(real_x, real_y)
 
         if buttons & mouse.RIGHT:
             # perform action on the cell
-            actions.actOnCell(self.battle, dest_cell[0], dest_cell[1])
+            actions.actOnCell(self.board, dest_cell[0], dest_cell[1])
 
         elif buttons & mouse.LEFT:
             # select the specific cell
-            actions.moveSelectionTo(self.battle, dest_cell[0], dest_cell[1])
+            actions.moveSelectionTo(self.board, dest_cell[0], dest_cell[1])

@@ -1,4 +1,3 @@
-import board
 import pyglet
 from pygame.mixer import Sound
 
@@ -7,13 +6,15 @@ class Resources(object):
 
     @staticmethod
     def preload():
+        from pixelmek.ui.board import Board
+
         # Preload images
         Resources.mouse_pointer = pyglet.resource.image("images/ui/mouse-pointer-0.png")
 
         buildings_img = pyglet.resource.image("images/board/colony-buildings-32.png")
         buildings_grid = pyglet.image.ImageGrid(buildings_img,
-                                                columns=(buildings_img.width // board.Board.TILE_SIZE),
-                                                rows=(buildings_img.height // board.Board.TILE_SIZE))
+                                                columns=(buildings_img.width // Board.TILE_SIZE),
+                                                rows=(buildings_img.height // Board.TILE_SIZE))
 
         Resources.buildings_tex = pyglet.image.TextureGrid(buildings_grid)
         Resources.ground_img = pyglet.resource.image("images/board/ground-dark.png")

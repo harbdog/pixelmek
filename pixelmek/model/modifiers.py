@@ -1,6 +1,3 @@
-from battle import BattleMech
-
-
 class Modifiers(object):
 
     AUTO_MISS = 1000
