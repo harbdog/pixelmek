@@ -73,6 +73,18 @@ def setActionReady(is_ready):
     Actions.action_ready = is_ready
 
 
+def actOnUI(x, y):
+    button = Interface.UI.getButtonAt(x, y)
+    if button is not None and not button.hidden and not button.disabled:
+        battle = Battle.BATTLE
+        turn_unit = battle.getTurnUnit()
+        sel_cell_pos = battle.getSelectedCellPosition()
+
+        return button.do_action(**{'unit': turn_unit, 'cell_pos': sel_cell_pos})
+
+    return False
+
+
 def actOnCell(board, col, row):
     if not isActionReady():
         return

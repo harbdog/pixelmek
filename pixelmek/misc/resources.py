@@ -37,6 +37,13 @@ class Resources(object):
         Resources.move_icon_img = pyglet.resource.image("images/ui/move-icon.png")
         Resources.weapon_icon_img = pyglet.resource.image("images/ui/weapon-icon.png")
 
+        Resources.end_button_img = pyglet.resource.image("images/ui/end-button.png")
+        Resources.evade_button_img = pyglet.resource.image("images/ui/evade-button.png")
+        Resources.move_button_img = pyglet.resource.image("images/ui/move-button.png")
+        Resources.overheat_button_img = pyglet.resource.image("images/ui/red-button.png")
+        Resources.sprint_button_img = pyglet.resource.image("images/ui/sprint-button.png")
+        Resources.weapon_button_img = pyglet.resource.image("images/ui/weapon-button.png")
+
         Resources.ballistic_img = pyglet.resource.image("images/weapons/ballistic.png")
         Resources.buckshot_img = pyglet.resource.image("images/weapons/buckshot.png")
         Resources.gauss_img = pyglet.resource.image("images/weapons/gauss.png")

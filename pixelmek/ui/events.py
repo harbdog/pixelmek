@@ -6,6 +6,7 @@ from pyglet.window import mouse
 
 import actions
 from board import Board
+from interface import Interface
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):
@@ -127,6 +128,11 @@ class MouseEvents(cocos.layer.ScrollableLayer):
         'modifiers' is a bitwise or of pyglet.window.key modifier constants
            (values like 'SHIFT', 'OPTION', 'ALT')
         """
+
+        # first, check if there is a UI button where pressed before cascading down
+        if actions.actOnUI(x, y) is not False:
+            return
+
         real_x, real_y = self.board.scroller.screen_to_world(x, y)
         dest_cell = Board.layer_to_board(real_x, real_y)
 

@@ -2,10 +2,13 @@ import cocos
 import pyglet
 import random
 from cocos.batch import BatchNode
+from cocos.director import director
+from cocos.rect import Rect
 from cocos.sprite import Sprite
 from PIL import Image
 
 import floaters
+import gl
 from pixelmek.misc.resources import Resources
 
 
@@ -240,3 +243,53 @@ class UnitCard(cocos.layer.Layer):
         # calculate actual width and height of this element
         self.width = mech_sprite.width + stats_width
         self.height = mech_sprite.height + (3 * Board.TILE_SIZE // 2)
+
+
+class Button(cocos.layer.ColorLayer):
+
+    def __init__(self, icon, action, width, height,
+                 border_width=2, border_color=(255, 255, 255),
+                 r=225, g=225, b=225, a=255//2):
+        super(Button, self).__init__(r, g, b, a)
+
+        self.action = action
+        self.disabled = False
+        self.hidden = False
+
+        self.width = width
+        self.height = height
+
+        # draw icon
+        if icon is not None:
+            self.icon = Sprite(icon)
+            self.icon.position = self.icon.width // 2 + (width // 2 - self.icon.width // 2), \
+                                 self.icon.height // 2 + (height // 2 - self.icon.height // 2)
+            self.add(self.icon)
+
+        # draw border
+        if border_width > 0:
+            border_w = gl.SingleLine((0, 0), (0, height),
+                                      width=border_width,
+                                      color=(border_color[0], border_color[1], border_color[2], 255))
+            border_e = gl.SingleLine((width, 0), (width, height),
+                                     width=border_width,
+                                     color=(border_color[0], border_color[1], border_color[2], 255))
+            border_n = gl.SingleLine((0, height), (width, height),
+                                     width=border_width,
+                                     color=(border_color[0], border_color[1], border_color[2], 255))
+            border_s = gl.SingleLine((0, 0), (width, 0),
+                                     width=border_width,
+                                     color=(border_color[0], border_color[1], border_color[2], 255))
+            self.add(border_w)
+            self.add(border_e)
+            self.add(border_n)
+            self.add(border_s)
+
+    def is_at(self, x, y):
+        p = Rect(x, y, 1, 1)
+        r = Rect(self.x, self.y, self.width, self.height)
+
+        return p.intersects(r)
+
+    def do_action(self, **kwargs):
+        return self.action(**kwargs)
