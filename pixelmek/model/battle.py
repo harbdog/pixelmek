@@ -12,6 +12,7 @@ class Battle(object):
 
     def __init__(self):
         Battle.BATTLE = self
+        self.started = False
         self.map = None
 
         self.player_list = []

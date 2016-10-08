@@ -2,7 +2,6 @@ import cocos
 import pyglet
 import random
 from cocos.batch import BatchNode
-from cocos.director import director
 from cocos.rect import Rect
 from cocos.sprite import Sprite
 from PIL import Image
@@ -248,11 +247,19 @@ class UnitCard(cocos.layer.Layer):
 class Button(cocos.layer.ColorLayer):
 
     def __init__(self, icon, action, width, height,
-                 border_width=2, border_color=(255, 255, 255),
-                 r=225, g=225, b=225, a=255//2):
-        super(Button, self).__init__(r, g, b, a)
+                 border_width=2, border_color=(50, 50, 50), border_selected_color=(255, 255, 255),
+                 color=(225, 225, 225), selected_color=(50, 150, 220)):
+        super(Button, self).__init__(color[0], color[1], color[2], 255//2)
+
+        self.border_width = border_width
+        self.border_color = border_color
+        self.border_selected_color = border_selected_color
+
+        self.default_color = color
+        self.selected_color = selected_color
 
         self.action = action
+        self.selected = False
         self.disabled = False
         self.hidden = False
 
@@ -266,24 +273,36 @@ class Button(cocos.layer.ColorLayer):
                                  self.icon.height // 2 + (height // 2 - self.icon.height // 2)
             self.add(self.icon)
 
+        self.borders = []
+        self.draw_border()
+
+    def draw_border(self):
+        for border in self.borders:
+            border.kill()
+
+        border_color = self.border_color
+        if self.selected:
+            border_color = self.border_selected_color
+
         # draw border
-        if border_width > 0:
-            border_w = gl.SingleLine((0, 0), (0, height),
-                                      width=border_width,
-                                      color=(border_color[0], border_color[1], border_color[2], 255))
-            border_e = gl.SingleLine((width, 0), (width, height),
-                                     width=border_width,
+        if self.border_width > 0:
+            border_w = gl.SingleLine((0, 0), (0, self.height),
+                                     width=self.border_width,
                                      color=(border_color[0], border_color[1], border_color[2], 255))
-            border_n = gl.SingleLine((0, height), (width, height),
-                                     width=border_width,
+            border_e = gl.SingleLine((self.width, 0), (self.width, self.height),
+                                     width=self.border_width,
                                      color=(border_color[0], border_color[1], border_color[2], 255))
-            border_s = gl.SingleLine((0, 0), (width, 0),
-                                     width=border_width,
+            border_n = gl.SingleLine((0, self.height), (self.width, self.height),
+                                     width=self.border_width,
                                      color=(border_color[0], border_color[1], border_color[2], 255))
-            self.add(border_w)
-            self.add(border_e)
-            self.add(border_n)
-            self.add(border_s)
+            border_s = gl.SingleLine((0, 0), (self.width, 0),
+                                     width=self.border_width,
+                                     color=(border_color[0], border_color[1], border_color[2], 255))
+
+            self.borders = [border_w, border_e, border_n, border_s]
+
+            for border in self.borders:
+                self.add(border)
 
     def is_at(self, x, y):
         p = Rect(x, y, 1, 1)
@@ -291,5 +310,23 @@ class Button(cocos.layer.ColorLayer):
 
         return p.intersects(r)
 
+    def set_selected(self, selected):
+        if selected != self.selected:
+            if selected:
+                from interface import Interface
+                Interface.UI.deselectAllButtons()
+
+                self.color = self.selected_color
+
+            else:
+                self.color = self.default_color
+
+            self.selected = selected
+            self.draw_border()
+
     def do_action(self, **kwargs):
+        if not self.selected:
+            self.set_selected(True)
+
+        kwargs['button'] = self
         return self.action(**kwargs)

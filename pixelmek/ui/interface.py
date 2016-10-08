@@ -1,9 +1,10 @@
 import cocos
+import actions
 from cocos.director import director
 
-from widgets import Button
-from widgets import UnitCard
 from pixelmek.misc.resources import Resources
+from widgets import UnitCard
+from widgets import Button
 
 
 class Interface(cocos.layer.Layer):
@@ -13,7 +14,6 @@ class Interface(cocos.layer.Layer):
     def __init__(self):
         super(Interface, self).__init__()
         from board import Board
-
         Interface.UI = self
 
         self.buttons = []
@@ -21,34 +21,35 @@ class Interface(cocos.layer.Layer):
         self.unit_display = None
         self.target_display = None
 
-        # TESTING: clickable UI buttons
+        # add clickable UI buttons
         size = director.get_window_size()
         width = size[0]
         height = size[1]
-        btn = Button(icon=Resources.move_button_img, action=self.doSomething,
-                     width=4+Board.TILE_SIZE, height=4+Board.TILE_SIZE)
+        self.move_btn = Button(icon=Resources.move_button_img, action=actions.selectMoveAction,
+                        width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        btn2 = Button(icon=Resources.evade_button_img, action=self.doSomethingElse,
-                     width=4+Board.TILE_SIZE, height=4+Board.TILE_SIZE)
+        self.evade_btn = Button(icon=Resources.evade_button_img, action=actions.selectEvadeAction,
+                        width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        btn3 = Button(icon=Resources.sprint_button_img, action=self.doSomething,
-                     width=4+Board.TILE_SIZE, height=4+Board.TILE_SIZE)
+        self.sprint_btn = Button(icon=Resources.sprint_button_img, action=actions.selectSprintAction,
+                          width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        btn4 = Button(icon=Resources.weapon_button_img, action=self.doSomethingElse,
-                      width=4+Board.TILE_SIZE, height=4+Board.TILE_SIZE)
+        self.weapon_btn = Button(icon=Resources.weapon_button_img, action=actions.selectWeaponAction,
+                          width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        btn5 = Button(icon=Resources.overheat_button_img, action=self.doSomething,
-                     width=4+Board.TILE_SIZE, height=4+Board.TILE_SIZE)
+        self.overheat_btn = Button(icon=Resources.overheat_button_img, action=actions.selectOverheatAction,
+                            width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        btn6 = Button(icon=Resources.end_button_img, action=self.doSomethingElse,
-                      width=4+Board.TILE_SIZE, height=4+Board.TILE_SIZE)
+        self.end_btn = Button(icon=Resources.end_button_img, action=actions.selectEndAction,
+                       width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        self.addButton(btn)
-        self.addButton(btn2)
-        self.addButton(btn3)
-        self.addButton(btn4)
-        self.addButton(btn5)
-        self.addButton(btn6)
+        self.addButton(self.move_btn)
+        self.addButton(self.evade_btn)
+        self.addButton(self.sprint_btn)
+        self.addButton(self.weapon_btn)
+        self.addButton(self.overheat_btn)
+        self.addButton(self.end_btn)
+
         self.arrangeButtons()
 
     def clearButtons(self):
@@ -61,6 +62,11 @@ class Interface(cocos.layer.Layer):
         if button is not None:
             self.buttons.append(button)
             self.add(button)
+
+    def deselectAllButtons(self):
+        for button in self.buttons:
+            button.set_selected(False)
+            button.draw_border()
 
     def arrangeButtons(self):
         num_buttons = len(self.buttons)
@@ -77,12 +83,12 @@ class Interface(cocos.layer.Layer):
             total_width += button.width
 
         button_x = (width // 2) - (total_width // 2)
-        button_y = Board.TILE_SIZE // 2
+        button_y = 0
         for button in self.buttons:
             button.x = button_x
-            button.y = button_y
+            button.y = button_y + button.border_width // 2
 
-            button_x += button.width
+            button_x += button.width + button.border_width
 
     def getButtonAt(self, x, y):
         for button in self.buttons:
@@ -90,12 +96,6 @@ class Interface(cocos.layer.Layer):
                 return button
 
         return None
-
-    def doSomething(self, unit=None, cell_pos=None):
-        print(str(len(self.buttons)) + " do something with " + str(unit) + " to cell " + str(cell_pos))
-
-    def doSomethingElse(self, unit=None, cell_pos=None):
-        print(str(len(self.buttons)) + " do something else " + str(unit) + " to cell " + str(cell_pos))
 
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:

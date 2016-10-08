@@ -46,7 +46,6 @@ map_model = Map()
 battle.setMap(map_model)
 
 board = Board(battle)
-ui = Interface()
 key_events = events.KeyboardEvents(board)
 mouse_events = events.MouseEvents(board)
 

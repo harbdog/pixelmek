@@ -22,6 +22,55 @@ from settings import Settings
 from interface import Interface
 
 
+class Actions(object):
+    # indicator for when an action can be performed or waiting on animation
+    action_ready = False
+
+
+def isActionReady():
+    return Actions.action_ready
+
+
+def setActionReady(is_ready):
+    Actions.action_ready = is_ready
+
+
+def initGame():
+    battle = Battle.BATTLE
+    if battle.started:
+        return False
+
+    print("Battle!")
+    ui = Interface()
+
+    battle.started = True
+    return True
+
+
+def selectMoveAction(unit=None, cell_pos=None, **kwargs):
+    print("select move for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
+    print("select evade for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def selectSprintAction(unit=None, cell_pos=None, **kwargs):
+    print("select sprint for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
+    print("select weapon for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
+    print("select overheat for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def selectEndAction(unit=None, cell_pos=None, **kwargs):
+    print("select end for " + str(unit) + " to cell " + str(cell_pos))
+
+
 def nextTurn():
     battle = Battle.BATTLE
     board = Board.BOARD
@@ -58,19 +107,6 @@ def nextTurn():
     board.scroller.set_focus(*turn_cell_pos)
 
     Interface.UI.updatePlayerUnitStats(next_unit)
-
-
-class Actions(object):
-    # indicator for when an action can be performed or waiting on animation
-    action_ready = False
-
-
-def isActionReady():
-    return Actions.action_ready
-
-
-def setActionReady(is_ready):
-    Actions.action_ready = is_ready
 
 
 def actOnUI(x, y):

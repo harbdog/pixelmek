@@ -15,6 +15,7 @@ class MainMenu(Menu):
         super(MainMenu, self).__init__("PixelMek")
 
         self.scroller = scroller
+        self.battle_scene = None
 
         self.font_title['font_name'] = 'Convoy'
         self.font_title['font_size'] = 50
@@ -37,14 +38,18 @@ class MainMenu(Menu):
         self.create_menu(menus)
 
     def on_battle(self):
-        print("Battle!")
-        scene = cocos.scene.Scene()
-        scene.add(self.scroller)
-        scene.add(Interface.UI)
-        director.push(scene)
+        starting = actions.initGame()
+        if starting:
+            self.battle_scene = cocos.scene.Scene()
+            self.battle_scene.add(self.scroller)
+            self.battle_scene.add(Interface.UI)
+            director.push(ZoomTransition(self.battle_scene, duration=0.5))
 
-        actions.nextTurn()
-        actions.setActionReady(True)
+            actions.nextTurn()
+            actions.setActionReady(True)
+
+        elif self.battle_scene is not None:
+            director.push(ZoomTransition(self.battle_scene, duration=0.5))
 
     def on_settings(self):
         print("Settings...")
@@ -58,3 +63,5 @@ class MainMenu(Menu):
 
     def on_quit(self):
         print("Back to the game if it's on...")
+        if self.battle_scene is not None:
+            director.push(ZoomTransition(self.battle_scene, duration=0.5))
