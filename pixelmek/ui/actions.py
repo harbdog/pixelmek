@@ -51,24 +51,48 @@ def selectMoveAction(unit=None, cell_pos=None, **kwargs):
     print("select move for " + str(unit) + " to cell " + str(cell_pos))
 
 
+def doMoveAction(unit=None, cell_pos=None, **kwargs):
+    print("do MOVE on "+str(unit) + " to cell " + str(cell_pos))
+
+
 def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
     print("select evade for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def doEvadeAction(unit=None, cell_pos=None, **kwargs):
+    print("do EVADE on "+str(unit) + " to cell " + str(cell_pos))
 
 
 def selectSprintAction(unit=None, cell_pos=None, **kwargs):
     print("select sprint for " + str(unit) + " to cell " + str(cell_pos))
 
 
+def doSprintAction(unit=None, cell_pos=None, **kwargs):
+    print("do SPRINT on "+str(unit) + " to cell " + str(cell_pos))
+
+
 def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
     print("select weapon for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def doWeaponAction(unit=None, cell_pos=None, **kwargs):
+    print("do FIRE on "+str(unit) + " to cell " + str(cell_pos))
 
 
 def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
     print("select overheat for " + str(unit) + " to cell " + str(cell_pos))
 
 
+def doOverheatAction(unit=None, cell_pos=None, **kwargs):
+    print("do FIRE OVR on "+str(unit) + " to cell " + str(cell_pos))
+
+
 def selectEndAction(unit=None, cell_pos=None, **kwargs):
     print("select end for " + str(unit) + " to cell " + str(cell_pos))
+
+
+def doEndAction(unit=None, cell_pos=None, **kwargs):
+    print("do END on "+str(unit) + " to cell " + str(cell_pos))
 
 
 def nextTurn():

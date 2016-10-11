@@ -246,7 +246,7 @@ class UnitCard(cocos.layer.Layer):
 
 class Button(cocos.layer.ColorLayer):
 
-    def __init__(self, icon, action, width, height,
+    def __init__(self, icon, action, action_label, width, height,
                  border_width=2, border_color=(50, 50, 50), border_selected_color=(255, 255, 255),
                  color=(225, 225, 225), selected_color=(50, 150, 220)):
         super(Button, self).__init__(color[0], color[1], color[2], 255//2)
@@ -259,6 +259,7 @@ class Button(cocos.layer.ColorLayer):
         self.selected_color = selected_color
 
         self.action = action
+        self.action_label = action_label
         self.selected = False
         self.disabled = False
         self.hidden = False
@@ -315,6 +316,7 @@ class Button(cocos.layer.ColorLayer):
             if selected:
                 from interface import Interface
                 Interface.UI.deselectAllButtons()
+                Interface.UI.buttonSelected(self)
 
                 self.color = self.selected_color
 
@@ -330,3 +332,28 @@ class Button(cocos.layer.ColorLayer):
 
         kwargs['button'] = self
         return self.action(**kwargs)
+
+
+class TextButton(Button):
+    def __init__(self, icon, action, action_label, width, height, text, font_size=16,
+                 border_width=2, border_color=(50, 50, 50), border_selected_color=(255, 255, 255),
+                 color=(225, 225, 225), selected_color=(50, 150, 220)):
+        super(TextButton, self).__init__(icon=icon, action=action, action_label=action_label,
+                                         width=width, height=height,
+                                         border_width=border_width, border_color=border_color,
+                                         border_selected_color=border_selected_color,
+                                         color=color, selected_color=selected_color)
+
+        self.text = text
+        self.font_size = font_size
+
+        self.label = floaters.TextFloater(text, font_name='TranscendsGames',
+                                          font_size=font_size, anchor_x='center', anchor_y='center')
+        self.label.position = width // 2, height // 2
+        self.add(self.label)
+
+    def update_text(self, text):
+        # The width of the button layer cannot be resized? So if the new text might be
+        # too big or small, it needs to be recreated
+        self.text = text
+        self.label.element.text = text
