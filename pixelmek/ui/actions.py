@@ -53,6 +53,8 @@ def selectMoveAction(unit=None, cell_pos=None, **kwargs):
 
 def doMoveAction(unit=None, cell_pos=None, **kwargs):
     print("do MOVE on "+str(unit) + " to cell " + str(cell_pos))
+    # perform action on the cell
+    actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
 
 
 def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
@@ -77,6 +79,8 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
 
 def doWeaponAction(unit=None, cell_pos=None, **kwargs):
     print("do FIRE on "+str(unit) + " to cell " + str(cell_pos))
+    # perform action on the cell
+    actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
 
 
 def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
@@ -93,6 +97,8 @@ def selectEndAction(unit=None, cell_pos=None, **kwargs):
 
 def doEndAction(unit=None, cell_pos=None, **kwargs):
     print("do END on "+str(unit) + " to cell " + str(cell_pos))
+    # perform action on the cell
+    actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
 
 
 def nextTurn():
@@ -100,6 +106,9 @@ def nextTurn():
     board = Board.BOARD
     if battle is None or board is None:
         return
+
+    # clear button selection
+    Interface.UI.deselectAllButtons()
 
     # do some things on the UI to end the previous unit's turn
     prev_unit = battle.getTurnUnit()
@@ -240,7 +249,40 @@ def actOnCell(board, col, row):
 
 def moveSelectionTo(board, col, row):
     # move selection to the given cell
+    battle = board.battle
     board.setSelectedCellPosition(col, row)
+
+    # highlight the appropriate action button based on selection
+    cell_pos = battle.getSelectedCellPosition()
+    if cell_pos is None:
+        # clear button selection
+        Interface.UI.deselectAllButtons()
+        return
+
+    selected_btn = Interface.UI.getSelectedButton()
+    selected_action = None
+    if selected_btn is not None:
+        selected_action = selected_btn.action_label
+
+    cell_unit = battle.getUnitAt(*cell_pos)
+    if cell_unit is None:
+        # ensure that a movement button is selected
+        if selected_action not in Interface.ACTION_LIST_MOVES:
+            Interface.UI.selectButtonByActionLabel(Interface.ACTION_MOVE)
+
+    elif battle.isTurnUnit(cell_unit):
+        # ensure that the end turn button is selected
+        if selected_action is not Interface.ACTION_END:
+            Interface.UI.selectButtonByActionLabel(Interface.ACTION_END)
+
+    elif battle.isFriendlyUnit(battle.getTurnPlayer(), cell_unit):
+        # clear button selection
+        Interface.UI.deselectAllButtons()
+
+    else:
+        # ensure that an attack button is selected
+        if selected_action not in Interface.ACTION_LIST_ATTACKS:
+            Interface.UI.selectButtonByActionLabel(Interface.ACTION_FIRE)
 
 
 def moveSelectionBy(board, col_amt, row_amt):

@@ -11,6 +11,16 @@ class Interface(cocos.layer.Layer):
 
     UI = None
 
+    ACTION_MOVE = "MOVE"
+    ACTION_EVADE = "EVADE"
+    ACTION_SPRINT = "SPRINT"
+    ACTION_FIRE = "FIRE"
+    ACTION_OVR = "OVR FIRE"
+    ACTION_END = "END"
+
+    ACTION_LIST_MOVES = [ACTION_MOVE, ACTION_EVADE, ACTION_SPRINT]
+    ACTION_LIST_ATTACKS = [ACTION_FIRE, ACTION_OVR]
+
     def __init__(self):
         super(Interface, self).__init__()
         from board import Board
@@ -25,27 +35,27 @@ class Interface(cocos.layer.Layer):
         self.target_display = None
 
         # add clickable UI button bar
-        self.move_btn = Button(action_label="MOVE",
+        self.move_btn = Button(action_label=Interface.ACTION_MOVE,
                                icon=Resources.move_button_img, action=actions.selectMoveAction,
                                width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        self.evade_btn = Button(action_label="EVADE",
+        self.evade_btn = Button(action_label=Interface.ACTION_EVADE,
                                 icon=Resources.evade_button_img, action=actions.selectEvadeAction,
                                 width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        self.sprint_btn = Button(action_label="SPRINT",
+        self.sprint_btn = Button(action_label=Interface.ACTION_SPRINT,
                                  icon=Resources.sprint_button_img, action=actions.selectSprintAction,
                                  width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        self.weapon_btn = Button(action_label="FIRE",
+        self.weapon_btn = Button(action_label=Interface.ACTION_FIRE,
                                  icon=Resources.weapon_button_img, action=actions.selectWeaponAction,
                                  width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        self.overheat_btn = Button(action_label="FIRE OVR",
+        self.overheat_btn = Button(action_label=Interface.ACTION_OVR,
                                    icon=Resources.overheat_button_img, action=actions.selectOverheatAction,
                                    width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
-        self.end_btn = Button(action_label="END",
+        self.end_btn = Button(action_label=Interface.ACTION_END,
                               icon=Resources.end_button_img, action=actions.selectEndAction,
                               width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
@@ -73,6 +83,20 @@ class Interface(cocos.layer.Layer):
             after_txt = " \\\\\\"
             self.button_action_labels[button.action_label] = before_txt + button.action_label + after_txt
             self.button_action[button.action_label] = action_call
+
+    def getButtonByActionLabel(self, action_label):
+        for button in self.buttons:
+            if button.action_label == action_label:
+                return button
+
+        return None
+
+    def selectButtonByActionLabel(self, action_label):
+        button = self.getButtonByActionLabel(action_label)
+        if button is not None:
+            button.set_selected(True)
+
+        return button
 
     def getSelectedButton(self):
         for button in self.buttons:
