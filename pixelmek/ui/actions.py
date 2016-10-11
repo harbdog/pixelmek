@@ -251,7 +251,7 @@ def moveSelectionBy(board, col_amt, row_amt):
     if cell_pos is None:
         return
 
-    battle.setSelectedCellPosition(cell_pos[0] + col_amt, cell_pos[1] + row_amt)
+    moveSelectionTo(board, cell_pos[0] + col_amt, cell_pos[1] + row_amt)
 
 
 def performAttackOnUnit(board, target_unit):
