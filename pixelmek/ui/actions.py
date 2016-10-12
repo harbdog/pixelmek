@@ -216,6 +216,7 @@ def actOnCell(board, col, row):
 
             board.scroller.set_focus(*turn_cell_pos)
 
+            Interface.UI.deselectAllButtons()
             setActionReady(True)
 
         turn_unit.sprite.strut(reverse=animate_reverse)

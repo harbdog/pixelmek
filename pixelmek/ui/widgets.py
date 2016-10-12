@@ -315,16 +315,21 @@ class Button(cocos.layer.ColorLayer):
         if selected != self.selected:
             if selected:
                 from interface import Interface
-                Interface.UI.deselectAllButtons()
+                is_action_btn = Interface.UI.isActionButton(self)
+                Interface.UI.deselectAllButtons(hide_action=(not is_action_btn))
                 Interface.UI.buttonSelected(self)
 
-                self.color = self.selected_color
-
-            else:
-                self.color = self.default_color
-
             self.selected = selected
-            self.draw_border()
+            self.update_selected()
+
+    def update_selected(self):
+        if self.selected:
+            self.color = self.selected_color
+
+        else:
+            self.color = self.default_color
+
+        self.draw_border()
 
     def do_action(self, **kwargs):
         if not self.selected:

@@ -11,6 +11,7 @@ class Interface(cocos.layer.Layer):
 
     UI = None
 
+    ACTION = "ACTION"
     ACTION_MOVE = "MOVE"
     ACTION_EVADE = "EVADE"
     ACTION_SPRINT = "SPRINT"
@@ -68,6 +69,9 @@ class Interface(cocos.layer.Layer):
 
         self.arrangeButtons()
 
+    def isActionButton(self, button):
+        return button is self.action_btn
+
     def clearButtons(self):
         for button in self.buttons:
             button.kill()
@@ -105,8 +109,8 @@ class Interface(cocos.layer.Layer):
 
         return None
 
-    def deselectAllButtons(self):
-        if self.action_btn is not None:
+    def deselectAllButtons(self, hide_action=True):
+        if hide_action and self.action_btn is not None:
             self.action_btn.visible = False
 
         for button in self.buttons:
@@ -115,6 +119,8 @@ class Interface(cocos.layer.Layer):
 
     def buttonSelected(self, selected_button):
         if selected_button is self.action_btn:
+            selected_button.selected = True
+            selected_button.update_selected()
             return
 
         from board import Board
@@ -126,10 +132,9 @@ class Interface(cocos.layer.Layer):
         action_call = self.button_action[selected_button.action_label]
         action_text = self.button_action_labels[selected_button.action_label]
         action_font_size = 2 * Board.TILE_SIZE // 3
-        self.action_btn = TextButton(text=action_text, font_size=action_font_size, action_label="",
+        self.action_btn = TextButton(text=action_text, font_size=action_font_size, action_label=Interface.ACTION,
                                      icon=None, action=action_call,
                                      width=4 + len(action_text) * 3 * action_font_size // 4, height=4 + Board.TILE_SIZE)
-        self.action_btn.set_selected(True)
         self.action_btn.visible = True
         self.add(self.action_btn)
 
