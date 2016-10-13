@@ -12,3 +12,6 @@ class TextFloater(cocos.text.Label):
 
         super(TextFloater, self).__init__(text, color=color, font_size=font_size, font_name=font_name,
                                           anchor_x=anchor_x, anchor_y=anchor_y)
+
+    def set_text(self, text):
+        self.element.text = text

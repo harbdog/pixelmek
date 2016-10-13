@@ -361,4 +361,4 @@ class TextButton(Button):
         # The width of the button layer cannot be resized? So if the new text might be
         # too big or small, it needs to be recreated
         self.text = text
-        self.label.element.text = text
+        self.label.set_text(text)

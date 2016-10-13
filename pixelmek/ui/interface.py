@@ -2,6 +2,7 @@ import cocos
 import actions
 from cocos.director import director
 
+from floaters import TextFloater
 from pixelmek.misc.resources import Resources
 from widgets import UnitCard
 from widgets import Button, TextButton
@@ -28,6 +29,11 @@ class Interface(cocos.layer.Layer):
         Interface.UI = self
 
         self.action_btn = None
+        self.action_sub_label = TextFloater("<sub>", font_name='TranscendsGames',
+                                          font_size=12, anchor_x='center', anchor_y='top')
+        self.action_sub_label.visible = False
+        self.add(self.action_sub_label)
+
         self.buttons = []
         self.button_action_labels = {}
         self.button_action = {}
@@ -112,6 +118,7 @@ class Interface(cocos.layer.Layer):
     def deselectAllButtons(self, hide_action=True):
         if hide_action and self.action_btn is not None:
             self.action_btn.visible = False
+            self.action_sub_label.visible = False
 
         for button in self.buttons:
             button.set_selected(False)
@@ -129,14 +136,25 @@ class Interface(cocos.layer.Layer):
             self.action_btn.kill()
 
         # a button has been selected, add an action button with the appropriate text
-        action_call = self.button_action[selected_button.action_label]
-        action_text = self.button_action_labels[selected_button.action_label]
+        action_label = selected_button.action_label
+        action_call = self.button_action[action_label]
+        action_text = self.button_action_labels[action_label]
         action_font_size = 2 * Board.TILE_SIZE // 3
-        self.action_btn = TextButton(text=action_text, font_size=action_font_size, action_label=Interface.ACTION,
-                                     icon=None, action=action_call,
+        self.action_btn = TextButton(text=action_text, font_size=action_font_size,
+                                     action_label=Interface.ACTION, icon=None, action=action_call,
                                      width=4 + len(action_text) * 3 * action_font_size // 4, height=4 + Board.TILE_SIZE)
         self.action_btn.visible = True
         self.add(self.action_btn)
+
+        # update text of label under the action button
+        if action_label in Interface.ACTION_LIST_MOVES:
+            self.action_sub_label.set_text("%s: %i" % (action_label, 42))
+        elif action_label in Interface.ACTION_LIST_ATTACKS:
+            self.action_sub_label.set_text("%s: %i Damage" % (action_label, 4))
+        elif action_label is Interface.ACTION_END:
+            self.action_sub_label.set_text("End Turn")
+
+        self.action_sub_label.visible = True
 
         self.arrangeButtons()
 
@@ -166,6 +184,9 @@ class Interface(cocos.layer.Layer):
             self.action_btn.x = (width // 2) - (self.action_btn.width // 2)
             self.action_btn.y = button_y + Board.TILE_SIZE * 2
 
+            self.action_sub_label.x = (width // 2)
+            self.action_sub_label.y = self.action_btn.y - 2
+
     def getButtonAt(self, x, y):
         if self.action_btn is not None and self.action_btn.is_at(x, y):
             return self.action_btn
@@ -175,6 +196,10 @@ class Interface(cocos.layer.Layer):
                 return button
 
         return None
+
+    def updateActionSubLabelText(self, text):
+        if text is None:
+            self.action_sub_label.visible = False
 
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:
