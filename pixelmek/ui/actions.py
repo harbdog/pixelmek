@@ -49,6 +49,14 @@ def initGame():
 
 def selectMoveAction(unit=None, cell_pos=None, **kwargs):
     print("select move for " + str(unit) + " to cell " + str(cell_pos))
+    short_label = Interface.SUB_MOVE
+    sel_cell = Board.BOARD.getCellAt(*cell_pos)
+    if sel_cell is not None:
+        move_distance = sel_cell.range_to_display
+        if move_distance > 0:
+            Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
+        else:
+            Interface.UI.updateActionSubLabelText(None)
 
 
 def doMoveAction(unit=None, cell_pos=None, **kwargs):
@@ -59,6 +67,14 @@ def doMoveAction(unit=None, cell_pos=None, **kwargs):
 
 def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
     print("select evade for " + str(unit) + " to cell " + str(cell_pos))
+    short_label = Interface.SUB_EVADE
+    sel_cell = Board.BOARD.getCellAt(*cell_pos)
+    if sel_cell is not None:
+        move_distance = sel_cell.range_to_display
+        if move_distance > 0:
+            Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
+        else:
+            Interface.UI.updateActionSubLabelText(None)
 
 
 def doEvadeAction(unit=None, cell_pos=None, **kwargs):
@@ -67,6 +83,14 @@ def doEvadeAction(unit=None, cell_pos=None, **kwargs):
 
 def selectSprintAction(unit=None, cell_pos=None, **kwargs):
     print("select sprint for " + str(unit) + " to cell " + str(cell_pos))
+    short_label = Interface.SUB_SPRINT
+    sel_cell = Board.BOARD.getCellAt(*cell_pos)
+    if sel_cell is not None:
+        move_distance = sel_cell.range_to_display
+        if move_distance > 0:
+            Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
+        else:
+            Interface.UI.updateActionSubLabelText(None)
 
 
 def doSprintAction(unit=None, cell_pos=None, **kwargs):
@@ -75,6 +99,11 @@ def doSprintAction(unit=None, cell_pos=None, **kwargs):
 
 def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
     print("select weapon for " + str(unit) + " to cell " + str(cell_pos))
+    short_label = Interface.SUB_FIRE
+    cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
+    if cell_distance is not None:
+        damage = unit.getDamageForDistance(cell_distance)
+        Interface.UI.updateActionSubLabelText("%s: %i DAMAGE" % (short_label, damage))
 
 
 def doWeaponAction(unit=None, cell_pos=None, **kwargs):
@@ -85,6 +114,11 @@ def doWeaponAction(unit=None, cell_pos=None, **kwargs):
 
 def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
     print("select overheat for " + str(unit) + " to cell " + str(cell_pos))
+    short_label = Interface.SUB_OVR
+    cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
+    if cell_distance is not None:
+        damage = unit.getDamageForDistance(cell_distance)
+        Interface.UI.updateActionSubLabelText("%s: %i DAMAGE +1 HEAT" % (short_label, damage))
 
 
 def doOverheatAction(unit=None, cell_pos=None, **kwargs):
@@ -93,6 +127,7 @@ def doOverheatAction(unit=None, cell_pos=None, **kwargs):
 
 def selectEndAction(unit=None, cell_pos=None, **kwargs):
     print("select end for " + str(unit) + " to cell " + str(cell_pos))
+    Interface.UI.updateActionSubLabelText(Interface.SUB_END)
 
 
 def doEndAction(unit=None, cell_pos=None, **kwargs):
@@ -270,11 +305,17 @@ def moveSelectionTo(board, col, row):
         # ensure that a movement button is selected
         if selected_action not in Interface.ACTION_LIST_MOVES:
             Interface.UI.selectButtonByActionLabel(Interface.ACTION_MOVE)
+        elif selected_action is not None:
+            # update anything that the new selection has on current action
+            Interface.UI.selectButtonByActionLabel(selected_action)
 
     elif battle.isTurnUnit(cell_unit):
         # ensure that the end turn button is selected
         if selected_action is not Interface.ACTION_END:
             Interface.UI.selectButtonByActionLabel(Interface.ACTION_END)
+        elif selected_action is not None:
+            # update anything that the new selection has on current action
+            Interface.UI.selectButtonByActionLabel(selected_action)
 
     elif battle.isFriendlyUnit(battle.getTurnPlayer(), cell_unit):
         # clear button selection
@@ -284,6 +325,9 @@ def moveSelectionTo(board, col, row):
         # ensure that an attack button is selected
         if selected_action not in Interface.ACTION_LIST_ATTACKS:
             Interface.UI.selectButtonByActionLabel(Interface.ACTION_FIRE)
+        elif selected_action is not None:
+            # update anything that the new selection has on current action
+            Interface.UI.selectButtonByActionLabel(selected_action)
 
 
 def moveSelectionBy(board, col_amt, row_amt):

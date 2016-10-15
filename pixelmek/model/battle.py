@@ -225,6 +225,9 @@ class BattleMech(object):
             self.__class__.__name__, self.mech.name, self.mech.variant, self.col, self.row
         )
 
+    def getPosition(self):
+        return self.col, self.row
+
     def getPlayer(self):
         return self.player
 
@@ -234,9 +237,6 @@ class BattleMech(object):
 
         return self.player.team
 
-    def setSprite(self, sprite):
-        self.sprite = sprite
-
     def getName(self):
         return self.mech.name
 
@@ -245,6 +245,9 @@ class BattleMech(object):
 
     def getSprite(self):
         return self.sprite
+
+    def setSprite(self, sprite):
+        self.sprite = sprite
 
     def getImagePath(self):
         return self.mech.image_path
@@ -314,6 +317,13 @@ class BattleMech(object):
                 remaining_damage = 0
 
         return remaining_damage
+
+    def getDamageForDistance(self, dist_to_target):
+        if dist_to_target is None:
+            return 0
+
+        range_str = Battle.getDistanceRange(dist_to_target)
+        return getattr(self, range_str)
 
 
 class Player(object):

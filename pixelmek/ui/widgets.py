@@ -336,6 +336,7 @@ class Button(cocos.layer.ColorLayer):
             self.set_selected(True)
 
         kwargs['button'] = self
+        kwargs['action_label'] = self.action_label
         return self.action(**kwargs)
 
 

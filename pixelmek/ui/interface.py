@@ -18,10 +18,17 @@ class Interface(cocos.layer.Layer):
     ACTION_SPRINT = "SPRINT"
     ACTION_FIRE = "FIRE"
     ACTION_OVR = "OVR FIRE"
-    ACTION_END = "END"
+    ACTION_END = "END TURN"
 
     ACTION_LIST_MOVES = [ACTION_MOVE, ACTION_EVADE, ACTION_SPRINT]
     ACTION_LIST_ATTACKS = [ACTION_FIRE, ACTION_OVR]
+
+    SUB_MOVE = "MV"
+    SUB_EVADE = "EVA"
+    SUB_SPRINT = "SPR"
+    SUB_FIRE = "ATK"
+    SUB_OVR = "OVR"
+    SUB_END = "END"
 
     def __init__(self):
         super(Interface, self).__init__()
@@ -30,7 +37,7 @@ class Interface(cocos.layer.Layer):
 
         self.action_btn = None
         self.action_sub_label = TextFloater("<sub>", font_name='TranscendsGames',
-                                          font_size=12, anchor_x='center', anchor_y='top')
+                                          font_size=14, anchor_x='center', anchor_y='top')
         self.action_sub_label.visible = False
         self.add(self.action_sub_label)
 
@@ -106,6 +113,13 @@ class Interface(cocos.layer.Layer):
         if button is not None:
             button.set_selected(True)
 
+            from board import Board
+            battle = Board.BOARD.battle
+            turn_unit = battle.getTurnUnit()
+            sel_cell_pos = battle.getSelectedCellPosition()
+
+            return button.do_action(**{'unit': turn_unit, 'cell_pos': sel_cell_pos})
+
         return button
 
     def getSelectedButton(self):
@@ -145,16 +159,6 @@ class Interface(cocos.layer.Layer):
                                      width=4 + len(action_text) * 3 * action_font_size // 4, height=4 + Board.TILE_SIZE)
         self.action_btn.visible = True
         self.add(self.action_btn)
-
-        # update text of label under the action button
-        if action_label in Interface.ACTION_LIST_MOVES:
-            self.action_sub_label.set_text("%s: %i" % (action_label, 42))
-        elif action_label in Interface.ACTION_LIST_ATTACKS:
-            self.action_sub_label.set_text("%s: %i Damage" % (action_label, 4))
-        elif action_label is Interface.ACTION_END:
-            self.action_sub_label.set_text("End Turn")
-
-        self.action_sub_label.visible = True
 
         self.arrangeButtons()
 
@@ -200,6 +204,17 @@ class Interface(cocos.layer.Layer):
     def updateActionSubLabelText(self, text):
         if text is None:
             self.action_sub_label.visible = False
+
+        else:
+            size = director.get_window_size()
+            width = size[0]
+            height = size[1]
+
+            self.action_sub_label.visible = True
+            self.action_sub_label.set_text(text)
+
+            self.action_sub_label.x = (width // 2)
+            self.action_sub_label.y = self.action_btn.y - 2
 
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:
