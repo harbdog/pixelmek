@@ -11,7 +11,6 @@ type: BM
 size: 2
 move: 12
 role: Striker
-skill: 4
 short: 5
 medium: 5
 long: 2

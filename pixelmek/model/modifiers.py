@@ -1,5 +1,6 @@
 class Modifiers(object):
 
+    MODIFIER_MULTIPLIER = 8
     AUTO_MISS = 1000
 
     @staticmethod

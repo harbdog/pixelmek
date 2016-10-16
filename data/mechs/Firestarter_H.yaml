@@ -12,7 +12,6 @@ size: 1
 move: 12
 jump: 12
 role: Scout
-skill: 4
 short: 2
 medium: 1
 long: 0

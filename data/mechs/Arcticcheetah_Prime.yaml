@@ -12,7 +12,6 @@ size: 1
 move: 16
 jump: 12
 role: Striker
-skill: 4
 short: 3
 medium: 2
 long: 1

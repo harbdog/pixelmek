@@ -389,15 +389,14 @@ def performAttackOnUnit(board, target_unit):
     print(target_range + ": " + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
 
     # TODO: introduce dynamic damage (optional?)
-    attack_damage = int(getattr(turn_unit, target_range))
-
-    # apply damage to model before animating
-    attack_remainder = target_unit.applyDamage(attack_damage)
+    attack_damage = battle.performAttack(turn_unit, target_unit)
 
     # determine actual target point based on the target unit sprite size
     target_sprite = target_unit.getSprite()
     real_x = (dest_cell[0] * Board.TILE_SIZE) + Board.TILE_SIZE // 2
     real_y = (dest_cell[1] * Board.TILE_SIZE) + (2 * target_sprite.get_height() // 3)
+
+    # TODO: if missed, show a visible weapon miss
 
     for weaponMap in turn_unit.mech.weapons:
         for weapon in weaponMap.iterkeys():
@@ -744,7 +743,11 @@ def performAttackOnUnit(board, target_unit):
     target_area = Board.board_to_layer(target_unit.col, target_unit.row)
 
     # show damage floater after the travel time of the first projectile to hit
-    floater = floaters.TextFloater("%i" % attack_damage)
+    floater_text = "%i" % attack_damage
+    if attack_damage == 0:
+        floater_text = "MISS"
+
+    floater = floaters.TextFloater(floater_text)
     floater.visible = False
     floater.position = real_x, real_y + target_sprite.get_height() // 3
     board.add(floater, z=2000)
@@ -761,9 +764,6 @@ def performAttackOnUnit(board, target_unit):
     stats_action = Delay(min_travel_time) + CallFunc(target_sprite.updateStatsIndicators) \
                    + CallFunc(Interface.UI.updateTargetUnitStats, target_unit)
     target_sprite.do(stats_action)
-
-    if attack_remainder > 0:
-        print("Overkill by %i!" % attack_remainder)
 
     if target_unit.structure > 0:
         print("Remaining %i/%i" % (target_unit.armor, target_unit.structure))

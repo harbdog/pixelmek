@@ -2,6 +2,7 @@ import model
 import random
 
 from cocos.euclid import Point2
+from modifiers import Modifiers
 
 
 class Battle(object):
@@ -159,9 +160,59 @@ class Battle(object):
     def getNumCols(self):
         return self.map.numCols
 
+    def performAttack(self, source_unit, target_unit):
+        src_pos = source_unit.getPosition()
+        target_pos = target_unit.getPosition()
+
+        # TODO: implement damage randomization
+        cell_distance = Battle.getCellDistance(src_pos, target_pos)
+        attack_damage = source_unit.getDamageForDistance(cell_distance)
+
+        to_hit = self.getToHit(source_unit, target_unit)
+
+        rand_hit = random.randint(0, 100)
+        if rand_hit <= to_hit:
+            print("(HIT) rolled %i/%i" % (rand_hit, to_hit))
+            # apply damage to model
+            attack_remainder = target_unit.applyDamage(attack_damage)
+
+            if attack_remainder > 0:
+                print("Overkill by %i!" % attack_remainder)
+
+            return attack_damage
+
+        else:
+            print("(MISS) rolled %i/%i" % (rand_hit, to_hit))
+            return 0
+
     def getToHit(self, source_unit, target_unit):
-        # TODO: calculate actual to-hit value based on things and such
-        return random.randint(0, 100)
+        # TODO: use the source unit's skill to determine base to-hit %
+        base_to_hit = 90
+
+        to_hit = base_to_hit
+
+        # TODO: determine LOS is available first
+
+        source_pos = source_unit.getPosition()
+        target_pos = target_unit.getPosition()
+        target_distance = self.getCellDistance(source_pos, target_pos)
+
+        # account for range modifiers
+        range_modifier = Modifiers.getRangeModifier(target_distance) * Modifiers.MODIFIER_MULTIPLIER
+        to_hit -= range_modifier
+
+        # account for target movement modifiers
+        move_modifier = Modifiers.getTargetMovementModifier(target_unit) * Modifiers.MODIFIER_MULTIPLIER
+        to_hit -= move_modifier
+
+        if to_hit > 100:
+            to_hit = 100
+        elif to_hit < 0:
+            to_hit = 0
+
+        print("To-Hit %i percent = %i - %i (range) - %i (move)" % (to_hit, base_to_hit, range_modifier, move_modifier))
+
+        return to_hit
 
     @staticmethod
     def getCellDistance(cell_1, cell_2):
@@ -206,7 +257,7 @@ class BattleMech(object):
         self.col = col
         self.row = row
 
-        self.skill = mech.skill
+        self.skill = 4  # TODO: allow non-static skill value
         self.move = mech.move
         self.jump = mech.get_jump()
         self.short = mech.short

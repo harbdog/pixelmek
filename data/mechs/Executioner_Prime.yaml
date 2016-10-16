@@ -12,7 +12,6 @@ size: 4
 move: 10
 jump: 8
 role: Sniper
-skill: 4
 short: 4
 medium: 4
 long: 4

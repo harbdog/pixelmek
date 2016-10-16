@@ -11,7 +11,6 @@ type: BM
 size: 4
 move: 6
 role: Sniper
-skill: 4
 short: 3
 medium: 3
 long: 3
