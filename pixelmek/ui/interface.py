@@ -1,6 +1,7 @@
 import cocos
 import actions
 from cocos.director import director
+from cocos.sprite import Sprite
 
 from floaters import TextFloater
 from pixelmek.misc.resources import Resources
@@ -36,9 +37,17 @@ class Interface(cocos.layer.Layer):
         Interface.UI = self
 
         self.action_btn = None
+        self.action_super_label = TextFloater("<super>", font_name='TranscendsGames',
+                                          font_size=16, anchor_x='center', anchor_y='bottom')
+        self.action_super_icon = Sprite(Resources.enemy_indicator_img)
+        self.action_super_icon.scale = 0.75
         self.action_sub_label = TextFloater("<sub>", font_name='TranscendsGames',
                                           font_size=14, anchor_x='center', anchor_y='top')
+        self.action_super_label.visible = False
+        self.action_super_icon.visible = False
         self.action_sub_label.visible = False
+        self.add(self.action_super_label)
+        self.add(self.action_super_icon)
         self.add(self.action_sub_label)
 
         self.buttons = []
@@ -132,6 +141,8 @@ class Interface(cocos.layer.Layer):
     def deselectAllButtons(self, hide_action=True):
         if hide_action and self.action_btn is not None:
             self.action_btn.visible = False
+            self.action_super_label.visible = False
+            self.action_super_icon.visible = False
             self.action_sub_label.visible = False
 
         for button in self.buttons:
@@ -188,6 +199,13 @@ class Interface(cocos.layer.Layer):
             self.action_btn.x = (width // 2) - (self.action_btn.width // 2)
             self.action_btn.y = button_y + Board.TILE_SIZE * 2
 
+            self.action_super_icon.x = (width // 2)
+            self.action_super_icon.y = self.action_btn.y + self.action_btn.height \
+                                       + self.action_super_icon.height // 2 + 2
+
+            self.action_super_label.x = (width // 2)
+            self.action_super_label.y = self.action_super_icon.y + self.action_super_icon.height // 2
+
             self.action_sub_label.x = (width // 2)
             self.action_sub_label.y = self.action_btn.y - 2
 
@@ -215,6 +233,27 @@ class Interface(cocos.layer.Layer):
 
             self.action_sub_label.x = (width // 2)
             self.action_sub_label.y = self.action_btn.y - 2
+
+    def updateActionSuperLabelText(self, text):
+        if text is None:
+            self.action_super_icon.visible = False
+            self.action_super_label.visible = False
+
+        else:
+            size = director.get_window_size()
+            width = size[0]
+            height = size[1]
+
+            self.action_super_icon.visible = True
+            self.action_super_label.visible = True
+            self.action_super_label.set_text(text)
+
+            self.action_super_icon.x = (width // 2)
+            self.action_super_icon.y = self.action_btn.y + self.action_btn.height \
+                                       + self.action_super_icon.height // 2 + 2
+
+            self.action_super_label.x = (width // 2)
+            self.action_super_label.y = self.action_super_icon.y + self.action_super_icon.height // 2
 
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:

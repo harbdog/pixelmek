@@ -105,6 +105,15 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
         damage = unit.getDamageForDistance(cell_distance)
         Interface.UI.updateActionSubLabelText("%s: %i DAMAGE" % (short_label, damage))
 
+        battle = Battle.BATTLE
+        target_unit = battle.getUnitAt(*cell_pos)
+
+        if target_unit is not None:
+            to_hit = battle.getToHit(unit, target_unit)
+            Interface.UI.updateActionSuperLabelText(str(to_hit) + "%")
+        else:
+            Interface.UI.updateActionSuperLabelText(None)
+
 
 def doWeaponAction(unit=None, cell_pos=None, **kwargs):
     print("do FIRE on "+str(unit) + " to cell " + str(cell_pos))
@@ -117,8 +126,18 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
     short_label = Interface.SUB_OVR
     cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
     if cell_distance is not None:
+        # TODO implement actual OVR damage/heat rules
         damage = unit.getDamageForDistance(cell_distance)
         Interface.UI.updateActionSubLabelText("%s: %i DAMAGE +1 HEAT" % (short_label, damage))
+
+        battle = Battle.BATTLE
+        target_unit = battle.getUnitAt(*cell_pos)
+
+        if target_unit is not None:
+            to_hit = battle.getToHit(unit, target_unit)
+            Interface.UI.updateActionSuperLabelText(str(to_hit) + "%")
+        else:
+            Interface.UI.updateActionSuperLabelText(None)
 
 
 def doOverheatAction(unit=None, cell_pos=None, **kwargs):
@@ -128,6 +147,11 @@ def doOverheatAction(unit=None, cell_pos=None, **kwargs):
 def selectEndAction(unit=None, cell_pos=None, **kwargs):
     print("select end for " + str(unit) + " to cell " + str(cell_pos))
     Interface.UI.updateActionSubLabelText(Interface.SUB_END)
+
+    board = Board.BOARD
+    turn_unit = board.battle.getTurnUnit()
+    if turn_unit is not None:
+        board.setSelectedCellPosition(turn_unit.col, turn_unit.row)
 
 
 def doEndAction(unit=None, cell_pos=None, **kwargs):

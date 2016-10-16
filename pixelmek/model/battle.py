@@ -1,4 +1,5 @@
 import model
+import random
 
 from cocos.euclid import Point2
 
@@ -157,6 +158,10 @@ class Battle(object):
 
     def getNumCols(self):
         return self.map.numCols
+
+    def getToHit(self, source_unit, target_unit):
+        # TODO: calculate actual to-hit value based on things and such
+        return random.randint(0, 100)
 
     @staticmethod
     def getCellDistance(cell_1, cell_2):
