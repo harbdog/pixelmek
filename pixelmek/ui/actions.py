@@ -396,7 +396,10 @@ def performAttackOnUnit(board, target_unit):
     real_x = (dest_cell[0] * Board.TILE_SIZE) + Board.TILE_SIZE // 2
     real_y = (dest_cell[1] * Board.TILE_SIZE) + (2 * target_sprite.get_height() // 3)
 
-    # TODO: if missed, show a visible weapon miss
+    # if missed, show a visible weapon miss
+    if attack_damage == 0:
+        real_x += random.choice([-1, 1]) * Board.TILE_SIZE
+        real_y += random.choice([-1, 0, 1]) * Board.TILE_SIZE
 
     for weaponMap in turn_unit.mech.weapons:
         for weapon in weaponMap.iterkeys():
