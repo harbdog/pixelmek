@@ -57,6 +57,9 @@ class Interface(cocos.layer.Layer):
         self.unit_display = None
         self.target_display = None
 
+        # used to retain the labels that show the to hit % over each enemy
+        self.to_hit_labels = {}
+
         # add clickable UI button bar
         self.move_btn = Button(action_label=Interface.ACTION_MOVE,
                                icon=Resources.move_button_img, action=actions.selectMoveAction,
@@ -255,6 +258,18 @@ class Interface(cocos.layer.Layer):
             self.action_super_label.x = (width // 2)
             self.action_super_label.y = self.action_super_icon.y + self.action_super_icon.height // 2
 
+    def setUnitStatsIndicatorsVisible(self, visible, except_units=None):
+        from board import Board
+
+        if except_units is None:
+            except_units = []
+
+        for battle_unit in Board.BOARD.battle.unit_list:
+            if battle_unit.isDestroyed() or battle_unit in except_units:
+                continue
+
+            battle_unit.sprite.setStatsIndicatorsVisible(visible)
+
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:
             self.unit_display.kill()
@@ -292,3 +307,37 @@ class Interface(cocos.layer.Layer):
         self.target_display.position = width - self.target_display.width - Board.TILE_SIZE // 2, \
                                        height - self.target_display.height - Board.TILE_SIZE // 2
         self.add(self.target_display)
+
+    def clearToHitLabels(self):
+        for battle_unit in self.to_hit_labels:
+            self.to_hit_labels[battle_unit].kill()
+
+        self.to_hit_labels.clear()
+
+    def updateToHitLabels(self):
+        from board import Board
+        board = Board.BOARD
+        battle = board.battle
+
+        self.clearToHitLabels()
+
+        turn_unit = battle.getTurnUnit()
+        if turn_unit is None:
+            return
+
+        enemy_units = battle.getEnemyUnits(turn_unit)
+        for enemy in enemy_units:
+            if enemy.isDestroyed():
+                continue
+
+            to_hit = battle.getToHit(turn_unit, enemy)
+
+            if to_hit > 0:
+                to_hit_text = str(to_hit) + "%"
+                to_hit_label = TextFloater(to_hit_text, font_name='TranscendsGames',
+                                                 font_size=14, anchor_x='center', anchor_y='bottom')
+                to_hit_label.x = enemy.sprite.x + Board.TILE_SIZE // 4
+                to_hit_label.y = enemy.sprite.y + enemy.sprite.height // 2 + Board.TILE_SIZE // 2
+
+                self.to_hit_labels[enemy] = to_hit_label
+                board.add(to_hit_label, z=9000)

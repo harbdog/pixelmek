@@ -199,6 +199,7 @@ def nextTurn():
     board.scroller.set_focus(*turn_cell_pos)
 
     Interface.UI.updatePlayerUnitStats(next_unit)
+    Interface.UI.updateToHitLabels()
 
 
 def actOnUI(x, y):
@@ -254,6 +255,9 @@ def actOnCell(board, col, row):
 
         turn_unit.move -= cell.range_to_display
 
+        Interface.UI.clearToHitLabels()
+        Interface.UI.setUnitStatsIndicatorsVisible(False)
+
         for cell in board.cellMap.itervalues():
             cell.remove_indicators()
 
@@ -276,6 +280,8 @@ def actOnCell(board, col, row):
             board.scroller.set_focus(*turn_cell_pos)
 
             Interface.UI.deselectAllButtons()
+            Interface.UI.updateToHitLabels()
+            Interface.UI.setUnitStatsIndicatorsVisible(True)
             setActionReady(True)
 
         turn_unit.sprite.strut(reverse=animate_reverse)
@@ -292,6 +298,9 @@ def actOnCell(board, col, row):
 
         print("Enemy: " + str(cell_unit))
 
+        Interface.UI.clearToHitLabels()
+        Interface.UI.setUnitStatsIndicatorsVisible(False, except_units=[cell_unit])
+
         board.showUnitIndicators(visible=False)
         for chk_cell in board.cellMap.itervalues():
             chk_cell.remove_indicators()
@@ -299,6 +308,8 @@ def actOnCell(board, col, row):
         attack_time = performAttackOnUnit(board, cell_unit)
 
         def _ready_next_turn():
+            Interface.UI.setUnitStatsIndicatorsVisible(True)
+
             setActionReady(False)
             nextTurn()
             setActionReady(True)

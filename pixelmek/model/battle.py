@@ -186,6 +186,9 @@ class Battle(object):
             return 0
 
     def getToHit(self, source_unit, target_unit):
+        if target_unit.isDestroyed():
+            return 0
+
         # TODO: use the source unit's skill to determine base to-hit %
         base_to_hit = 90
 
@@ -213,6 +216,16 @@ class Battle(object):
         print("To-Hit %i percent = %i - %i (range) - %i (move)" % (to_hit, base_to_hit, range_modifier, move_modifier))
 
         return to_hit
+
+    def getEnemyUnits(self, battle_unit):
+        enemy_units = []
+        for unit in self.unit_list:
+            if unit is battle_unit:
+                continue
+            elif not Battle.isFriendlyUnit(battle_unit.player, unit):
+                enemy_units.append(unit)
+
+        return enemy_units
 
     @staticmethod
     def getCellDistance(cell_1, cell_2):

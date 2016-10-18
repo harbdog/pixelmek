@@ -302,6 +302,10 @@ class MechSprite(cocos.layer.Layer):
 
         self.do(stomp_action)
 
+    def setStatsIndicatorsVisible(self, visible):
+        for child in self.stats.get_children():
+            child.visible = visible
+
     def updateStatsIndicators(self):
         # TODO: Just testing pips on the indicator, it should be put on a new UI layer on top of everything
         for child in self.stats.get_children():
