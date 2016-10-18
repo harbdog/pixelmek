@@ -255,6 +255,8 @@ def actOnCell(board, col, row):
 
         turn_unit.move -= cell.range_to_display
 
+        Interface.UI.action_btn.selected = True
+        Interface.UI.action_btn.update_selected()
         Interface.UI.clearToHitLabels()
         Interface.UI.setUnitStatsIndicatorsVisible(False)
 
@@ -298,6 +300,8 @@ def actOnCell(board, col, row):
 
         print("Enemy: " + str(cell_unit))
 
+        Interface.UI.action_btn.selected = True
+        Interface.UI.action_btn.update_selected()
         Interface.UI.clearToHitLabels()
         Interface.UI.setUnitStatsIndicatorsVisible(False, except_units=[cell_unit])
 
