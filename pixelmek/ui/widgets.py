@@ -53,6 +53,7 @@ class UnitCard(cocos.layer.Layer):
 
         mech_sprite = Sprite(pyg_img)
         mech_sprite.position = mech_sprite.width // 2, Board.TILE_SIZE // 2 + mech_sprite.height // 2
+        self.sprite = mech_sprite
 
         self.unit_display.add(mech_sprite)
         self.add(self.unit_display)

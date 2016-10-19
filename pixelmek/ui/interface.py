@@ -55,7 +55,10 @@ class Interface(cocos.layer.Layer):
         self.button_action = {}
 
         self.unit_display = None
+        self.unit_display_bg = None
+
         self.target_display = None
+        self.target_display_bg = None
 
         # used to retain the labels that show the to hit % over each enemy
         self.to_hit_labels = {}
@@ -273,10 +276,12 @@ class Interface(cocos.layer.Layer):
     def updatePlayerUnitStats(self, battle_unit):
         if self.unit_display is not None:
             self.unit_display.kill()
+            self.unit_display_bg.kill()
 
         if battle_unit is None:
             # Hide player unit stats at bottom left
             self.unit_display = None
+            self.unit_display_bg = None
             return
 
         from board import Board
@@ -288,13 +293,20 @@ class Interface(cocos.layer.Layer):
         self.unit_display.position = Board.TILE_SIZE // 2, Board.TILE_SIZE
         self.add(self.unit_display)
 
+        self.unit_display_bg = Sprite(Resources.unit_card_bg_left_img)
+        bg_position = self.unit_display.sprite.get_rect().topleft
+        self.unit_display_bg.position = bg_position[0] + self.unit_display_bg.width // 2, bg_position[1]
+        self.add(self.unit_display_bg, z=-1)
+
     def updateTargetUnitStats(self, target_unit, is_friendly=False):
         if self.target_display is not None:
             self.target_display.kill()
+            self.target_display_bg.kill()
 
         if target_unit is None:
             # Hide target unit stats at top right
             self.target_display = None
+            self.target_display_bg = None
             return
 
         from board import Board
@@ -307,6 +319,12 @@ class Interface(cocos.layer.Layer):
         self.target_display.position = width - self.target_display.width - Board.TILE_SIZE // 2, \
                                        height - self.target_display.height - Board.TILE_SIZE // 2
         self.add(self.target_display)
+
+        self.target_display_bg = Sprite(Resources.unit_card_bg_right_img)
+        bg_position = self.target_display.sprite.get_rect().topright
+        self.target_display_bg.position = width - self.target_display_bg.width // 2, \
+                                          height - self.target_display_bg.height // 2 - Board.TILE_SIZE // 2
+        self.add(self.target_display_bg, z=-1)
 
     def clearToHitLabels(self):
         for battle_unit in self.to_hit_labels:

@@ -26,6 +26,9 @@ class Resources(object):
         Resources.enemy_indicator_img = pyglet.resource.image("images/ui/enemy-indicator.png")
         Resources.move_indicator_img = pyglet.resource.image("images/ui/move-indicator.png")
 
+        Resources.unit_card_bg_left_img = pyglet.resource.image("images/ui/unit-card-bg-left.png")
+        Resources.unit_card_bg_right_img = pyglet.resource.image("images/ui/unit-card-bg-right.png")
+
         Resources.armor_pip_img = pyglet.resource.image("images/ui/armor-pip.png")
         Resources.structure_pip_img = pyglet.resource.image("images/ui/structure-pip.png")
         Resources.empty_pip_img = pyglet.resource.image("images/ui/empty-pip.png")
