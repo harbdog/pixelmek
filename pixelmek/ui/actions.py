@@ -110,7 +110,7 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
 
         if target_unit is not None:
             to_hit = battle.getToHit(unit, target_unit)
-            Interface.UI.updateActionSuperLabelText(str(to_hit) + "%")
+            Interface.UI.updateActionSuperLabelText('{:>4}'.format(str(to_hit) + "%"))
         else:
             Interface.UI.updateActionSuperLabelText(None)
 
@@ -135,7 +135,7 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
 
         if target_unit is not None:
             to_hit = battle.getToHit(unit, target_unit)
-            Interface.UI.updateActionSuperLabelText(str(to_hit) + "%")
+            Interface.UI.updateActionSuperLabelText('{:>4}'.format(str(to_hit) + "%"))
         else:
             Interface.UI.updateActionSuperLabelText(None)
 

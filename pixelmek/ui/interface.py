@@ -1,5 +1,6 @@
 import cocos
 import actions
+from cocos.batch import BatchNode
 from cocos.director import director
 from cocos.sprite import Sprite
 
@@ -293,9 +294,11 @@ class Interface(cocos.layer.Layer):
         self.unit_display.position = Board.TILE_SIZE // 2, Board.TILE_SIZE
         self.add(self.unit_display)
 
-        self.unit_display_bg = Sprite(Resources.unit_card_bg_left_img)
+        self.unit_display_bg = BatchNode()
+        bg_sprite = Sprite(Resources.unit_card_bg_left_img)
+        self.unit_display_bg.add(bg_sprite)
         bg_position = self.unit_display.sprite.get_rect().topleft
-        self.unit_display_bg.position = bg_position[0] + self.unit_display_bg.width // 2, bg_position[1]
+        self.unit_display_bg.position = bg_position[0] + bg_sprite.width // 2, bg_position[1]
         self.add(self.unit_display_bg, z=-1)
 
     def updateTargetUnitStats(self, target_unit, is_friendly=False):
@@ -320,10 +323,11 @@ class Interface(cocos.layer.Layer):
                                        height - self.target_display.height - Board.TILE_SIZE // 2
         self.add(self.target_display)
 
-        self.target_display_bg = Sprite(Resources.unit_card_bg_right_img)
-        bg_position = self.target_display.sprite.get_rect().topright
-        self.target_display_bg.position = width - self.target_display_bg.width // 2, \
-                                          height - self.target_display_bg.height // 2 - Board.TILE_SIZE // 2
+        self.target_display_bg = BatchNode()
+        bg_sprite = Sprite(Resources.unit_card_bg_right_img)
+        self.target_display_bg.add(bg_sprite)
+        self.target_display_bg.position = width - bg_sprite.width // 2, \
+                                          height - bg_sprite.height // 2 - Board.TILE_SIZE // 2
         self.add(self.target_display_bg, z=-1)
 
     def clearToHitLabels(self):
@@ -351,7 +355,7 @@ class Interface(cocos.layer.Layer):
             to_hit = battle.getToHit(turn_unit, enemy)
 
             if to_hit > 0:
-                to_hit_text = str(to_hit) + "%"
+                to_hit_text = '{:>3}'.format(str(to_hit) + "%")
                 to_hit_label = TextFloater(to_hit_text, font_name='TranscendsGames',
                                                  font_size=14, anchor_x='center', anchor_y='bottom')
                 to_hit_label.x = enemy.sprite.x + Board.TILE_SIZE // 4
