@@ -19,8 +19,8 @@ class Interface(cocos.layer.Layer):
     ACTION_EVADE = "EVADE"
     ACTION_SPRINT = "SPRINT"
     ACTION_FIRE = "FIRE"
-    ACTION_OVR = "OVR FIRE"
-    ACTION_END = "END TURN"
+    ACTION_OVR = "OVR"
+    ACTION_END = "END"
 
     ACTION_LIST_MOVES = [ACTION_MOVE, ACTION_EVADE, ACTION_SPRINT]
     ACTION_LIST_ATTACKS = [ACTION_FIRE, ACTION_OVR]
@@ -30,7 +30,7 @@ class Interface(cocos.layer.Layer):
     SUB_SPRINT = "SPR"
     SUB_FIRE = "ATK"
     SUB_OVR = "OVR"
-    SUB_END = "END"
+    SUB_END = "END TURN"
 
     def __init__(self):
         super(Interface, self).__init__()
@@ -38,6 +38,15 @@ class Interface(cocos.layer.Layer):
         Interface.UI = self
 
         self.action_btn = None
+
+        self.action_btn_bg = BatchNode()
+        action_bg = Sprite(Resources.action_buttons_bg_img)
+        self.action_btn_bg.add(action_bg)
+        self.action_btn_bg.width = action_bg.width
+        self.action_btn_bg.height = action_bg.height
+        self.action_btn_bg.visible = False
+        self.add(self.action_btn_bg, z=-1)
+
         self.action_super_label = TextFloater("<super>", font_name='TranscendsGames',
                                           font_size=16, anchor_x='center', anchor_y='bottom')
         self.action_super_icon = Sprite(Resources.enemy_indicator_img)
@@ -148,6 +157,7 @@ class Interface(cocos.layer.Layer):
     def deselectAllButtons(self, hide_action=True):
         if hide_action and self.action_btn is not None:
             self.action_btn.visible = False
+            self.action_btn_bg.visible = False
             self.action_super_label.visible = False
             self.action_super_icon.visible = False
             self.action_sub_label.visible = False
@@ -176,6 +186,7 @@ class Interface(cocos.layer.Layer):
                                      action_label=Interface.ACTION, icon=None, action=action_call,
                                      width=4 + len(action_text) * 3 * action_font_size // 4, height=4 + Board.TILE_SIZE)
         self.action_btn.visible = True
+        self.action_btn_bg.visible = True
         self.add(self.action_btn)
 
         self.arrangeButtons()
@@ -192,7 +203,7 @@ class Interface(cocos.layer.Layer):
 
         total_width = 0
         for button in self.buttons:
-            total_width += button.width
+            total_width += button.width + button.border_width // 2
 
         button_x = (width // 2) - (total_width // 2)
         button_y = 0
@@ -201,6 +212,9 @@ class Interface(cocos.layer.Layer):
             button.y = button_y + button.border_width // 2
 
             button_x += button.width + button.border_width
+
+        self.action_btn_bg.x = (width // 2)
+        self.action_btn_bg.y = self.action_btn_bg.height // 2
 
         if self.action_btn is not None:
             self.action_btn.x = (width // 2) - (self.action_btn.width // 2)
