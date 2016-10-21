@@ -2,6 +2,8 @@ import model
 import random
 
 from cocos.euclid import Point2
+from los import RayTrace
+from map import Map
 from modifiers import Modifiers
 
 
@@ -16,6 +18,7 @@ class Battle(object):
         Battle.BATTLE = self
         self.started = False
         self.map = None
+        self.los = RayTrace(self)
 
         self.player_list = []
 
@@ -84,6 +87,8 @@ class Battle(object):
         # TODO: account for critical and heat effects on move
         next_unit.move = next_unit.mech.move
 
+        self.los.generateLOS(next_unit, radius=24, clear=True)
+
     def getCellsInRange(self, col, row, max_dist):
         cells = {}
         self._recurseCellsInRange(col, row, 0, max_dist, cells)
@@ -129,15 +134,17 @@ class Battle(object):
                     and not battle_unit.isDestroyed():
                 return False
 
-        loc = (col, row)
-        cell_data = self.map.boardMap.get(loc)
+        tile = self.map.getTileAt(col, row)
 
-        if cell_data is None:
-            return True
+        ref_tile = tile
+        if tile.ref is not None:
+            ref_tile = self.map.getTileAt(*tile.ref)
 
-        # TODO: check cell data to see if it is passable terrain object, such as trees, rocks, etc
+        # check cell data to see if it is passable terrain object, such as trees, rocks, etc
+        if ref_tile.type is Map.TYPE_BUILDING:
+            return False
 
-        return False
+        return True
 
     def getUnitAt(self, col, row):
         if self.map is None:

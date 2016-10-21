@@ -247,6 +247,7 @@ def actOnCell(board, col, row):
         print("Skipping remainder of the turn!")
 
         nextTurn()
+        updateLOS(Board.BOARD)
 
         setActionReady(True)
 
@@ -284,6 +285,7 @@ def actOnCell(board, col, row):
             Interface.UI.deselectAllButtons()
             Interface.UI.updateToHitLabels()
             Interface.UI.setUnitStatsIndicatorsVisible(True)
+            updateLOS(Board.BOARD)
             setActionReady(True)
 
         turn_unit.sprite.strut(reverse=animate_reverse)
@@ -316,10 +318,16 @@ def actOnCell(board, col, row):
 
             setActionReady(False)
             nextTurn()
+            updateLOS(Board.BOARD)
             setActionReady(True)
 
         # start the next turn when the attack is completed
         board.do(Delay(attack_time) + CallFunc(_ready_next_turn))
+
+
+def updateLOS(board):
+    for this_cell in board.cellMap.itervalues():
+        this_cell.update_los_visibility()
 
 
 def moveSelectionTo(board, col, row):

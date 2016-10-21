@@ -35,7 +35,8 @@ class Board(cocos.layer.ScrollableLayer):
 
         for row in range(self.map.numRows):
             for col in range(self.map.numCols):
-                cell = Cell(ground_img)
+                tile = self.map.getTileAt(col, row)
+                cell = Cell(tile, ground_img)
                 rect = cell.get_rect()
                 rect.bottomleft = col * 32, row * 32
                 cell.position = rect.center
@@ -48,18 +49,18 @@ class Board(cocos.layer.ScrollableLayer):
             loc = (col, row)
             cell_data = self.map.boardMap[loc]
 
-            cell_images = cell_data.get(Map.KEY_IMAGES)
+            cell_images = cell_data.images
 
             if cell_images is not None:
-                cell_level = cell_data[Map.KEY_LEVEL]
+                cell_level = cell_data.level
                 cell_z = (self.map.numCols - row - cell_level) * 10
 
                 cell_batch = BatchNode()
                 cell_batch.position = col * self.TILE_SIZE, row * self.TILE_SIZE
                 self.add(cell_batch, z=cell_z)
 
-                cell_cols = cell_data[Map.KEY_COLUMNS]
-                cell_rows = cell_data[Map.KEY_ROWS]
+                cell_cols = cell_data.cols
+                cell_rows = cell_data.rows
                 for this_row in range(cell_rows + cell_level):
                     for this_col in range(cell_cols):
                         cell_index = this_col + (this_row * cell_cols)
@@ -187,10 +188,16 @@ class Cell(cocos.sprite.Sprite):
     INDICATOR_ACTION = 'action'
     INDICATOR_RANGE = 'range'
 
-    def __init__(self, image):
+    def __init__(self, tile, image):
         super(Cell, self).__init__(image)
+        self.tile = tile
         self.indicators = {}
         self.range_to_display = 0
+
+        self.visible = False
+
+    def update_los_visibility(self):
+        self.visible = self.tile.los
 
     def show_range_to_display(self, show=True):
         indicator_name = Cell.INDICATOR_RANGE
