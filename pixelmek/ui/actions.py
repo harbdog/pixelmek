@@ -54,8 +54,10 @@ def selectMoveAction(unit=None, cell_pos=None, **kwargs):
     if sel_cell is not None:
         move_distance = sel_cell.range_to_display
         if move_distance > 0:
+            Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
         else:
+            Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
 
 
@@ -72,8 +74,10 @@ def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
     if sel_cell is not None:
         move_distance = sel_cell.range_to_display
         if move_distance > 0:
+            Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
         else:
+            Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
 
 
@@ -88,8 +92,10 @@ def selectSprintAction(unit=None, cell_pos=None, **kwargs):
     if sel_cell is not None:
         move_distance = sel_cell.range_to_display
         if move_distance > 0:
+            Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
         else:
+            Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
 
 
@@ -110,8 +116,10 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
 
         if target_unit is not None:
             to_hit = battle.getToHit(unit, target_unit)
+            Interface.UI.setActionButtonEnabled(to_hit > 0)
             Interface.UI.updateActionSuperLabelText('{:>4}'.format(str(to_hit) + "%"))
         else:
+            Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSuperLabelText(None)
 
 
@@ -135,8 +143,10 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
 
         if target_unit is not None:
             to_hit = battle.getToHit(unit, target_unit)
+            Interface.UI.setActionButtonEnabled(to_hit > 0)
             Interface.UI.updateActionSuperLabelText('{:>4}'.format(str(to_hit) + "%"))
         else:
+            Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSuperLabelText(None)
 
 
@@ -206,7 +216,7 @@ def nextTurn():
 
 def actOnUI(x, y):
     button = Interface.UI.getButtonAt(x, y)
-    if button is not None and not button.hidden and not button.disabled:
+    if button is not None and not button.hidden and button.enabled:
         battle = Battle.BATTLE
         turn_unit = battle.getTurnUnit()
         sel_cell_pos = battle.getSelectedCellPosition()
@@ -218,6 +228,10 @@ def actOnUI(x, y):
 
 def actOnCell(board, col, row):
     if not isActionReady():
+        return
+
+    # make sure the action is currently allowed by checking action button
+    if not Interface.UI.action_btn.enabled:
         return
 
     battle = board.battle
@@ -318,6 +332,12 @@ def actOnCell(board, col, row):
             chk_cell.remove_indicators()
 
         attack_time = performAttackOnUnit(board, cell_unit)
+
+        # make sure an attack actually happened before ending the turn without attacking
+        if attack_time < 0:
+            Interface.UI.setUnitStatsIndicatorsVisible(True)
+            setActionReady(True)
+            return
 
         def _ready_next_turn():
             Interface.UI.setUnitStatsIndicatorsVisible(True)

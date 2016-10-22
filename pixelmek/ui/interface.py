@@ -240,6 +240,9 @@ class Interface(cocos.layer.Layer):
 
         return None
 
+    def setActionButtonEnabled(self, enabled):
+        self.action_btn.set_enabled(enabled)
+
     def updateActionSubLabelText(self, text):
         if text is None:
             self.action_sub_label.visible = False

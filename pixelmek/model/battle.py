@@ -203,16 +203,23 @@ class Battle(object):
             print("(MISS) rolled %i/%i" % (rand_hit, to_hit))
             return 0
 
+    def hasTargetLOS(self, source_unit, target_unit):
+        # TODO: determine LOS correctly, for now just cheating and using only LOS of tile
+        tile = self.map.getTileAt(*target_unit.getPosition())
+        return tile.hasLOS(source_unit)
+
     def getToHit(self, source_unit, target_unit):
         if target_unit.isDestroyed():
+            return 0
+
+        # make sure source has LOS to target
+        if not self.hasTargetLOS(source_unit, target_unit):
             return 0
 
         # TODO: use the source unit's skill to determine base to-hit %
         base_to_hit = 90
 
         to_hit = base_to_hit
-
-        # TODO: determine LOS is available first
 
         source_pos = source_unit.getPosition()
         target_pos = target_unit.getPosition()

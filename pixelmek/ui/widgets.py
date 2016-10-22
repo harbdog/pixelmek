@@ -262,7 +262,7 @@ class Button(cocos.layer.ColorLayer):
         self.action = action
         self.action_label = action_label
         self.selected = False
-        self.disabled = False
+        self.enabled = True
         self.hidden = False
 
         self.width = width
@@ -311,6 +311,17 @@ class Button(cocos.layer.ColorLayer):
         r = Rect(self.x, self.y, self.width, self.height)
 
         return p.intersects(r)
+
+    def set_enabled(self, enabled):
+        self.enabled = enabled
+
+        opacity = 255
+        if not enabled:
+            opacity = 255//2
+
+        # self.opacity = opacity    # do not change opacity of color layer background
+        for child in self.get_children():
+            child.opacity = opacity
 
     def set_selected(self, selected):
         if selected != self.selected:
