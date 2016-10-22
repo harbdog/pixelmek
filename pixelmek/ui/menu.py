@@ -6,7 +6,7 @@ from cocos.scenes import *
 
 import actions
 import settings
-from pixelmek.model.battle import Battle
+from board import Board
 from interface import Interface
 
 

@@ -19,6 +19,7 @@ class Battle(object):
         self.started = False
         self.map = None
         self.los = RayTrace(self)
+        self.visible_radius = 24
 
         self.player_list = []
 
@@ -39,6 +40,16 @@ class Battle(object):
 
     def addPlayer(self, player):
         self.player_list.append(player)
+
+    def initBattle(self):
+        self.los.clearLOS()
+        for battle_unit in self.unit_list:
+            self.los.generateLOS(battle_unit, radius=self.visible_radius, clear=False)
+
+        self.started = True
+
+    def updateLOS(self, battle_unit):
+        self.los.generateLOS(battle_unit, radius=self.visible_radius, clear=True)
 
     def clearSelectedCell(self):
         self.sel_cell_pos = None
@@ -87,7 +98,7 @@ class Battle(object):
         # TODO: account for critical and heat effects on move
         next_unit.move = next_unit.mech.move
 
-        self.los.generateLOS(next_unit, radius=24, clear=True)
+        self.los.generateLOS(next_unit, radius=self.visible_radius, clear=True)
 
     def getCellsInRange(self, col, row, max_dist):
         cells = {}

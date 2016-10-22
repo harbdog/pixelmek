@@ -233,9 +233,6 @@ class MechSprite(cocos.layer.Layer):
         num_steps = 1 + int(math.ceil(Point2(col, row).distance(Point2(self.battle_mech.col, self.battle_mech.row))))
         time = self.timeBySize() * (num_steps * 2)
 
-        self.battle_mech.col = col
-        self.battle_mech.row = row
-
         shadow_rect = self.shadow.get_rect()
         shadow_rect.bottomleft = (col * 32), (row * 32)
 

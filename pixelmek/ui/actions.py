@@ -40,11 +40,11 @@ def initGame():
     if battle.started:
         return False
 
-    print("Battle!")
+    battle.initBattle()
+
     ui = Interface()
 
-    battle.started = True
-    return True
+    return battle.started
 
 
 def selectMoveAction(unit=None, cell_pos=None, **kwargs):
@@ -201,6 +201,8 @@ def nextTurn():
     Interface.UI.updatePlayerUnitStats(next_unit)
     Interface.UI.updateToHitLabels()
 
+    updateLOS(Board.BOARD)
+
 
 def actOnUI(x, y):
     button = Interface.UI.getButtonAt(x, y)
@@ -247,7 +249,6 @@ def actOnCell(board, col, row):
         print("Skipping remainder of the turn!")
 
         nextTurn()
-        updateLOS(Board.BOARD)
 
         setActionReady(True)
 
@@ -291,6 +292,11 @@ def actOnCell(board, col, row):
         turn_unit.sprite.strut(reverse=animate_reverse)
         turn_unit.sprite.moveToCell(col, row, animate_reverse, _ready_next_move)
 
+        turn_unit.col = col
+        turn_unit.row = row
+
+        battle.updateLOS(turn_unit)
+
     elif Battle.isFriendlyUnit(turn_player, cell_unit):
         # TODO: interact with friendly unit somehow, like swap cells with it if it has move remaining?
         print("Friendly: " + str(cell_unit))
@@ -318,7 +324,6 @@ def actOnCell(board, col, row):
 
             setActionReady(False)
             nextTurn()
-            updateLOS(Board.BOARD)
             setActionReady(True)
 
         # start the next turn when the attack is completed
