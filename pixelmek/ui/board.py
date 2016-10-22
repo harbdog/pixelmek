@@ -197,7 +197,10 @@ class Cell(cocos.sprite.Sprite):
         self.visible = False
 
     def update_los_visibility(self):
-        self.visible = self.tile.los
+        # TODO: just see if any friendly unit has visibility to this tile
+        turn_unit = Battle.BATTLE.getTurnUnit()
+
+        self.visible = turn_unit in self.tile.los
 
     def show_range_to_display(self, show=True):
         indicator_name = Cell.INDICATOR_RANGE

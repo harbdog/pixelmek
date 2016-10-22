@@ -102,10 +102,6 @@ class Map:
 
         return self.boardMap[pos]
 
-    def clearLOS(self):
-        for pos, tile in self.boardMap.items():
-            tile.los = False
-
 
 class Tile:
     def __init__(self, tile_type=Map.TYPE_NONE, cols=1, rows=1,
@@ -118,4 +114,10 @@ class Tile:
         self.images = images
         self.ref = ref
 
-        self.los = False
+        self.los = {}
+
+    def hasLOS(self, battle_unit):
+        if battle_unit in self.los:
+            return self.los[battle_unit]
+
+        return False

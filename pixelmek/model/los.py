@@ -120,6 +120,13 @@ class RayTrace:
     def __init__(self, battle):
         self.battle = battle
 
+    def clearLOS(self, battle_unit=None):
+        for pos, tile in self.battle.map.boardMap.items():
+            if battle_unit is None:
+                tile.los.clear()
+            elif battle_unit in tile.los:
+                del tile.los[battle_unit]
+
     def generateLOS(self, battle_unit, radius=10, clear=True):
         if self.battle is None or battle_unit is None or battle_unit.isDestroyed():
             return
@@ -133,7 +140,7 @@ class RayTrace:
 
         if clear:
             # clear previous FOV settings
-            battle_map.clearLOS()
+            self.clearLOS(battle_unit=battle_unit)
 
         # Player coordinates
         px = battle_unit.col
@@ -170,7 +177,7 @@ class RayTrace:
                 if tile is None:
                     break
 
-                tile.los = True     # Make tile visible
+                tile.los[battle_unit] = True     # Make tile visible
 
                 ref_tile = tile
                 if tile.ref is not None:
