@@ -5,7 +5,7 @@
 from map import Map
 
 
-class RayTrace:
+class LineOfSight:
     RAYS = 360  # Should be 360!
 
     STEP = 1  # The step of for cycle. More = Faster, but large steps may
@@ -156,9 +156,9 @@ class RayTrace:
         # value of sin(i degrees) and to y (player's y) value of cos(i degrees),
         # RAD times, and checking for collision with wall every step.
 
-        for i in range(0, RayTrace.RAYS + 1, RayTrace.STEP):
-            ax = RayTrace.sin_table[i]  # Get pre-calculated value sin(x / (180 / pi))
-            ay = RayTrace.cos_table[i]  # cos(x / (180 / pi))
+        for i in range(0, LineOfSight.RAYS + 1, LineOfSight.STEP):
+            ax = LineOfSight.sin_table[i]  # Get pre-calculated value sin(x / (180 / pi))
+            ay = LineOfSight.cos_table[i]  # cos(x / (180 / pi))
 
             x = px  # Player's x
             y = py  # Player's y
@@ -181,9 +181,85 @@ class RayTrace:
 
                 ref_tile = tile
                 if tile.ref is not None:
-                    # a reference tile will contain information about the large object taking up this tile
+                    # a reference tile will contain information about an object taking up this tile
                     ref_tile = battle_map.getTileAt(*tile.ref)
 
                 # Stop ray if it hit
                 if ref_tile.type is Map.TYPE_BUILDING and ref_tile.level > 0:
                     break
+
+    def getLineTiles(self, start, end):
+        tiles = []
+        if self.battle is None:
+            return tiles
+
+        battle_map = self.battle.map
+        if battle_map is None:
+            return tiles
+
+        coords = LineOfSight.getLine(start, end)
+
+        for point in coords:
+            tile = battle_map.getTileAt(*point)
+            tiles.append(tile)
+
+        return tiles
+
+    @staticmethod
+    def getLine(start, end):
+        """Bresenham's Line Algorithm
+        Produces a list of tuples from start and end
+        from http://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm#Python
+
+        >> points1 = get_line((0, 0), (3, 4))
+        >> points2 = get_line((3, 4), (0, 0))
+        >> assert(set(points1) == set(points2))
+        >> print points1
+        [(0, 0), (1, 1), (1, 2), (2, 3), (3, 4)]
+        >> print points2
+        [(3, 4), (2, 3), (1, 2), (1, 1), (0, 0)]
+        """
+        # Setup initial conditions
+        x1, y1 = start
+        x2, y2 = end
+        dx = x2 - x1
+        dy = y2 - y1
+
+        # Determine how steep the line is
+        is_steep = abs(dy) > abs(dx)
+
+        # Rotate line
+        if is_steep:
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+
+        # Swap start and end points if necessary and store swap state
+        swapped = False
+        if x1 > x2:
+            x1, x2 = x2, x1
+            y1, y2 = y2, y1
+            swapped = True
+
+        # Recalculate differentials
+        dx = x2 - x1
+        dy = y2 - y1
+
+        # Calculate error
+        error = int(dx / 2.0)
+        ystep = 1 if y1 < y2 else -1
+
+        # Iterate over bounding box generating points between start and end
+        y = y1
+        points = []
+        for x in range(x1, x2 + 1):
+            coord = (y, x) if is_steep else (x, y)
+            points.append(coord)
+            error -= abs(dy)
+            if error < 0:
+                y += ystep
+                error += dx
+
+        # Reverse the list if the coordinates were swapped
+        if swapped:
+            points.reverse()
+        return points

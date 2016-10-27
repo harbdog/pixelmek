@@ -2,7 +2,7 @@ import model
 import random
 
 from cocos.euclid import Point2
-from los import RayTrace
+from los import LineOfSight
 from map import Map
 from modifiers import Modifiers
 
@@ -18,7 +18,7 @@ class Battle(object):
         Battle.BATTLE = self
         self.started = False
         self.map = None
-        self.los = RayTrace(self)
+        self.los = LineOfSight(self)
         self.visible_radius = 24
 
         self.player_list = []
@@ -114,8 +114,6 @@ class Battle(object):
         if dist >= 0:
             cells[cell] = dist
 
-        # TODO: distinguish between LOS related range and move related range recursion
-
         # allow passing through friendly unit occupied cells
         turn_unit = self.getTurnUnit()
         turn_player = turn_unit.getPlayer()
@@ -204,9 +202,18 @@ class Battle(object):
             return 0
 
     def hasTargetLOS(self, source_unit, target_unit):
-        # TODO: determine LOS correctly, for now just cheating and using only LOS of tile
-        tile = self.map.getTileAt(*target_unit.getPosition())
-        return tile.hasLOS(source_unit)
+        los_tiles = self.los.getLineTiles(source_unit.getPosition(), target_unit.getPosition())
+        for tile in los_tiles:
+            ref_tile = tile
+            if tile.ref is not None:
+                # a reference tile will contain information about an object taking up this tile
+                ref_tile = self.map.getTileAt(*tile.ref)
+
+            # if hits something it cannot see past, return False
+            if ref_tile.type is Map.TYPE_BUILDING and ref_tile.level > 0:
+                return False
+
+        return True
 
     def getToHit(self, source_unit, target_unit):
         if target_unit.isDestroyed():
