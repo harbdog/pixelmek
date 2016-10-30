@@ -146,6 +146,10 @@ class LineOfSight:
         px = battle_unit.col
         py = battle_unit.row
 
+        tile = battle_map.getTileAt(px, py)
+        if tile is not None:
+            tile.los[battle_unit] = True  # Make tile visible
+
         # It works like this:
         # It starts at player coordinates and cast 360 rays
         # (if step is 1, less is step is more than 1) in every direction,

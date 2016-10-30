@@ -201,8 +201,8 @@ class Battle(object):
             print("(MISS) rolled %i/%i" % (rand_hit, to_hit))
             return 0
 
-    def hasTargetLOS(self, source_unit, target_unit):
-        los_tiles = self.los.getLineTiles(source_unit.getPosition(), target_unit.getPosition())
+    def hasTargetLOS(self, source_pos, target_pos):
+        los_tiles = self.los.getLineTiles(source_pos, target_pos)
         for tile in los_tiles:
             ref_tile = tile
             if tile.ref is not None:
@@ -220,7 +220,7 @@ class Battle(object):
             return 0
 
         # make sure source has LOS to target
-        if not self.hasTargetLOS(source_unit, target_unit):
+        if not self.hasTargetLOS(source_unit.getPosition(), target_unit.getPosition()):
             return 0
 
         # TODO: use the source unit's skill to determine base to-hit %
@@ -263,6 +263,9 @@ class Battle(object):
     def getCellDistance(cell_1, cell_2):
         point_1 = Point2(cell_1[0], cell_1[1])
         point_2 = Point2(cell_2[0], cell_2[1])
+
+        if point_1 == point_2:
+            return 0
 
         return point_1.distance(point_2)
 

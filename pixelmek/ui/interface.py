@@ -5,6 +5,7 @@ from cocos.director import director
 from cocos.sprite import Sprite
 
 from floaters import TextFloater
+from gl import SingleLine
 from pixelmek.misc.resources import Resources
 from widgets import UnitCard
 from widgets import Button, TextButton
@@ -72,6 +73,9 @@ class Interface(cocos.layer.Layer):
 
         # used to retain the labels that show the to hit % over each enemy
         self.to_hit_labels = {}
+
+        # used to retain the lines that show LOS to each enemy
+        self.los_lines = []
 
         # add clickable UI button bar
         self.move_btn = Button(action_label=Interface.ACTION_MOVE,
@@ -353,12 +357,16 @@ class Interface(cocos.layer.Layer):
 
         self.to_hit_labels.clear()
 
+        # also clear LOS lines that tend to go with them
+        self.clearLosLines()
+
     def updateToHitLabels(self):
         from board import Board
         board = Board.BOARD
         battle = board.battle
 
         self.clearToHitLabels()
+        self.clearLosLines()
 
         turn_unit = battle.getTurnUnit()
         if turn_unit is None:
@@ -380,3 +388,64 @@ class Interface(cocos.layer.Layer):
 
                 self.to_hit_labels[enemy] = to_hit_label
                 board.add(to_hit_label, z=9000)
+
+                # draw LOS line indicator to target
+                self.drawLosLine(turn_unit.getPosition(), enemy.getPosition())
+
+    def clearLosLines(self):
+        for los_line in self.los_lines:
+            los_line.kill()
+
+        self.los_lines = []
+
+    def drawLosLine(self, source_coords, target_coords):
+        from board import Board
+        board = Board.BOARD
+
+        source_x, source_y = Board.board_to_layer(*source_coords)
+        target_x, target_y = Board.board_to_layer(*target_coords)
+
+        cell_offset = Board.TILE_SIZE // 2
+
+        los_line = SingleLine((source_x + cell_offset, source_y + cell_offset),
+                              (target_x + cell_offset, target_y + cell_offset),
+                               width=2, color=(255, 50, 50, 200))
+
+        board.add(los_line, z=10000)
+        self.los_lines.append(los_line)
+
+    def generateLosLinesFrom(self, source_unit, source_coords):
+        from board import Board
+        board = Board.BOARD
+        battle = board.battle
+
+        self.clearLosLines()
+
+        if source_unit is None:
+            return
+
+        enemy_units = battle.getEnemyUnits(source_unit)
+        for enemy in enemy_units:
+            if enemy.isDestroyed():
+                continue
+
+            target_coords = enemy.getPosition()
+            if battle.hasTargetLOS(source_coords, target_coords):
+                # draw LOS line indicator to target
+                self.drawLosLine(source_coords, target_coords)
+
+    def generateTargetLosLine(self, source_unit, target_unit):
+        from board import Board
+        board = Board.BOARD
+        battle = board.battle
+
+        self.clearLosLines()
+
+        if source_unit is None or target_unit is None:
+            return
+
+        source_coords = source_unit.getPosition()
+        target_coords = target_unit.getPosition()
+        if battle.hasTargetLOS(source_coords, target_coords):
+            # draw LOS line indicator to target
+            self.drawLosLine(source_coords, target_coords)

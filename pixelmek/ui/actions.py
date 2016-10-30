@@ -56,9 +56,13 @@ def selectMoveAction(unit=None, cell_pos=None, **kwargs):
         if move_distance > 0:
             Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
+
+            # TODO: only show LOS to currently visible targets from the selected cell
+            Interface.UI.generateLosLinesFrom(unit, cell_pos)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
+            Interface.UI.clearLosLines()
 
 
 def doMoveAction(unit=None, cell_pos=None, **kwargs):
@@ -76,9 +80,13 @@ def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
         if move_distance > 0:
             Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
+
+            # TODO: only show LOS to currently visible targets from the selected cell
+            Interface.UI.generateLosLinesFrom(unit, cell_pos)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
+            Interface.UI.clearLosLines()
 
 
 def doEvadeAction(unit=None, cell_pos=None, **kwargs):
@@ -94,9 +102,13 @@ def selectSprintAction(unit=None, cell_pos=None, **kwargs):
         if move_distance > 0:
             Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
+
+            # TODO: only show LOS to currently visible targets from the selected cell
+            Interface.UI.generateLosLinesFrom(unit, cell_pos)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
+            Interface.UI.clearLosLines()
 
 
 def doSprintAction(unit=None, cell_pos=None, **kwargs):
@@ -118,9 +130,13 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
             to_hit = battle.getToHit(unit, target_unit)
             Interface.UI.setActionButtonEnabled(to_hit > 0)
             Interface.UI.updateActionSuperLabelText('{:>4}'.format(str(to_hit) + "%"))
+
+            # show an LOS line only to the target
+            Interface.UI.generateTargetLosLine(unit, target_unit)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSuperLabelText(None)
+            Interface.UI.clearLosLines()
 
 
 def doWeaponAction(unit=None, cell_pos=None, **kwargs):
@@ -145,9 +161,13 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
             to_hit = battle.getToHit(unit, target_unit)
             Interface.UI.setActionButtonEnabled(to_hit > 0)
             Interface.UI.updateActionSuperLabelText('{:>4}'.format(str(to_hit) + "%"))
+
+            # show an LOS line only to the target
+            Interface.UI.generateTargetLosLine(unit, target_unit)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSuperLabelText(None)
+            Interface.UI.clearLosLines()
 
 
 def doOverheatAction(unit=None, cell_pos=None, **kwargs):
@@ -162,6 +182,9 @@ def selectEndAction(unit=None, cell_pos=None, **kwargs):
     turn_unit = board.battle.getTurnUnit()
     if turn_unit is not None:
         board.setSelectedCellPosition(turn_unit.col, turn_unit.row)
+
+        # TODO: only show LOS to currently visible targets from the selected cell
+        Interface.UI.generateLosLinesFrom(unit, cell_pos)
 
 
 def doEndAction(unit=None, cell_pos=None, **kwargs):
