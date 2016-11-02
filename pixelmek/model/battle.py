@@ -1,5 +1,6 @@
 import model
 import random
+from pixelmek.misc.settings import Settings
 
 from cocos.euclid import Point2
 from los import LineOfSight
@@ -180,15 +181,20 @@ class Battle(object):
         src_pos = source_unit.getPosition()
         target_pos = target_unit.getPosition()
 
-        # TODO: implement damage randomization
         cell_distance = Battle.getCellDistance(src_pos, target_pos)
-        attack_damage = source_unit.getDamageForDistance(cell_distance)
+        max_damage = source_unit.getDamageForDistance(cell_distance)
 
+        # TODO: use Settings.VARIABLE_MODIFIERS to adjust To-Hit based on target movement
         to_hit = self.getToHit(source_unit, target_unit)
 
         rand_hit = random.randint(0, 100)
         if rand_hit <= to_hit:
-            print("(HIT) rolled %i/%i" % (rand_hit, to_hit))
+            # determine amount of damage
+            attack_damage = random.randint(1, max_damage) if Settings.VARIABLE_DAMAGE \
+                else max_damage
+
+            print("(HIT DMG=%i) rolled %i/%i" % (attack_damage, rand_hit, to_hit))
+
             # apply damage to model
             attack_remainder = target_unit.applyDamage(attack_damage)
 

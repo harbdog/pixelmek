@@ -1,17 +1,6 @@
 from cocos.director import director
 from cocos.menu import *
-
-
-class Settings:
-
-    VOLUME_FX = 0.5
-
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def set_volume_fx(volume):
-        Settings.VOLUME_FX = volume
+from pixelmek.misc.settings import Settings
 
 
 class SettingsMenu(Menu):

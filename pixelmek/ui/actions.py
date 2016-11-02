@@ -18,7 +18,7 @@ from cocos.sprite import Sprite
 from pixelmek.misc.resources import Resources
 from pixelmek.model.battle import Battle
 from board import Board
-from settings import Settings
+from pixelmek.misc.settings import Settings
 from interface import Interface
 
 
@@ -121,7 +121,9 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
     cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
     if cell_distance is not None:
         damage = unit.getDamageForDistance(cell_distance)
-        Interface.UI.updateActionSubLabelText("%s: %i DAMAGE" % (short_label, damage))
+
+        atk_sub_text = "%s: 1-%i DAMAGE" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE"
+        Interface.UI.updateActionSubLabelText(atk_sub_text % (short_label, damage))
 
         battle = Battle.BATTLE
         target_unit = battle.getUnitAt(*cell_pos)
