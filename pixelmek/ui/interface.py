@@ -398,7 +398,7 @@ class Interface(cocos.layer.Layer):
 
         self.los_lines = []
 
-    def drawLosLine(self, source_coords, target_coords, alpha=0.8):
+    def drawLosLine(self, source_coords, target_coords, width=2, alpha=0.8):
         from board import Board
         board = Board.BOARD
 
@@ -409,7 +409,7 @@ class Interface(cocos.layer.Layer):
 
         los_line = SingleLine((source_x + cell_offset, source_y + cell_offset),
                               (target_x + cell_offset, target_y + cell_offset),
-                               width=2, color=(255, 50, 50, int(255 * alpha)))
+                               width=width, color=(255, 50, 50, int(255 * alpha)))
 
         board.add(los_line, z=10000)
         self.los_lines.append(los_line)
@@ -455,4 +455,5 @@ class Interface(cocos.layer.Layer):
             if battle.hasTargetLOS(source_coords, target_coords):
                 # draw LOS line indicator brightest to current target
                 line_alpha = 1.0 if enemy is target_unit else 0.3
-                self.drawLosLine(source_coords, target_coords, alpha=line_alpha)
+                line_width = 3 if enemy is target_unit else 2
+                self.drawLosLine(source_coords, target_coords, width=line_width, alpha=line_alpha)
