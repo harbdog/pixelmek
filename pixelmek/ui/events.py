@@ -134,12 +134,15 @@ class MouseEvents(cocos.layer.ScrollableLayer):
             return
 
         real_x, real_y = self.board.scroller.screen_to_world(x, y)
-        dest_cell = Board.layer_to_board(real_x, real_y)
+        col, row = Board.layer_to_board(real_x, real_y)
 
         if buttons & mouse.RIGHT:
             # perform action on the cell
-            actions.actOnCell(self.board, dest_cell[0], dest_cell[1])
+            actions.actOnCell(self.board, col, row)
 
         elif buttons & mouse.LEFT:
             # select the specific cell
-            actions.moveSelectionTo(self.board, dest_cell[0], dest_cell[1])
+            if not self.board.cellInView(col, row, autofocus=True):
+                return
+
+            actions.moveSelectionTo(self.board, col, row)

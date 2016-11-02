@@ -380,9 +380,10 @@ def updateLOS(board):
         this_cell.update_los_visibility()
 
 
-def moveSelectionTo(board, col, row):
+def moveSelectionTo(board, col, row, autofocus=False):
     # move selection to the given cell
     battle = board.battle
+
     board.setSelectedCellPosition(col, row)
 
     # highlight the appropriate action button based on selection

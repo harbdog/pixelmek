@@ -139,19 +139,28 @@ class Board(cocos.layer.ScrollableLayer):
                     is_friendly=Battle.isFriendlyUnit(self.battle.getTurnPlayer(), cell_unit))
 
             # only refocus if getting too close to edge of display (within 3 Tiles of each side)
-            window_size = director.get_window_size()
-            view_width = window_size[0] - Board.BOARD.TILE_SIZE * 6
-            view_height = window_size[1] - Board.BOARD.TILE_SIZE * 6
+            self.cellInView(col, row, autofocus=True)
 
-            view_bottom_left = self.scroller.screen_to_world(Board.BOARD.TILE_SIZE * 3, Board.BOARD.TILE_SIZE * 3)
-            view_rect = Rect(view_bottom_left[0], view_bottom_left[1], view_width, view_height)
+    def cellInView(self, col, row, autofocus=False):
+        if col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
+            return False
 
-            cell_screen_pos = Board.board_to_layer(col, row)
-            cell_rect = Rect(cell_screen_pos[0], cell_screen_pos[1], Board.BOARD.TILE_SIZE, Board.BOARD.TILE_SIZE)
+        window_size = director.get_window_size()
+        view_width = window_size[0] - Board.BOARD.TILE_SIZE * 6
+        view_height = window_size[1] - Board.BOARD.TILE_SIZE * 6
 
-            if not cell_rect.intersects(view_rect):
-                self.scroller.set_focus(cell_screen_pos[0] + Board.BOARD.TILE_SIZE // 2,
-                                        cell_screen_pos[1] + Board.BOARD.TILE_SIZE // 2)
+        view_bottom_left = self.scroller.screen_to_world(Board.BOARD.TILE_SIZE * 3, Board.BOARD.TILE_SIZE * 3)
+        view_rect = Rect(view_bottom_left[0], view_bottom_left[1], view_width, view_height)
+
+        cell_screen_pos = Board.board_to_layer(col, row)
+        cell_rect = Rect(cell_screen_pos[0], cell_screen_pos[1], Board.BOARD.TILE_SIZE, Board.BOARD.TILE_SIZE)
+
+        intersects = cell_rect.intersects(view_rect)
+        if autofocus and not intersects:
+            self.scroller.set_focus(cell_screen_pos[0] + Board.BOARD.TILE_SIZE // 2,
+                                    cell_screen_pos[1] + Board.BOARD.TILE_SIZE // 2)
+
+        return intersects
 
     def showRangeIndicators(self):
         turn_unit = self.battle.getTurnUnit()
