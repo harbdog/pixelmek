@@ -418,6 +418,8 @@ def moveSelectionTo(board, col, row, autofocus=False):
     elif battle.isFriendlyUnit(battle.getTurnPlayer(), cell_unit):
         # clear button selection
         Interface.UI.deselectAllButtons()
+        # clear los lines
+        Interface.UI.clearLosLines()
 
     else:
         # ensure that an attack button is selected
