@@ -57,12 +57,14 @@ def selectMoveAction(unit=None, cell_pos=None, **kwargs):
             Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
 
-            # TODO: only show LOS to currently visible targets from the selected cell
+            # show LOS to currently visible targets from the selected cell
             Interface.UI.generateLosLinesFrom(unit, cell_pos)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
-            Interface.UI.clearLosLines()
+
+            # show LOS to currently visible targets from the unit's current cell
+            Interface.UI.generateTargetLosLine(source_unit=unit, target_unit=None)
 
 
 def doMoveAction(unit=None, cell_pos=None, **kwargs):
@@ -81,12 +83,14 @@ def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
             Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
 
-            # TODO: only show LOS to currently visible targets from the selected cell
+            # show LOS to currently visible targets from the selected cell
             Interface.UI.generateLosLinesFrom(unit, cell_pos)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
-            Interface.UI.clearLosLines()
+
+            # show LOS to currently visible targets from the unit's current cell
+            Interface.UI.generateTargetLosLine(source_unit=unit, target_unit=None)
 
 
 def doEvadeAction(unit=None, cell_pos=None, **kwargs):
@@ -103,12 +107,14 @@ def selectSprintAction(unit=None, cell_pos=None, **kwargs):
             Interface.UI.setActionButtonEnabled(True)
             Interface.UI.updateActionSubLabelText("%s: %i" % (short_label, move_distance))
 
-            # TODO: only show LOS to currently visible targets from the selected cell
+            # show LOS to currently visible targets from the selected cell
             Interface.UI.generateLosLinesFrom(unit, cell_pos)
         else:
             Interface.UI.setActionButtonEnabled(False)
             Interface.UI.updateActionSubLabelText(None)
-            Interface.UI.clearLosLines()
+
+            # show LOS to currently visible targets from the unit's current cell
+            Interface.UI.generateTargetLosLine(source_unit=unit, target_unit=None)
 
 
 def doSprintAction(unit=None, cell_pos=None, **kwargs):
@@ -186,7 +192,7 @@ def selectEndAction(unit=None, cell_pos=None, **kwargs):
         board.setSelectedCellPosition(turn_unit.col, turn_unit.row)
 
         # TODO: only show LOS to currently visible targets from the selected cell
-        Interface.UI.generateLosLinesFrom(unit, cell_pos)
+        Interface.UI.generateLosLinesFrom(unit, turn_unit.getPosition())
 
 
 def doEndAction(unit=None, cell_pos=None, **kwargs):

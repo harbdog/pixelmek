@@ -414,7 +414,7 @@ class Interface(cocos.layer.Layer):
         board.add(los_line, z=10000)
         self.los_lines.append(los_line)
 
-    def generateLosLinesFrom(self, source_unit, source_coords):
+    def generateLosLinesFrom(self, source_unit, source_coords=None):
         from board import Board
         board = Board.BOARD
         battle = board.battle
@@ -423,6 +423,9 @@ class Interface(cocos.layer.Layer):
 
         if source_unit is None:
             return
+
+        if source_coords is None:
+            source_coords = source_unit.getPosition()
 
         enemy_units = battle.getEnemyUnits(source_unit)
         for enemy in enemy_units:
@@ -441,7 +444,7 @@ class Interface(cocos.layer.Layer):
 
         self.clearLosLines()
 
-        if source_unit is None or target_unit is None:
+        if source_unit is None:
             return
 
         source_coords = source_unit.getPosition()
