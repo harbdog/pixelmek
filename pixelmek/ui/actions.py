@@ -231,7 +231,8 @@ def nextTurn():
     board.showRangeIndicators()
     board.showUnitIndicators()
 
-    board.setSelectedCellPosition(next_unit.col, next_unit.row)
+    # clear selection so accidental turn skipping does not occur
+    board.clearSelectedCellPosition()
 
     turn_cell_pos = Board.board_to_layer(next_unit.col, next_unit.row)
     if turn_cell_pos is not None:
@@ -320,7 +321,8 @@ def actOnCell(board, col, row):
             board.showRangeIndicators()
             board.showUnitIndicators()
 
-            board.setSelectedCellPosition(turn_unit.col, turn_unit.row)
+            # clear selection so accidental turn skipping does not occur
+            board.clearSelectedCellPosition()
 
             turn_cell_pos = Board.board_to_layer(turn_unit.col, turn_unit.row)
             if turn_cell_pos is not None:
@@ -442,7 +444,9 @@ def moveSelectionBy(board, col_amt, row_amt):
 
     cell_pos = battle.getSelectedCellPosition()
     if cell_pos is None:
-        return
+        if battle.getTurnUnit() is None:
+            return
+        cell_pos = battle.getTurnUnit().getPosition()
 
     moveSelectionTo(board, cell_pos[0] + col_amt, cell_pos[1] + row_amt)
 

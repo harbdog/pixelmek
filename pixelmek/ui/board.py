@@ -115,6 +115,14 @@ class Board(cocos.layer.ScrollableLayer):
 
         return self.getCellAt(*sel_cell_pos)
 
+    def clearSelectedCellPosition(self):
+        prev_cell = self.getSelectedCell()
+        if prev_cell is not None:
+            prev_cell.show_action_indicator(show=False)
+            prev_cell.show_range_to_display(show=False)
+
+        self.battle.clearSelectedCell()
+
     def setSelectedCellPosition(self, col, row):
         if col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
             return
