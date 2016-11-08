@@ -2,6 +2,7 @@ from __future__ import division
 
 import cocos
 import pyglet
+from pyglet import window
 from pyglet.window import mouse
 
 import actions
@@ -37,34 +38,47 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
         if char == "P":
             mech.sprite.pause()
 
-        elif char == "SPACE" or char == "RETURN":
+        elif char in ("SPACE", "RETURN"):
             cell_pos = self.battle.getSelectedCellPosition()
             if cell_pos is None:
                 return
 
             actions.actOnCell(self.board, cell_pos[0], cell_pos[1])
 
-        elif char == "W":
-            mech.sprite.strut()
+        elif char in ("LEFT", "A"):
+            if modifiers & window.key.MOD_SHIFT:
+                # move view left
+                self.board.cellInViewMoveBy(-3, 0, force_focus=True)
+            else:
+                # move selection left
+                actions.moveSelectionBy(self.board, -1, 0)
 
-        elif char == "S":
-            mech.sprite.sulk()
+        elif char in ("RIGHT", "D"):
+            if modifiers & window.key.MOD_SHIFT:
+                # move view right
+                self.board.cellInViewMoveBy(3, 0, force_focus=True)
+            else:
+                # move selection right
+                actions.moveSelectionBy(self.board, 1, 0)
 
-        elif char == "LEFT":
-            # move selection left
-            actions.moveSelectionBy(self.board, -1, 0)
+        elif char in ("UP", "W"):
+            if modifiers & window.key.MOD_SHIFT:
+                # move view up
+                self.board.cellInViewMoveBy(0, 3, force_focus=True)
+            else:
+                # move selection up
+                actions.moveSelectionBy(self.board, 0, 1)
 
-        elif char == "RIGHT":
-            # move selection right
-            actions.moveSelectionBy(self.board, 1, 0)
+        elif char in ("DOWN", "S"):
+            if modifiers & window.key.MOD_SHIFT:
+                # move view down
+                self.board.cellInViewMoveBy(0, -3, force_focus=True)
+            else:
+                # move selection down
+                actions.moveSelectionBy(self.board, 0, -1)
 
-        elif char == "UP":
-            # move selection up
-            actions.moveSelectionBy(self.board, 0, 1)
-
-        elif char == "DOWN":
-            # move selection down
-            actions.moveSelectionBy(self.board, 0, -1)
+        elif char in ("LSHIFT", "RSHIFT", "LCTRL", "RCTRL"):
+            print("modifier pressed: " + char)
 
         else:
             print("unused binding: " + char)
@@ -141,8 +155,12 @@ class MouseEvents(cocos.layer.ScrollableLayer):
             actions.actOnCell(self.board, col, row)
 
         elif buttons & mouse.LEFT:
-            # select the specific cell
-            if not self.board.cellInView(col, row, autofocus=True):
-                return
+            if modifiers & window.key.MOD_SHIFT:
+                # move view to the cell
+                self.board.cellInView(col, row, force_focus=True)
+            else:
+                # select the specific cell
+                if not self.board.cellInView(col, row, autofocus=True):
+                    return
 
-            actions.moveSelectionTo(self.board, col, row)
+                actions.moveSelectionTo(self.board, col, row)

@@ -149,7 +149,7 @@ class Board(cocos.layer.ScrollableLayer):
             # only refocus if getting too close to edge of display (within 3 Tiles of each side)
             self.cellInView(col, row, autofocus=True)
 
-    def cellInView(self, col, row, autofocus=False):
+    def cellInView(self, col, row, autofocus=False, force_focus=False):
         if col < 0 or row < 0 or col >= self.map.numCols or row >= self.map.numRows:
             return False
 
@@ -164,11 +164,25 @@ class Board(cocos.layer.ScrollableLayer):
         cell_rect = Rect(cell_screen_pos[0], cell_screen_pos[1], Board.BOARD.TILE_SIZE, Board.BOARD.TILE_SIZE)
 
         intersects = cell_rect.intersects(view_rect)
-        if autofocus and not intersects:
+        if force_focus or (autofocus and not intersects):
             self.scroller.set_focus(cell_screen_pos[0] + Board.BOARD.TILE_SIZE // 2,
                                     cell_screen_pos[1] + Board.BOARD.TILE_SIZE // 2)
 
         return intersects
+
+    def cellInViewMoveBy(self, col_offset, row_offset, autofocus=False, force_focus=False):
+        # determine the cell currently at the center of the view and move by offset amount
+        window_size = director.get_window_size()
+        view_width = window_size[0] - Board.BOARD.TILE_SIZE * 6
+        view_height = window_size[1] - Board.BOARD.TILE_SIZE * 6
+
+        view_bottom_left = self.scroller.screen_to_world(Board.BOARD.TILE_SIZE * 3, Board.BOARD.TILE_SIZE * 3)
+        view_rect = Rect(view_bottom_left[0], view_bottom_left[1], view_width, view_height)
+
+        view_center = view_rect.center
+        col, row = Board.layer_to_board(*view_center)
+
+        self.cellInView(col + col_offset, row + row_offset, autofocus, force_focus)
 
     def showRangeIndicators(self):
         turn_unit = self.battle.getTurnUnit()

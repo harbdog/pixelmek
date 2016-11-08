@@ -263,7 +263,7 @@ def actOnCell(board, col, row):
         return
 
     # make sure the action is currently allowed by checking action button
-    if not Interface.UI.action_btn.enabled:
+    if Interface.UI.action_btn is None or not Interface.UI.action_btn.enabled:
         return
 
     battle = board.battle
