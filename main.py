@@ -2,7 +2,7 @@ import os
 import pygame
 import pyglet
 from random import randint
-
+from pixelmek.ai.bot import Bot
 from pixelmek.misc import include
 from pixelmek.misc import resources
 from pixelmek.model.battle import *
@@ -51,7 +51,7 @@ mouse_events = events.MouseEvents(board)
 
 # set up test players
 player = Player("Human", team=0)
-bot = Player("Bot", team=1, is_bot=True)
+bot = Bot("Bot", team=1)
 
 battle.addPlayer(player)
 battle.addPlayer(bot)

@@ -20,6 +20,7 @@ from pixelmek.model.battle import Battle
 from board import Board
 from pixelmek.misc.settings import Settings
 from interface import Interface
+from threading import Thread
 
 
 class Actions(object):
@@ -244,6 +245,10 @@ def nextTurn():
     Interface.UI.updateToHitLabels()
 
     updateLOS(Board.BOARD)
+
+    if next_unit.getPlayer().is_bot:
+        t = Thread(target=next_unit.getPlayer().act)
+        t.start()
 
 
 def actOnUI(x, y):
