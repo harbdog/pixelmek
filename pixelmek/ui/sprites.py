@@ -230,6 +230,9 @@ class MechSprite(cocos.layer.Layer):
         self.shadow.do(actions)
 
     def moveToCell(self, col, row, reverse=False, func=None):
+        if col == self.battle_mech.col and row == self.battle_mech.row:
+            return 0.5
+
         num_steps = 1 + int(math.ceil(Point2(col, row).distance(Point2(self.battle_mech.col, self.battle_mech.row))))
         time = self.timeBySize() * (num_steps * 2)
 

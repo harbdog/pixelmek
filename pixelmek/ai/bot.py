@@ -33,7 +33,7 @@ class Bot(Player):
         cells_in_range = battle.getCellsInRange(turn_unit.col, turn_unit.row, turn_unit.move)
         enemy_units = battle.getEnemyUnits(turn_unit)
 
-        cell_pos_best = 0, 0
+        cell_pos_best = turn_unit.getPosition()
         cell_los_best = 1000
 
         for cell_pos in cells_in_range:
