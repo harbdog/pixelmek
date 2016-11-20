@@ -368,6 +368,9 @@ class Interface(cocos.layer.Layer):
         self.clearToHitLabels()
         self.clearLosLines()
 
+        if battle.isBotTurn():
+            return
+
         turn_unit = battle.getTurnUnit()
         if turn_unit is None:
             return

@@ -64,6 +64,12 @@ class Battle(object):
     def getSelectedCellPosition(self):
         return self.sel_cell_pos
 
+    def isBotTurn(self):
+        turn_player = self.getTurnPlayer()
+        if turn_player is not None and turn_player.is_bot:
+            return True
+        return False
+
     def getTurnPlayer(self):
         turn_unit = self.getTurnUnit()
         if turn_unit is None:

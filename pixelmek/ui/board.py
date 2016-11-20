@@ -185,6 +185,9 @@ class Board(cocos.layer.ScrollableLayer):
         self.cellInView(col + col_offset, row + row_offset, autofocus, force_focus)
 
     def showRangeIndicators(self):
+        if self.battle.isBotTurn():
+            return
+
         turn_unit = self.battle.getTurnUnit()
         cells_in_range = self.battle.getCellsInRange(turn_unit.col, turn_unit.row, turn_unit.move)
         for cell_pos in cells_in_range:
