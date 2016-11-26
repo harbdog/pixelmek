@@ -2,10 +2,12 @@ import model
 import random
 from pixelmek.misc.settings import Settings
 
+from collections import namedtuple
 from cocos.euclid import Point2
 from los import LineOfSight
 from map import Map
 from modifiers import Modifiers
+from criticals import CriticalHits
 
 
 class Battle(object):
@@ -14,6 +16,8 @@ class Battle(object):
     RANGE_LONG = 42
 
     BATTLE = None
+
+    AttackResults = namedtuple('AttackResults', 'attack_damage critical_type')
 
     def __init__(self):
         Battle.BATTLE = self
@@ -184,6 +188,9 @@ class Battle(object):
         return self.map.numCols
 
     def performAttack(self, source_unit, target_unit):
+
+        results = Battle.AttackResults(0, None)
+
         src_pos = source_unit.getPosition()
         target_pos = target_unit.getPosition()
 
@@ -201,17 +208,26 @@ class Battle(object):
 
             print("(HIT DMG=%i) rolled %i/%i" % (attack_damage, rand_hit, to_hit))
 
+            # use pre-damage structure to determine if a critical hits needs to be rolled for
+            prev_structure = target_unit.structure
+
             # apply damage to model
             attack_remainder = target_unit.applyDamage(attack_damage)
 
+            critical_type = None
+
             if attack_remainder > 0:
                 print("Overkill by %i!" % attack_remainder)
+            elif target_unit.structure > 0 and target_unit.structure != prev_structure:
+                # a critical hit needs to be rolled
+                critical_type = CriticalHits.rollCriticalHit(target_unit)
 
-            return attack_damage
+            results = Battle.AttackResults(attack_damage, critical_type)
 
         else:
             print("(MISS) rolled %i/%i" % (rand_hit, to_hit))
-            return 0
+
+        return results
 
     def hasTargetLOS(self, source_pos, target_pos):
         los_tiles = self.los.getLineTiles(source_pos, target_pos)

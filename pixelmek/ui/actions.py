@@ -482,8 +482,10 @@ def performAttackOnUnit(board, target_unit):
     target_range = Battle.getDistanceRange(cell_distance)
     print(target_range + ": " + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
 
-    # TODO: introduce dynamic damage (optional?)
-    attack_damage = battle.performAttack(turn_unit, target_unit)
+    # perform the attack and show the results
+    attack_results = battle.performAttack(turn_unit, target_unit)
+    attack_damage = attack_results.attack_damage
+    critical_type = attack_results.critical_type
 
     # determine actual target point based on the target unit sprite size
     target_sprite = target_unit.getSprite()
@@ -854,6 +856,18 @@ def performAttackOnUnit(board, target_unit):
         + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
         + FadeOut(1.0) + CallFunc(floater.kill)
     floater.do(action)
+
+    if critical_type is not None:
+        crit_floater = floaters.TextFloater(critical_type)
+        crit_floater.visible = False
+
+        crit_floater.position = real_x, real_y + target_sprite.get_height() // 3
+        board.add(crit_floater, z=2000)
+
+        action = Delay(min_travel_time) + Delay(1.0) + ToggleVisibility() \
+                 + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.5) \
+                 + FadeOut(1.5) + CallFunc(crit_floater.kill)
+        crit_floater.do(action)
 
     if action.duration > max_travel_time:
         max_travel_time = action.duration
