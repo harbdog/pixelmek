@@ -197,6 +197,9 @@ def selectEndAction(unit=None, cell_pos=None, **kwargs):
 
 
 def doEndAction(unit=None, cell_pos=None, **kwargs):
+    if cell_pos is None:
+        return
+
     print("do END on "+str(unit) + " to cell " + str(cell_pos))
     # perform action on the cell
     actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
