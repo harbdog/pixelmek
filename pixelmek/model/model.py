@@ -204,3 +204,6 @@ class Special(yaml.YAMLObject):
         return "%s(name=%r [%s])" % (
             self.__class__.__name__, self.name, self.short_name
         )
+
+    def isSpecial(self, special_short_name):
+        return self.short_name == special_short_name

@@ -29,11 +29,11 @@ class CriticalHits(object):
         if battle_unit is None:
             return None
 
-        roll = random.randint(12, 12)
+        roll = random.randint(2, 2)
         print("Rolled:", roll)
 
         critical_type = CriticalHits.CRITICAL_HITS_TABLE.get(roll)
-        CriticalHits.applyCriticalHitEffect(battle_unit, critical_type)
+        critical_type = CriticalHits.applyCriticalHitEffect(battle_unit, critical_type)
 
         return critical_type
 
@@ -42,33 +42,40 @@ class CriticalHits(object):
         print("Critical Type:", str(critical_type))
 
         if critical_type is None:
-            return
+            return None
 
         elif critical_type is CriticalHits.CRITICAL_AMMO:
-            # TODO: Unless the unit has CASE(I/II) or Energy special, the unit is destroyed
-            # If it has CASE(I), unit takes an additional point of damage
-            # If is has CASE(II) or Energy, treat as no critical
-            return
+            # Unless the unit has CASE(I/II) or Energy special, the unit is destroyed
+            if battle_unit.hasSpecial('ENE') or battle_unit.hasSpecial('CASEII'):
+                # If it has CASE(II) or Energy, treat as no critical
+                critical_type = None
+            elif battle_unit.hasSpecial('CASE'):
+                # If it has CASE(I), unit takes an additional point of damage
+                battle_unit.applyDamage(1)
+            else:
+                # Unit is destroyed
+                battle_unit.structure = 0
 
         elif critical_type is CriticalHits.CRITICAL_ENGINE:
             # TODO: 1st hit: unit generates 1 heat from firing weapons
             # 2nd hit: unit is destroyed
-            return
+            pass
 
         elif critical_type is CriticalHits.CRITICAL_FIRE_CTL:
             # TODO: Each hit adds +2 to weapon attack modifiers
-            return
+            pass
 
         elif critical_type is CriticalHits.CRITICAL_WEAPON:
             # TODO: Each hit reduces all damage values by 1 (to minimum of 0)
-            return
+            pass
 
         elif critical_type is CriticalHits.CRITICAL_MOVE:
             # TODO: Each hit halves the unit's current Move, rounding normally
             # If reduced to 0, unit is immobile
-            return
+            pass
 
         elif critical_type is CriticalHits.CRITICAL_DESTROYED:
             # Unit is destroyed
             battle_unit.structure = 0
-            return
+
+        return critical_type

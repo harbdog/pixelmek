@@ -387,6 +387,24 @@ class BattleMech(object):
     def getSize(self):
         return self.mech.size
 
+    def getAllSpecials(self):
+        return self.mech.specials
+
+    def getSpecial(self, special_short_name):
+        if self.mech.specials is None:
+            return None
+
+        for special_map in self.mech.specials:
+            for special in special_map:
+                if special.isSpecial(special_short_name):
+                    return special
+
+        return None
+
+    def hasSpecial(self, special_short_name):
+        this_special = self.getSpecial(special_short_name)
+        return this_special is not None
+
     def getTurnMove(self):
         turn_move = self.mech.move
 
