@@ -29,7 +29,7 @@ class CriticalHits(object):
         if battle_unit is None:
             return None
 
-        roll = random.randint(2, 2)
+        roll = random.randint(2, 12)
         print("Rolled:", roll)
 
         critical_type = CriticalHits.CRITICAL_HITS_TABLE.get(roll)
@@ -59,20 +59,24 @@ class CriticalHits(object):
         elif critical_type is CriticalHits.CRITICAL_ENGINE:
             # TODO: 1st hit: unit generates 1 heat from firing weapons
             # 2nd hit: unit is destroyed
-            pass
+            battle_unit.crit_engine += 1
+
+            if battle_unit.crit_engine >= 2:
+                # Unit is destroyed
+                battle_unit.structure = 0
 
         elif critical_type is CriticalHits.CRITICAL_FIRE_CTL:
-            # TODO: Each hit adds +2 to weapon attack modifiers
-            pass
+            # Each hit adds +2 to weapon attack modifiers
+            battle_unit.crit_to_hit += 1
 
         elif critical_type is CriticalHits.CRITICAL_WEAPON:
-            # TODO: Each hit reduces all damage values by 1 (to minimum of 0)
-            pass
+            # Each hit reduces all damage values by 1 (to minimum of 0)
+            battle_unit.crit_weapons += 1
 
         elif critical_type is CriticalHits.CRITICAL_MOVE:
-            # TODO: Each hit halves the unit's current Move, rounding normally
+            # Each hit halves the unit's current Move, rounding normally
             # If reduced to 0, unit is immobile
-            pass
+            battle_unit.crit_mp += 1
 
         elif critical_type is CriticalHits.CRITICAL_DESTROYED:
             # Unit is destroyed

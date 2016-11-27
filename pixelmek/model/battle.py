@@ -260,6 +260,10 @@ class Battle(object):
         target_pos = target_unit.getPosition()
         target_distance = self.getCellDistance(source_pos, target_pos)
 
+        # account for critical hits on fire control system
+        crit_modifier = source_unit.crit_to_hit * Modifiers.MODIFIER_MULTIPLIER
+        to_hit -= crit_modifier
+
         # account for range modifiers
         range_modifier = Modifiers.getRangeModifier(target_distance) * Modifiers.MODIFIER_MULTIPLIER
         to_hit -= range_modifier
@@ -473,7 +477,17 @@ class BattleMech(object):
             return 0
 
         range_str = Battle.getDistanceRange(dist_to_target)
-        return getattr(self, range_str)
+        damage = getattr(self, range_str)
+
+        if damage is None:
+            return 0
+
+        # account for critical hits to weapons
+        damage -= self.crit_weapons
+        if damage < 0:
+            damage = 0
+
+        return damage
 
 
 class Player(object):
