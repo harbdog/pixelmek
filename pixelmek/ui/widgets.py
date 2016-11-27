@@ -125,7 +125,10 @@ class UnitCard(cocos.layer.Layer):
 
         # create attack icon and label of values
         attack_icon = Sprite(Resources.weapon_icon_img)
-        attack_str = "%i/%i/%i" % (battle_unit.short, battle_unit.medium, battle_unit.long)
+        attack_short = battle_unit.getDamageForRange('short')
+        attack_medium = battle_unit.getDamageForRange('medium')
+        attack_long = battle_unit.getDamageForRange('long')
+        attack_str = "%i/%i/%i" % (attack_short, attack_medium, attack_long)
 
         if reverse:
             attack_icon.position = -attack_icon.width // 2, stats_height + attack_icon.height // 2

@@ -477,6 +477,10 @@ class BattleMech(object):
             return 0
 
         range_str = Battle.getDistanceRange(dist_to_target)
+
+        return self.getDamageForRange(range_str)
+
+    def getDamageForRange(self, range_str):
         damage = getattr(self, range_str)
 
         if damage is None:
@@ -488,7 +492,6 @@ class BattleMech(object):
             damage = 0
 
         return damage
-
 
 class Player(object):
 
