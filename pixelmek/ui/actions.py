@@ -160,8 +160,11 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
     cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
     if cell_distance is not None:
         # TODO implement actual OVR damage/heat rules
-        damage = unit.getDamageForDistance(cell_distance)
-        Interface.UI.updateActionSubLabelText("%s: %i DAMAGE +1 HEAT" % (short_label, damage))
+        overheat = 1
+
+        damage = unit.getDamageForDistance(cell_distance) + overheat
+        atk_sub_text = "%s: 1-%i DAMAGE +1 HEAT" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE +1 HEAT"
+        Interface.UI.updateActionSubLabelText(atk_sub_text % (short_label, damage))
 
         battle = Battle.BATTLE
         target_unit = battle.getUnitAt(*cell_pos)
@@ -181,6 +184,7 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
 
 def doOverheatAction(unit=None, cell_pos=None, **kwargs):
     print("do FIRE OVR on "+str(unit) + " to cell " + str(cell_pos))
+    actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
 
 
 def selectEndAction(unit=None, cell_pos=None, **kwargs):
@@ -302,6 +306,10 @@ def actOnCell(board, col, row):
         # TODO: ask confirmation to end the turn without firing
         print("Skipping remainder of the turn!")
 
+        # turn ended without firing, decrease heat if possible
+        if turn_unit.heat > 0:
+            turn_unit.heat -= 1
+
         nextTurn()
 
         setActionReady(True)
@@ -372,7 +380,15 @@ def actOnCell(board, col, row):
         for chk_cell in board.cellMap.itervalues():
             chk_cell.remove_indicators()
 
-        attack_time = performAttackOnUnit(board, cell_unit)
+        # Apply overheat value if selected
+        overheat = 0
+        sel_btn = Interface.UI.getSelectedButton()
+        if sel_btn is not None and sel_btn.action_label == Interface.ACTION_OVR:
+            # TODO: implement correct overheat amount
+            overheat = 1
+
+
+        attack_time = performAttackOnUnit(board, cell_unit, overheat)
 
         # make sure an attack actually happened before ending the turn without attacking
         if attack_time < 0:
@@ -459,7 +475,7 @@ def moveSelectionBy(board, col_amt, row_amt):
     moveSelectionTo(board, cell_pos[0] + col_amt, cell_pos[1] + row_amt)
 
 
-def performAttackOnUnit(board, target_unit):
+def performAttackOnUnit(board, target_unit, overheat=0):
     # perform an attack on the given target BattleUnit
     battle = board.battle
 
@@ -483,7 +499,7 @@ def performAttackOnUnit(board, target_unit):
     print(target_range + ": " + str(src_cell) + " -> " + str(dest_cell) + " = " + str(cell_distance))
 
     # perform the attack and show the results
-    attack_results = battle.performAttack(turn_unit, target_unit)
+    attack_results = battle.performAttack(turn_unit, target_unit, overheat=overheat)
     attack_damage = attack_results.attack_damage
     critical_type = attack_results.critical_type
 

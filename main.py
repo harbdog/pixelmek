@@ -50,7 +50,7 @@ key_events = events.KeyboardEvents(board)
 mouse_events = events.MouseEvents(board)
 
 # set up test players
-player = Player("Human", team=0)
+player = Player("Human", team=0)    # Player("Human", team=0)
 bot = Bot("Bot", team=1)
 
 battle.addPlayer(player)

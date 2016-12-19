@@ -187,7 +187,7 @@ class Battle(object):
     def getNumCols(self):
         return self.map.numCols
 
-    def performAttack(self, source_unit, target_unit):
+    def performAttack(self, source_unit, target_unit, overheat=0):
 
         results = Battle.AttackResults(0, None)
 
@@ -203,7 +203,7 @@ class Battle(object):
         rand_hit = random.randint(0, 100)
         if rand_hit <= to_hit:
             # determine amount of damage
-            attack_damage = random.randint(1, max_damage) if Settings.VARIABLE_DAMAGE \
+            attack_damage = random.randint(1, max_damage + overheat) if Settings.VARIABLE_DAMAGE \
                 else max_damage
 
             print("(HIT DMG=%i) rolled %i/%i" % (attack_damage, rand_hit, to_hit))
@@ -226,6 +226,13 @@ class Battle(object):
 
         else:
             print("(MISS) rolled %i/%i" % (rand_hit, to_hit))
+
+        # apply heat if engine hit or if it was overheat attack
+        if source_unit.crit_engine == 1:
+            source_unit.heat += 1
+
+        if overheat > 0:
+            source_unit.heat += overheat
 
         return results
 

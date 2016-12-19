@@ -158,9 +158,7 @@ class UnitCard(cocos.layer.Layer):
 
         unit_stats.add(heat_icon, z=2)
 
-        # TESTING: Use actual heat!!!
-        rand_heat = random.randint(0, 4)
-        for i in range(rand_heat):
+        for i in range(battle_unit.heat):
             pip = Sprite(Resources.heat_pip_img)
             pip.scale = 2.0
             if reverse:
