@@ -525,7 +525,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
             weapon_channel = pygame.mixer.find_channel()
             if weapon_channel is None:
                 weapon_channel = pygame.mixer.Channel(0)
-            weapon_channel.set_volume(Settings.VOLUME_FX)
+            weapon_channel.set_volume(Settings.get_volume_fx())
 
             weapon_offset = weapon_data.get('offset', [0, 0])
             weapon_x = turn_unit.sprite.position[0] + weapon_offset[0]
@@ -785,7 +785,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
                 explosion_channel = pygame.mixer.find_channel()
                 if explosion_channel is None:
                     explosion_channel = pygame.mixer.Channel(1)
-                explosion_channel.set_volume(Settings.VOLUME_FX)
+                explosion_channel.set_volume(Settings.get_volume_fx())
 
                 # fire test missile projectile
                 missile_img = Resources.missile_img
@@ -1021,7 +1021,7 @@ def create_destruction_explosions(board, battle_unit):
             explosion_channel = pygame.mixer.find_channel()
             if explosion_channel is None:
                 explosion_channel = pygame.mixer.Channel(random.randint(0, 8))
-            explosion_channel.set_volume(Settings.VOLUME_FX)
+            explosion_channel.set_volume(Settings.get_volume_fx())
 
             # add random explosion sounds with the effect
             rand_index = random.randint(0, len(Resources.explosion_sounds)-1)

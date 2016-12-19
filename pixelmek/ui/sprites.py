@@ -260,7 +260,7 @@ class MechSprite(cocos.layer.Layer):
         for i in range(num_steps):
             # use channel 0 and 1 for alternating steps
             stomp_channel = pygame.mixer.Channel(i % 2)
-            stomp_channel.set_volume(Settings.VOLUME_FX)
+            stomp_channel.set_volume(Settings.get_volume_fx())
 
             stomp_reverse = True
             if i % 2 == (1 if reverse else 0):

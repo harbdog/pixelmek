@@ -11,6 +11,7 @@ from pixelmek.ui import menu
 from pixelmek.ui import sprites
 from pixelmek.ui.board import *
 
+Settings.init()
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
 mech_list = []
@@ -26,7 +27,9 @@ for root, dirs, f_names in os.walk(DATA_DIR+'/mechs/'):
 mech_list = sorted(mech_list, key=lambda x: x.name)
 
 # director must be initialized before any cocos elements can be created
-director.init(width=1024, height=768, resizable=True, autoscale=False)
+display_width = Settings.get_resolution_width()
+display_height = Settings.get_resolution_height()
+director.init(width=display_width, height=display_height, resizable=True, autoscale=False)
 director.show_FPS = True
 
 # initialize the audio mixer
