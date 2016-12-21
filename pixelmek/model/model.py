@@ -195,6 +195,12 @@ class Weapon(yaml.YAMLObject):
 class Special(yaml.YAMLObject):
     yaml_tag = u'!Special'
 
+    CASE = 'CASE'
+    CASEII = 'CASEII'
+    ENE = 'ENE'
+    HT = 'HT'
+    OVL = 'OVL'
+
     def __init__(self, name, short_name, description):
         self.name = name
         self.short_name = short_name

@@ -214,6 +214,17 @@ class Battle(object):
         cell_distance = Battle.getCellDistance(src_pos, target_pos)
         max_damage = source_unit.getDamageForDistance(cell_distance)
 
+        if overheat > 0:
+            if overheat > source_unit.getOverheat():
+                # make sure the overheat value does not exceed the value
+                overheat = source_unit.getOverheat()
+
+            # make sure the overheat can be used for the range
+            if cell_distance > Battle.RANGE_MEDIUM \
+                    and not source_unit.hasSpecial(model.Special.OVL):
+                # the unit requires the OVL special and does not have it, reduce overheat to 0 for this attack
+                overheat = 0
+
         # TODO: use Settings.VARIABLE_MODIFIERS to adjust To-Hit based on target movement
         to_hit = self.getToHit(source_unit, target_unit)
 
@@ -320,6 +331,9 @@ class Battle(object):
 
     @staticmethod
     def getCellDistance(cell_1, cell_2):
+        if cell_1 is None or cell_2 is None:
+            return 0
+
         point_1 = Point2(cell_1[0], cell_1[1])
         point_2 = Point2(cell_2[0], cell_2[1])
 
@@ -522,6 +536,9 @@ class BattleMech(object):
             damage = 0
 
         return damage
+
+    def getOverheat(self):
+        return self.mech.overheat
 
 
 class Player(object):

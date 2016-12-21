@@ -166,7 +166,11 @@ class Interface(cocos.layer.Layer):
             self.action_super_icon.visible = False
             self.action_sub_label.visible = False
 
+        if self.action_btn is not None:
+            self.action_btn.set_selected(False)
+
         for button in self.buttons:
+            button.clearVars()
             button.set_selected(False)
             button.draw_border()
 
@@ -233,6 +237,17 @@ class Interface(cocos.layer.Layer):
 
             self.action_sub_label.x = (width // 2)
             self.action_sub_label.y = self.action_btn.y - 2
+
+    def setButtonsVisible(self, visible):
+        if self.action_btn is not None:
+            self.action_super_label.visible = visible
+            self.action_super_icon.visible = visible
+            self.action_btn.visible = visible
+            self.action_btn_bg.visible = visible
+            self.action_sub_label.visible = visible
+
+        for button in self.buttons:
+            button.visible = visible
 
     def getButtonAt(self, x, y):
         if self.action_btn is not None and self.action_btn.is_at(x, y):

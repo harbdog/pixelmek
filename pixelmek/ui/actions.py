@@ -8,6 +8,7 @@ import cocos
 import pyglet
 import floaters
 import gl
+from pixelmek.model.model import Special
 
 from cocos.actions import *
 from cocos.euclid import Point2
@@ -35,6 +36,9 @@ def isActionReady():
 def setActionReady(is_ready):
     Actions.action_ready = is_ready
 
+    turn_player = Battle.BATTLE.getTurnPlayer()
+    Interface.UI.setButtonsVisible(is_ready and turn_player is not None and not turn_player.is_bot)
+
 
 def initGame():
     battle = Battle.BATTLE
@@ -51,6 +55,10 @@ def initGame():
 def selectMoveAction(unit=None, cell_pos=None, **kwargs):
     print("select move for " + str(unit) + " to cell " + str(cell_pos))
     short_label = Interface.SUB_MOVE
+
+    if cell_pos is None:
+        return
+
     sel_cell = Board.BOARD.getCellAt(*cell_pos)
     if sel_cell is not None:
         move_distance = sel_cell.range_to_display
@@ -69,6 +77,9 @@ def selectMoveAction(unit=None, cell_pos=None, **kwargs):
 
 
 def doMoveAction(unit=None, cell_pos=None, **kwargs):
+    if cell_pos is None:
+        return
+
     print("do MOVE on "+str(unit) + " to cell " + str(cell_pos))
     # perform action on the cell
     actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
@@ -77,6 +88,10 @@ def doMoveAction(unit=None, cell_pos=None, **kwargs):
 def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
     print("select evade for " + str(unit) + " to cell " + str(cell_pos))
     short_label = Interface.SUB_EVADE
+
+    if cell_pos is None:
+        return
+
     sel_cell = Board.BOARD.getCellAt(*cell_pos)
     if sel_cell is not None:
         move_distance = sel_cell.range_to_display
@@ -95,12 +110,19 @@ def selectEvadeAction(unit=None, cell_pos=None, **kwargs):
 
 
 def doEvadeAction(unit=None, cell_pos=None, **kwargs):
+    if cell_pos is None:
+        return
+
     print("do EVADE on "+str(unit) + " to cell " + str(cell_pos))
 
 
 def selectSprintAction(unit=None, cell_pos=None, **kwargs):
     print("select sprint for " + str(unit) + " to cell " + str(cell_pos))
     short_label = Interface.SUB_SPRINT
+
+    if cell_pos is None:
+        return
+
     sel_cell = Board.BOARD.getCellAt(*cell_pos)
     if sel_cell is not None:
         move_distance = sel_cell.range_to_display
@@ -119,6 +141,9 @@ def selectSprintAction(unit=None, cell_pos=None, **kwargs):
 
 
 def doSprintAction(unit=None, cell_pos=None, **kwargs):
+    if cell_pos is None:
+        return
+
     print("do SPRINT on "+str(unit) + " to cell " + str(cell_pos))
 
 
@@ -126,7 +151,7 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
     print("select weapon for " + str(unit) + " to cell " + str(cell_pos))
     short_label = Interface.SUB_FIRE
     cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
-    if cell_distance is not None:
+    if cell_pos is not None and cell_distance is not None:
         damage = unit.getDamageForDistance(cell_distance)
 
         atk_sub_text = "%s: 1-%i DAMAGE" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE"
@@ -149,6 +174,9 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
 
 
 def doWeaponAction(unit=None, cell_pos=None, **kwargs):
+    if cell_pos is None:
+        return
+
     print("do FIRE on "+str(unit) + " to cell " + str(cell_pos))
     # perform action on the cell
     actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
@@ -158,13 +186,30 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
     print("select overheat for " + str(unit) + " to cell " + str(cell_pos))
     short_label = Interface.SUB_OVR
     cell_distance = Battle.BATTLE.getCellDistance(unit.getPosition(), cell_pos)
-    if cell_distance is not None:
-        # TODO implement actual OVR damage/heat rules
-        overheat = 1
+    if cell_pos is not None and cell_distance is not None:
+        # each time the overheat button is clicked, cycle to next overheat value up to the max, then back again to 1
+        overheat = 0
+        curr_overheat = Interface.UI.overheat_btn.getVar('overheat')
+        if curr_overheat is not None:
+            overheat = curr_overheat
+
+        max_overheat = unit.getOverheat()
+        if cell_distance > Battle.RANGE_MEDIUM \
+                and not unit.hasSpecial(Special.OVL):
+            # the unit requires the OVL special and does not have it, reduce overheat to 0 for this attack
+            max_overheat = 0
+
+        overheat += 1
+        if max_overheat == 0:
+            overheat = 0
+        elif overheat > max_overheat:
+            overheat = 1
+
+        Interface.UI.overheat_btn.setVar('overheat', overheat)
 
         damage = unit.getDamageForDistance(cell_distance) + overheat
-        atk_sub_text = "%s: 1-%i DAMAGE +1 HEAT" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE +1 HEAT"
-        Interface.UI.updateActionSubLabelText(atk_sub_text % (short_label, damage))
+        atk_sub_text = "%s: 1-%i DAMAGE +%i HEAT" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE +%i HEAT"
+        Interface.UI.updateActionSubLabelText(atk_sub_text % (short_label, damage, overheat))
 
         battle = Battle.BATTLE
         target_unit = battle.getUnitAt(*cell_pos)
@@ -183,8 +228,11 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
 
 
 def doOverheatAction(unit=None, cell_pos=None, **kwargs):
+    if cell_pos is None:
+        return
+
     print("do FIRE OVR on "+str(unit) + " to cell " + str(cell_pos))
-    actOnCell(Board.BOARD, cell_pos[0], cell_pos[1])
+    actOnCell(Board.BOARD, cell_pos[0], cell_pos[1], **kwargs)
 
 
 def selectEndAction(unit=None, cell_pos=None, **kwargs):
@@ -275,8 +323,12 @@ def nextTurn():
         next_unit.sprite.sulk()
 
     if next_unit.getPlayer().is_bot:
+        setActionReady(False)
         t = Thread(target=next_unit.getPlayer().act)
         t.start()
+
+    else:
+        setActionReady(True)
 
 
 def actOnUI(x, y):
@@ -291,7 +343,7 @@ def actOnUI(x, y):
     return False
 
 
-def actOnCell(board, col, row):
+def actOnCell(board, col, row, **kwargs):
     if not isActionReady():
         return
 
@@ -405,9 +457,10 @@ def actOnCell(board, col, row):
 
         # Apply overheat value if selected
         overheat = 0
-        if sel_btn is not None and sel_btn.action_label == Interface.ACTION_OVR:
-            # TODO: implement correct overheat amount
-            overheat = 1
+        if sel_btn is not None \
+                and sel_btn.action_label == Interface.ACTION_OVR \
+                and 'overheat' in kwargs:
+            overheat = kwargs.get('overheat')
 
         attack_time = performAttackOnUnit(board, cell_unit, overheat)
 

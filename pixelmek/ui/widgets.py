@@ -262,6 +262,7 @@ class Button(cocos.layer.ColorLayer):
 
         self.action = action
         self.action_label = action_label
+        self.vars = {}
         self.selected = False
         self.enabled = True
         self.hidden = False
@@ -346,12 +347,31 @@ class Button(cocos.layer.ColorLayer):
 
         self.draw_border()
 
+    def setVar(self, var_key, var_value):
+        self.vars[var_key] = var_value
+
+    def getVar(self, var_key):
+        return self.vars.get(var_key)
+
+    def clearVars(self):
+        self.vars.clear()
+
     def do_action(self, **kwargs):
         if not self.selected:
             self.set_selected(True)
 
         kwargs['button'] = self
         kwargs['action_label'] = self.action_label
+
+        if self.selected:
+            # any vars placed on the selected button need to be given to the called function
+            from interface import Interface
+            is_action_btn = Interface.UI.isActionButton(self)
+            if is_action_btn:
+                sel_btn = Interface.UI.getSelectedButton()
+                if sel_btn is not None:
+                    kwargs.update(sel_btn.vars)
+
         return self.action(**kwargs)
 
 

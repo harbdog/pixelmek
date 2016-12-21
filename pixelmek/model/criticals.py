@@ -1,5 +1,7 @@
 import random
 
+from model import Special
+
 
 class CriticalHits(object):
 
@@ -46,10 +48,10 @@ class CriticalHits(object):
 
         elif critical_type is CriticalHits.CRITICAL_AMMO:
             # Unless the unit has CASE(I/II) or Energy special, the unit is destroyed
-            if battle_unit.hasSpecial('ENE') or battle_unit.hasSpecial('CASEII'):
+            if battle_unit.hasSpecial(Special.ENE) or battle_unit.hasSpecial(Special.CASEII):
                 # If it has CASE(II) or Energy, treat as no critical
                 critical_type = None
-            elif battle_unit.hasSpecial('CASE'):
+            elif battle_unit.hasSpecial(Special.CASE):
                 # If it has CASE(I), unit takes an additional point of damage
                 battle_unit.applyDamage(1)
             else:
