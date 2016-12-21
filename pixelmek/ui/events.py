@@ -45,6 +45,14 @@ class KeyboardEvents(cocos.layer.ScrollableLayer):
 
             actions.actOnCell(self.board, cell_pos[0], cell_pos[1])
 
+        elif char in ("TAB", "T"):
+            if modifiers & window.key.MOD_SHIFT:
+                # cycle previous closest target
+                actions.cycleTargetSelection(self.board, self.battle.getTurnUnit(), reverse=True)
+            else:
+                # cycle next closest target
+                actions.cycleTargetSelection(self.board, self.battle.getTurnUnit(), reverse=False)
+
         elif char in ("LEFT", "A"):
             if modifiers & window.key.MOD_SHIFT:
                 # move view left

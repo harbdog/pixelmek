@@ -68,6 +68,13 @@ class Battle(object):
     def getSelectedCellPosition(self):
         return self.sel_cell_pos
 
+    def getSelectedCellUnit(self):
+        # if a unit is at the selected cell position, return it, else None
+        if self.sel_cell_pos is None:
+            return None
+
+        return self.getUnitAt(*self.sel_cell_pos)
+
     def isBotTurn(self):
         turn_player = self.getTurnPlayer()
         if turn_player is not None and turn_player.is_bot:
@@ -499,6 +506,7 @@ class BattleMech(object):
             damage = 0
 
         return damage
+
 
 class Player(object):
 

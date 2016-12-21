@@ -412,6 +412,53 @@ def updateLOS(board):
         this_cell.update_los_visibility()
 
 
+def cycleTargetSelection(board, battle_unit, reverse=False):
+    # cycle target selections among those that can actually be hit
+    battle = board.battle
+
+    target_unit = battle.getSelectedCellUnit()
+    target_distance = -1
+    if target_unit is not None:
+        target_distance = battle.getCellDistance(battle_unit.getPosition(), target_unit.getPosition())
+
+    enemies = battle.getEnemyUnits(battle_unit)
+    enemies_by_distance = []
+    for enemy_unit in enemies:
+        if enemy_unit.isDestroyed():
+            continue
+
+        if battle.getToHit(battle_unit, enemy_unit) == 0:
+            continue
+
+        distance = battle.getCellDistance(battle_unit.getPosition(), enemy_unit.getPosition())
+        enemies_by_distance.append((distance, enemy_unit))
+
+    if len(enemies_by_distance) == 0:
+        return
+
+    enemies_by_distance.sort(key=lambda unit_tuple: unit_tuple[0])
+
+    target_index = -1
+    for idx, unit_tuple in enumerate(enemies_by_distance):
+        enemy_unit = unit_tuple[1]
+
+        if target_unit is enemy_unit:
+            target_index = idx
+            break
+
+    if reverse:
+        if target_index >= 0:
+            target_index -= 1
+    else:
+        if target_index < len(enemies_by_distance) - 1:
+            target_index += 1
+        else:
+            target_index = 0
+
+    next_target_unit = enemies_by_distance[target_index][1]
+    moveSelectionTo(board, next_target_unit.col, next_target_unit.row, autofocus=True)
+
+
 def moveSelectionTo(board, col, row, autofocus=False):
     # move selection to the given cell
     battle = board.battle
