@@ -113,8 +113,18 @@ class Battle(object):
                 next_unit = self.getTurnUnit()
 
         # initialize the unit for its next turn
-        # TODO: account for critical and heat effects on move
-        next_unit.move = next_unit.mech.move
+
+        if next_unit.isShutdown():
+            # unit was previously shutdown, now it starts back up with no heat
+            next_unit.shutdown = False
+            next_unit.heat = 0
+
+        elif next_unit.heat >= 4:
+            # show this unit as shutdown
+            next_unit.shutdown = True
+
+        # account for critical and heat effects on move
+        next_unit.move = next_unit.getTurnMove()
 
         self.los.generateLOS(next_unit, radius=self.visible_radius, clear=True)
 
@@ -273,6 +283,9 @@ class Battle(object):
         source_pos = source_unit.getPosition()
         target_pos = target_unit.getPosition()
         target_distance = self.getCellDistance(source_pos, target_pos)
+
+        # account for unit heat levels
+        to_hit -= source_unit.heat * Modifiers.MODIFIER_MULTIPLIER
 
         # account for critical hits on fire control system
         crit_modifier = source_unit.crit_to_hit * Modifiers.MODIFIER_MULTIPLIER
@@ -437,7 +450,10 @@ class BattleMech(object):
 
                     turn_move -= int(move_reduce)
 
-        if self.heat > 0:
+        if self.isShutdown():
+            # being shutdown gives a move of 0
+            turn_move = 0
+        elif self.heat > 0:
             # reduce move based on heat
             turn_move -= (self.heat * 2)
 

@@ -234,8 +234,6 @@ def nextTurn():
     if next_unit is None:
         return
 
-    next_unit.sprite.sulk()
-
     board.showRangeIndicators()
     board.showUnitIndicators()
 
@@ -252,6 +250,29 @@ def nextTurn():
     Interface.UI.updateToHitLabels()
 
     updateLOS(Board.BOARD)
+
+    if next_unit.isShutdown():
+        # show this unit as shutdown using floater and start the next turn
+        next_unit.sprite.shutdown()
+
+        unit_cell = next_unit.col, next_unit.row
+        unit_sprite = next_unit.getSprite()
+        real_x = (unit_cell[0] * Board.TILE_SIZE) + Board.TILE_SIZE // 2
+        real_y = (unit_cell[1] * Board.TILE_SIZE) + (2 * unit_sprite.get_height() // 3)
+
+        floater = floaters.TextFloater("SHUTDOWN")
+        floater.visible = False
+        floater.position = real_x, real_y + unit_sprite.get_height() // 3
+        board.add(floater, z=5000)
+
+        action = ToggleVisibility() \
+                 + MoveBy((0, Board.TILE_SIZE), 1.0) \
+                 + Delay(0.5) + FadeOut(2.0) + CallFunc(floater.kill) + CallFunc(nextTurn)
+        floater.do(action)
+        return
+
+    else:
+        next_unit.sprite.sulk()
 
     if next_unit.getPlayer().is_bot:
         t = Thread(target=next_unit.getPlayer().act)
@@ -279,6 +300,8 @@ def actOnCell(board, col, row):
         return
 
     battle = board.battle
+
+    sel_btn = Interface.UI.getSelectedButton()
 
     # perform an action based on the given cell and/or its occupants
     turn_unit = battle.getTurnUnit()
@@ -382,13 +405,16 @@ def actOnCell(board, col, row):
 
         # Apply overheat value if selected
         overheat = 0
-        sel_btn = Interface.UI.getSelectedButton()
         if sel_btn is not None and sel_btn.action_label == Interface.ACTION_OVR:
             # TODO: implement correct overheat amount
             overheat = 1
 
-
         attack_time = performAttackOnUnit(board, cell_unit, overheat)
+
+        if overheat > 0:
+            # show the new heat values on the UI
+            Interface.UI.updatePlayerUnitStats(turn_unit)
+            turn_unit.sprite.updateStatsIndicators()
 
         # make sure an attack actually happened before ending the turn without attacking
         if attack_time < 0:

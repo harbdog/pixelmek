@@ -372,7 +372,7 @@ class Interface(cocos.layer.Layer):
             return
 
         turn_unit = battle.getTurnUnit()
-        if turn_unit is None:
+        if turn_unit is None or turn_unit.isShutdown():
             return
 
         enemy_units = battle.getEnemyUnits(turn_unit)

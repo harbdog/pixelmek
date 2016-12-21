@@ -135,6 +135,10 @@ class LineOfSight:
         if battle_map is None:
             return
 
+        if battle_unit.isShutdown():
+            # decrease visibility for shutdown units
+            radius /= 2
+
         width = self.battle.getNumCols()
         height = self.battle.getNumRows()
 

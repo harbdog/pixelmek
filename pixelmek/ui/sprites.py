@@ -188,10 +188,63 @@ class MechSprite(cocos.layer.Layer):
         sink = MoveBy((0, -2), duration=time)
         self.img_ct.do(Repeat(Delay(time * 2) + sink + Reverse(sink)))
 
+    def shutdown(self):
+        if not self.static:
+            self.stop()
+
+        if self.static:
+            self.static = False
+            for section in self.node.get_children():
+                section.kill()
+
+            z = 1
+            self.node.add(self.img_ct, z=z)
+            z += 1
+            self.node.add(self.img_ll, z=z)
+            z += 1
+            self.node.add(self.img_rl, z=z)
+            z += 1
+            self.node.add(self.img_la, z=z)
+            z += 1
+            self.node.add(self.img_ra, z=z)
+
+        # TODO: adjust Z order only AFTER a Y position move
+        # TODO: Z order should be based on the number of rows in the board
+        new_z = (Map.numRows - self.battle_mech.row) * 10
+
+        parent = self.parent
+
+        parent.remove(self.shadow)
+        parent.remove(self)
+
+        parent.add(self.shadow, z=new_z)
+        parent.add(self, z=new_z+2)
+
+        # make smaller mechs move faster
+        time = 1.0
+
+        shift = MoveBy((0, -8), duration=time)
+
+        # lower the arms
+        self.img_la.do(shift)
+        self.img_ra.do(shift)
+
+        # lower the torso
+        lower = MoveBy((0, -4), duration=time/2)
+        self.img_ct.do(lower)
+
     def reset(self):
         for section in self.node.get_children():
             section.stop()
             section.position = 0, Board.TILE_SIZE//4
+
+        if self.battle_mech.isShutdown():
+            # lower the arms
+            self.img_la.y -= 8
+            self.img_ra.y -= 8
+
+            # lower the torso
+            self.img_ct.y -= 4
 
     def stop(self):
         self.shadow.stop()
@@ -200,7 +253,15 @@ class MechSprite(cocos.layer.Layer):
             section.stop()
             section.position = 0, Board.TILE_SIZE//4
 
-        if not self.static:
+        if self.battle_mech.isShutdown():
+            # lower the arms
+            self.img_la.y -= 8
+            self.img_ra.y -= 8
+
+            # lower the torso
+            self.img_ct.y -= 4
+
+        elif not self.static:
             self.static = True
             for section in self.node.get_children():
                 section.kill()
@@ -337,8 +398,7 @@ class MechSprite(cocos.layer.Layer):
 
         pip_height -= 4
 
-        # TESTING: Use actual heat!!!
-        rand_heat = random.randint(0, 4)
+        rand_heat = self.battle_mech.heat
         for i in range(rand_heat):
             pip = Sprite(Resources.heat_pip_img)
             pip.position = (i * pip.width) - (rand_heat * pip.width) // 2, pip_height
