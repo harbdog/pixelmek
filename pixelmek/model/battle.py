@@ -40,8 +40,31 @@ class Battle(object):
         self.unit_list.append(battle_unit)
 
     def updateUnitsTurnOrder(self):
-        # TODO: implement a better way to determine initiative for unit turn order
-        self.unit_list = sorted(self.unit_list, key=lambda x: x.getTurnMove(), reverse=True)
+        # start by sorting from most MP to least
+        sorted_list = sorted(self.unit_list, key=lambda x: x.getTurnMove(), reverse=True)
+        self.unit_list = []
+
+        # next, divide out by player
+        player_units = dict((el, []) for el in self.player_list)
+        for battle_unit in sorted_list:
+            player_units[battle_unit.player].append(battle_unit)
+
+        # then, in random order by player add in one unit at a time so they are staggered
+        random.shuffle(self.player_list)
+        units_remain = True
+
+        while units_remain:
+            has_units_this_round = False
+            for player in self.player_list:
+                player_unit_list = player_units.get(player)
+                if len(player_unit_list) > 0:
+                    has_units_this_round = True
+                    next_unit = player_unit_list.pop(0)
+                    if next_unit is not None:
+                        self.unit_list.append(next_unit)
+
+            if not has_units_this_round:
+                units_remain = False
 
     def addPlayer(self, player):
         self.player_list.append(player)
@@ -108,6 +131,8 @@ class Battle(object):
             while next_unit.isDestroyed():
                 self.unit_turn += 1
                 if self.unit_turn >= len(self.unit_list):
+                    # list has rolled around, change up turn order
+                    self.updateUnitsTurnOrder()
                     self.unit_turn = 0
 
                 next_unit = self.getTurnUnit()
@@ -315,12 +340,28 @@ class Battle(object):
         move_modifier = Modifiers.getTargetMovementModifier(target_unit) * Modifiers.MODIFIER_MULTIPLIER
         to_hit -= move_modifier
 
+        attacker_modifier = 0
+        if Settings.get_variable_modifiers():
+            # account for variable attacker movement modifiers
+            if source_unit.jumped:
+                # attacker jumped, +2 modifier to hitting
+                attacker_modifier = 2 * Modifiers.MODIFIER_MULTIPLIER
+
+            else:
+                # if attacker didn't move, it gets -1 modifier to hit
+                distance_moved = Battle.getCellDistance(source_unit.getPosition(), source_unit.prev_position)
+                if distance_moved < 1:
+                    attacker_modifier = -1 * Modifiers.MODIFIER_MULTIPLIER
+
+            to_hit -= attacker_modifier
+
         if to_hit > 100:
             to_hit = 100
         elif to_hit < 0:
             to_hit = 0
 
-        print("To-Hit %i percent = %i - %i (range) - %i (move)" % (to_hit, base_to_hit, range_modifier, move_modifier))
+        print("To-Hit %i percent = %i - %i (range) - %i (move) - %i (attacker)"
+              % (to_hit, base_to_hit, range_modifier, move_modifier, attacker_modifier))
 
         return to_hit
 
@@ -471,6 +512,9 @@ class BattleMech(object):
         return this_special is not None
 
     def getTurnMove(self):
+        if self.isDestroyed():
+            return 0
+
         turn_move = self.mech.move
 
         if self.crit_mp > 0:

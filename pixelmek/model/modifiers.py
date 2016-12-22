@@ -41,7 +41,7 @@ class Modifiers(object):
                 from battle import Battle
                 distance_moved = Battle.getCellDistance(battle_unit.getPosition(), battle_unit.prev_position)
                 if distance_moved < 1:
-                    move_modifier = -1
+                    move_modifier = 0
 
         else:
             # basic alpha strike rules use the greater of move or jump modifier
