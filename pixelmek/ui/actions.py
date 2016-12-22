@@ -154,7 +154,7 @@ def selectWeaponAction(unit=None, cell_pos=None, **kwargs):
     if cell_pos is not None and cell_distance is not None:
         damage = unit.getDamageForDistance(cell_distance)
 
-        atk_sub_text = "%s: 1-%i DAMAGE" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE"
+        atk_sub_text = "%s: 1-%i DAMAGE" if Settings.get_variable_damage() else "%s: %i DAMAGE"
         Interface.UI.updateActionSubLabelText(atk_sub_text % (short_label, damage))
 
         battle = Battle.BATTLE
@@ -208,7 +208,7 @@ def selectOverheatAction(unit=None, cell_pos=None, **kwargs):
         Interface.UI.overheat_btn.setVar('overheat', overheat)
 
         damage = unit.getDamageForDistance(cell_distance) + overheat
-        atk_sub_text = "%s: 1-%i DAMAGE +%i HEAT" if Settings.VARIABLE_DAMAGE else "%s: %i DAMAGE +%i HEAT"
+        atk_sub_text = "%s: 1-%i DAMAGE +%i HEAT" if Settings.get_variable_damage() else "%s: %i DAMAGE +%i HEAT"
         Interface.UI.updateActionSubLabelText(atk_sub_text % (short_label, damage, overheat))
 
         battle = Battle.BATTLE

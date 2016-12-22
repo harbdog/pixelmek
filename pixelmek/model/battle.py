@@ -113,6 +113,7 @@ class Battle(object):
                 next_unit = self.getTurnUnit()
 
         # initialize the unit for its next turn
+        next_unit.prev_position = next_unit.col, next_unit.row
 
         if next_unit.isShutdown():
             # unit was previously shutdown, now it starts back up with no heat
@@ -231,7 +232,7 @@ class Battle(object):
         rand_hit = random.randint(0, 100)
         if rand_hit <= to_hit:
             # determine amount of damage
-            attack_damage = random.randint(1, max_damage + overheat) if Settings.VARIABLE_DAMAGE \
+            attack_damage = random.randint(1, max_damage + overheat) if Settings.get_variable_damage() \
                 else max_damage
 
             print("(HIT DMG=%i) rolled %i/%i" % (attack_damage, rand_hit, to_hit))
@@ -400,6 +401,10 @@ class BattleMech(object):
         self.crit_mp = 0        # 1/2 Move (MV), minimum loss of 2 MV each, can be 0 (immobile)
         self.crit_to_hit = 0    # +2 To-Hit each for weapons fire
         self.crit_weapons = 0   # -1 Damage each for weapons fire
+
+        # tracking for movement modifiers
+        self.prev_position = col, row
+        self.jumped = False
 
     def __repr__(self):
         return "%s(name='%s %s', location=[%s,%s])" % (
