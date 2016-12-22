@@ -242,8 +242,12 @@ class Battle(object):
             # apply damage to model
             attack_remainder = target_unit.applyDamage(attack_damage)
 
-            critical_type = None
+            # if unit has the HT ability in range, apply heat to target
+            heat_damage = source_unit.getHeatDamageForDistance(cell_distance)
+            if heat_damage > 0:
+                target_unit.heat += heat_damage
 
+            critical_type = None
             if attack_remainder > 0:
                 print("Overkill by %i!" % attack_remainder)
             elif target_unit.structure > 0 and target_unit.structure != prev_structure:
@@ -446,6 +450,17 @@ class BattleMech(object):
 
         return None
 
+    def getSpecialValue(self, special_short_name):
+        if self.mech.specials is None:
+            return None
+
+        for special_map in self.mech.specials:
+            for special, value in special_map.items():
+                if special.isSpecial(special_short_name):
+                    return value
+
+        return None
+
     def hasSpecial(self, special_short_name):
         this_special = self.getSpecial(special_short_name)
         return this_special is not None
@@ -540,6 +555,23 @@ class BattleMech(object):
     def getOverheat(self):
         return self.mech.overheat
 
+    def getHeatDamageForDistance(self, dist_to_target):
+        heat_damage = 0
+
+        # if unit has the HT ability in range, apply heat to target
+        heat_damage_values = self.getSpecialValue(model.Special.HT)
+        if heat_damage_values is not None:
+            value_index = -1
+            if dist_to_target <= Battle.RANGE_SHORT:
+                value_index = 0
+            elif dist_to_target <= Battle.RANGE_MEDIUM:
+                value_index = 1
+            else:
+                value_index = 2
+
+            heat_damage = heat_damage_values[value_index]
+
+        return heat_damage
 
 class Player(object):
 
