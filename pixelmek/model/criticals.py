@@ -31,7 +31,7 @@ class CriticalHits(object):
         if battle_unit is None:
             return None
 
-        roll = random.randint(2, 12)
+        roll = random.randint(1, 6) + random.randint(1, 6)
         print("Rolled:", roll)
 
         critical_type = CriticalHits.CRITICAL_HITS_TABLE.get(roll)
