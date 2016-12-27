@@ -17,6 +17,7 @@ class UnitCard(cocos.layer.Layer):
         super(UnitCard, self).__init__()
         from board import Board
 
+        self.battle_unit = battle_unit
         self.reverse = reverse
         self.width = 0
         self.height = 0

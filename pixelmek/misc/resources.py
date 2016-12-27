@@ -1,8 +1,14 @@
+import os
 import pyglet
+
 from pygame.mixer import Sound
+from pixelmek.misc import include
+from pixelmek.misc.settings import Settings
 
 
 class Resources(object):
+
+    mech_list = []
 
     @staticmethod
     def preload():
@@ -84,3 +90,21 @@ class Resources(object):
         # preload font
         pyglet.font.add_file(pyglet.resource.file('images/ui/Convoy.ttf'))
         pyglet.font.add_file(pyglet.resource.file('images/ui/TranscendsGames.otf'))
+
+    @staticmethod
+    def get_units():
+        if len(Resources.mech_list) > 0:
+            return Resources.mech_list
+
+        # load mechs from the mechs directory
+        for root, dirs, f_names in os.walk(Settings.DATA_DIR + '/mechs/'):
+            for f_name in f_names:
+                mech = include.IncludeLoader(open(os.path.join(root, f_name), 'r')).get_data()
+                print("Loaded %s:" % mech.full_name())
+                print("  " + str(mech))
+                Resources.mech_list.append(mech)
+
+        # sort list alphabetically by name
+        Resources.mech_list = sorted(Resources.mech_list, key=lambda x: x.name)
+
+        return Resources.mech_list

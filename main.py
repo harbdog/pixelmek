@@ -1,9 +1,9 @@
 import os
 import pygame
 import pyglet
+
 from random import randint
 from pixelmek.ai.bot import Bot
-from pixelmek.misc import include
 from pixelmek.misc import resources
 from pixelmek.model.battle import *
 from pixelmek.ui import events
@@ -11,20 +11,10 @@ from pixelmek.ui import menu
 from pixelmek.ui import sprites
 from pixelmek.ui.board import *
 
-Settings.init()
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
+Settings.init(DATA_DIR)
 
-mech_list = []
-
-for root, dirs, f_names in os.walk(DATA_DIR+'/mechs/'):
-    for f_name in f_names:
-        mech = include.IncludeLoader(open(os.path.join(root, f_name), 'r')).get_data()
-        print("Loaded %s:" % mech.full_name())
-        print("  " + str(mech))
-        mech_list.append(mech)
-
-# sort list alphabetically by name
-mech_list = sorted(mech_list, key=lambda x: x.name)
+mech_list = Resources.get_units()
 
 # director must be initialized before any cocos elements can be created
 display_width = Settings.get_resolution_width()
@@ -44,7 +34,11 @@ resources.Resources.preload()
 cursor = pyglet.window.ImageMouseCursor(resources.Resources.mouse_pointer, 1, 17)
 director.window.set_mouse_cursor(cursor)
 
-battle = Battle()
+# set up test players
+player = Player("Human", team=0)
+bot = Bot("Bot", team=1)
+
+battle = Battle(player)
 map_model = Map()
 battle.setMap(map_model)
 
@@ -52,11 +46,6 @@ board = Board(battle)
 key_events = events.KeyboardEvents(board)
 mouse_events = events.MouseEvents(board)
 
-# set up test players
-player = Player("Human", team=0)
-bot = Bot("Bot", team=1)
-
-battle.addPlayer(player)
 battle.addPlayer(bot)
 
 # TODO: use menu system to determine which mechs the players get

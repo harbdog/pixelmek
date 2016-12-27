@@ -6,7 +6,7 @@ from cocos.scenes import *
 
 import actions
 import settings
-from board import Board
+import unitselect
 from interface import Interface
 
 
@@ -29,6 +29,9 @@ class MainMenu(Menu):
         battle_item = MenuItem('Battle', self.on_battle)
         menus.append(battle_item)
 
+        unit_select_item = MenuItem('Select Units', self.on_unit_select)
+        menus.append(unit_select_item)
+
         settings_item = MenuItem('Settings', self.on_settings)
         menus.append(settings_item)
 
@@ -50,6 +53,12 @@ class MainMenu(Menu):
 
         elif self.battle_scene is not None:
             director.push(ZoomTransition(self.battle_scene, duration=0.5))
+
+    def on_unit_select(self):
+        print("Unit Selection...")
+        scene = cocos.scene.Scene()
+        scene.add(unitselect.UnitSelectionMenu())
+        director.push(FlipX3DTransition(scene, duration=0.5))
 
     def on_settings(self):
         print("Settings...")

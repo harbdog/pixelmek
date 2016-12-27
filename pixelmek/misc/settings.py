@@ -7,6 +7,7 @@ class Settings:
         # Settings is to be a static only set of variables and methods so they can be looked up anywhere
         pass
 
+    DATA_DIR = 'data'
     FILE = os.path.expanduser('~/.pixelmek')
     RESOLUTION = 'RESOLUTION'
     VOLUME_FX = 'VOLUME_FX'
@@ -21,7 +22,10 @@ class Settings:
     }
 
     @staticmethod
-    def init():
+    def init(data_dir):
+        # setup data directory
+        Settings.DATA_DIR = data_dir
+
         # load settings from file
 
         print('Loading settings file %s' % Settings.FILE)

@@ -19,14 +19,15 @@ class Battle(object):
 
     AttackResults = namedtuple('AttackResults', 'attack_damage critical_type')
 
-    def __init__(self):
+    def __init__(self, player_one):
         Battle.BATTLE = self
+        self.player_one = player_one
         self.started = False
         self.map = None
         self.los = LineOfSight(self)
         self.visible_radius = 24
 
-        self.player_list = []
+        self.player_list = [player_one]
 
         self.unit_list = []
         self.unit_turn = -1
