@@ -282,6 +282,9 @@ def nextTurn():
     if next_unit is None:
         return
 
+    has_overheat_ability = next_unit.getOverheat() > 0
+    Interface.UI.overheat_btn.set_enabled(has_overheat_ability)
+
     board.showRangeIndicators()
     board.showUnitIndicators()
 
@@ -332,13 +335,21 @@ def nextTurn():
 
 
 def actOnUI(x, y):
-    button = Interface.UI.getButtonAt(x, y)
-    if button is not None and not button.hidden and button.enabled:
-        battle = Battle.BATTLE
-        turn_unit = battle.getTurnUnit()
-        sel_cell_pos = battle.getSelectedCellPosition()
+    if not isActionReady():
+        return True
 
-        return button.do_action(**{'unit': turn_unit, 'cell_pos': sel_cell_pos})
+    button = Interface.UI.getButtonAt(x, y)
+    if button is not None and not button.hidden:
+        if button.enabled:
+            battle = Battle.BATTLE
+            turn_unit = battle.getTurnUnit()
+            sel_cell_pos = battle.getSelectedCellPosition()
+
+            return button.do_action(**{'unit': turn_unit, 'cell_pos': sel_cell_pos})
+
+        else:
+            # Returning True to prevent clicking under the disabled button
+            return True
 
     return False
 
