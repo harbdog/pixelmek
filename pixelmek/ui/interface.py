@@ -239,7 +239,7 @@ class Interface(cocos.layer.Layer):
             self.action_sub_label.y = self.action_btn.y - 2
 
     def setButtonsVisible(self, visible):
-        if self.action_btn is not None:
+        if self.action_btn is not None and self.getSelectedButton() is not None:
             self.action_super_label.visible = visible
             self.action_super_icon.visible = visible
             self.action_btn.visible = visible
