@@ -71,6 +71,8 @@ class Battle(object):
         self.player_list.append(player)
 
     def initBattle(self):
+        self.updateUnitsTurnOrder()
+
         self.los.clearLOS()
         for battle_unit in self.unit_list:
             self.los.generateLOS(battle_unit, radius=self.visible_radius, clear=False)
@@ -376,6 +378,15 @@ class Battle(object):
 
         return enemy_units
 
+    def getPlayerUnits(self, player):
+        player_units = []
+
+        for unit in self.unit_list:
+            if unit.player is player:
+                player_units.append(unit)
+
+        return player_units
+
     @staticmethod
     def getCellDistance(cell_1, cell_2):
         if cell_1 is None or cell_2 is None:
@@ -482,6 +493,9 @@ class BattleMech(object):
 
     def getSize(self):
         return self.mech.size
+
+    def getTonnage(self):
+        return self.mech.tonnage
 
     def getAllSpecials(self):
         return self.mech.specials
@@ -623,9 +637,13 @@ class BattleMech(object):
 
         return heat_damage
 
+
 class Player(object):
 
     def __init__(self, callsign, team=-1, is_bot=False):
         self.callsign = callsign
         self.team = team
         self.is_bot = is_bot
+
+    def __str__(self):
+        return self.callsign

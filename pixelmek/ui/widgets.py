@@ -13,7 +13,7 @@ from pixelmek.misc.resources import Resources
 
 class UnitCard(cocos.layer.Layer):
 
-    def __init__(self, battle_unit, is_friendly=True, reverse=False):
+    def __init__(self, battle_unit, is_friendly=True, reverse=False, mask_image=True):
         super(UnitCard, self).__init__()
         from board import Board
 
@@ -30,27 +30,29 @@ class UnitCard(cocos.layer.Layer):
         pitch = -(mech_img_static.width * len('RGBA'))
         img_data = mech_img_static.get_image_data()
 
-        # testing with masking only a portion of the image
-        damage_height = int(mech_img_static.height)  # int(mech_img_static.height * 0.67)
-        data = img_data.get_region(0, 0, mech_img_static.width, damage_height).get_data('RGBA', pitch)
+        pyg_img = mech_img_static
+        if mask_image:
+            # masking only a portion of the image based on damage
+            damage_height = int(mech_img_static.height)
+            data = img_data.get_region(0, 0, mech_img_static.width, damage_height).get_data('RGBA', pitch)
 
-        mask = Image.frombytes('RGBA', (mech_img_static.width, damage_height), data)
-        # the first image is the color that the stamp will be
-        img1 = Image.new('RGBA', mask.size, color=(0, 0, 0, 255))
-        # second image is the background
-        bg_color = (200, 75, 75, 200)
-        if is_friendly:
-            bg_color = (225, 225, 225, 200)
-        img2 = Image.new('RGBA', mask.size, color=bg_color)
-        img1 = img1.convert('RGBA')
+            mask = Image.frombytes('RGBA', (mech_img_static.width, damage_height), data)
+            # the first image is the color that the stamp will be
+            img1 = Image.new('RGBA', mask.size, color=(0, 0, 0, 255))
+            # second image is the background
+            bg_color = (200, 75, 75, 200)
+            if is_friendly:
+                bg_color = (225, 225, 225, 200)
+            img2 = Image.new('RGBA', mask.size, color=bg_color)
+            img1 = img1.convert('RGBA')
 
-        # apply mask to background image
-        img = Image.composite(img1, img2, mask)
+            # apply mask to background image
+            img = Image.composite(img1, img2, mask)
 
-        raw_image = img.tobytes()
-        img_x = mask.size[0]
-        img_y = mask.size[1]
-        pyg_img = pyglet.image.ImageData(img_x, img_y, 'RGBA', raw_image, pitch=-img_x * len('RGBA'))
+            raw_image = img.tobytes()
+            img_x = mask.size[0]
+            img_y = mask.size[1]
+            pyg_img = pyglet.image.ImageData(img_x, img_y, 'RGBA', raw_image, pitch=-img_x * len('RGBA'))
 
         mech_sprite = Sprite(pyg_img)
         mech_sprite.position = mech_sprite.width // 2, Board.TILE_SIZE // 2 + mech_sprite.height // 2

@@ -8,6 +8,7 @@ import cocos
 import pyglet
 import floaters
 import gl
+import sprites
 from pixelmek.model.model import Special
 
 from cocos.actions import *
@@ -17,7 +18,7 @@ from cocos.particle_systems import Meteor, Galaxy, Fire
 from cocos.sprite import Sprite
 
 from pixelmek.misc.resources import Resources
-from pixelmek.model.battle import Battle
+from pixelmek.model.battle import Battle, BattleMech
 from board import Board
 from pixelmek.misc.settings import Settings
 from interface import Interface
@@ -50,6 +51,50 @@ def initGame():
     ui = Interface()
 
     return battle.started
+
+
+def add_unit_for_player(unit, owner):
+    # fill out the test board with mechs
+    side_col = 1
+    if owner.is_bot:
+        side_col = Battle.BATTLE.getNumCols() - 2
+
+    rand_col = random.randint(-1, 1)
+    col = side_col + rand_col
+    row = random.randint(0, Battle.BATTLE.getNumRows())
+
+    while not Battle.BATTLE.isCellAvailable(col, row):
+        rand_col = random.randint(-1, 1)
+        col = side_col + rand_col
+        row = random.randint(0, Battle.BATTLE.getNumRows() - 1)
+
+    battle_unit = BattleMech(owner, unit, col, row)
+    Battle.BATTLE.addUnit(battle_unit)
+
+    sprite = sprites.MechSprite(battle_unit)
+    battle_unit.setSprite(sprite)
+    # Z order is based on the number of rows in the board
+    sprite_z = (Battle.BATTLE.getNumRows() - row) * 10
+    Board.BOARD.add(sprite.shadow, z=sprite_z)
+    Board.BOARD.add(sprite, z=sprite_z + 1)
+
+
+def update_battle_unit(battle_unit, unit):
+    # remove previous sprites
+    sprite = battle_unit.sprite
+    Board.BOARD.remove(sprite.shadow)
+    Board.BOARD.remove(sprite)
+
+    # change an existing battle unit to another unit
+    battle_unit.__init__(battle_unit.player, unit, battle_unit.col, battle_unit.row)
+
+    # add new sprites
+    sprite = sprites.MechSprite(battle_unit)
+    battle_unit.setSprite(sprite)
+    # Z order is based on the number of rows in the board
+    sprite_z = (Battle.BATTLE.getNumRows() - battle_unit.row) * 10
+    Board.BOARD.add(sprite.shadow, z=sprite_z)
+    Board.BOARD.add(sprite, z=sprite_z + 1)
 
 
 def selectMoveAction(unit=None, cell_pos=None, **kwargs):

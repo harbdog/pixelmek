@@ -6,16 +6,18 @@ from cocos.scenes import *
 
 import actions
 import settings
-import unitselect
+import battleselect
 from interface import Interface
 
 
 class MainMenu(Menu):
+    BATTLE_SCENE = None
+    SCROLLER = None
+
     def __init__(self, scroller):
         super(MainMenu, self).__init__("PixelMek")
 
-        self.scroller = scroller
-        self.battle_scene = None
+        MainMenu.SCROLLER = scroller
 
         self.font_title['font_name'] = 'Convoy'
         self.font_title['font_size'] = 50
@@ -29,9 +31,6 @@ class MainMenu(Menu):
         battle_item = MenuItem('Battle', self.on_battle)
         menus.append(battle_item)
 
-        unit_select_item = MenuItem('Select Units', self.on_unit_select)
-        menus.append(unit_select_item)
-
         settings_item = MenuItem('Settings', self.on_settings)
         menus.append(settings_item)
 
@@ -40,25 +39,30 @@ class MainMenu(Menu):
 
         self.create_menu(menus)
 
-    def on_battle(self):
+    @staticmethod
+    def start_battle():
         starting = actions.initGame()
         if starting:
-            self.battle_scene = cocos.scene.Scene()
-            self.battle_scene.add(self.scroller)
-            self.battle_scene.add(Interface.UI)
-            director.push(ZoomTransition(self.battle_scene, duration=0.5))
+            MainMenu.BATTLE_SCENE = cocos.scene.Scene()
+            MainMenu.BATTLE_SCENE.add(MainMenu.SCROLLER)
+            MainMenu.BATTLE_SCENE.add(Interface.UI)
+            director.replace(ZoomTransition(MainMenu.BATTLE_SCENE, duration=0.5))
 
             actions.nextTurn()
             actions.setActionReady(True)
 
-        elif self.battle_scene is not None:
-            director.push(ZoomTransition(self.battle_scene, duration=0.5))
+        elif MainMenu.BATTLE_SCENE is not None:
+            director.replace(ZoomTransition(MainMenu.BATTLE_SCENE, duration=0.5))
 
-    def on_unit_select(self):
-        print("Unit Selection...")
-        scene = cocos.scene.Scene()
-        scene.add(unitselect.UnitSelectionMenu())
-        director.push(FlipX3DTransition(scene, duration=0.5))
+    def on_battle(self):
+        if MainMenu.BATTLE_SCENE is not None:
+            director.push(ZoomTransition(MainMenu.BATTLE_SCENE, duration=0.5))
+
+        else:
+            print("Battle Selection...")
+            scene = cocos.scene.Scene()
+            scene.add(battleselect.BattleSelectionMenu())
+            director.push(FlipX3DTransition(scene, duration=0.5))
 
     def on_settings(self):
         print("Settings...")
@@ -72,5 +76,5 @@ class MainMenu(Menu):
 
     def on_quit(self):
         print("Back to the game if it's on...")
-        if self.battle_scene is not None:
-            director.push(ZoomTransition(self.battle_scene, duration=0.5))
+        if self.BATTLE_SCENE is not None:
+            director.push(ZoomTransition(self.BATTLE_SCENE, duration=0.5))
