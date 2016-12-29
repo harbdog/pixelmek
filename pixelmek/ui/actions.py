@@ -22,7 +22,6 @@ from pixelmek.model.battle import Battle, BattleMech
 from board import Board
 from pixelmek.misc.settings import Settings
 from interface import Interface
-from threading import Thread
 
 
 class Actions(object):
@@ -372,8 +371,15 @@ def nextTurn():
 
     if next_unit.getPlayer().is_bot:
         setActionReady(False)
-        t = Thread(target=next_unit.getPlayer().act)
-        t.start()
+        floater = floaters.TextFloater("BOT")
+        floater.visible = False
+        floater.position = 0, 0
+        board.add(floater, z=5000)
+
+        action = ToggleVisibility() \
+                 + MoveBy((-Board.TILE_SIZE, -Board.TILE_SIZE), 0.1) \
+                 + CallFunc(floater.kill) + CallFunc(next_unit.getPlayer().act)
+        floater.do(action)
 
     else:
         setActionReady(True)

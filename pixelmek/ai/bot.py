@@ -13,7 +13,7 @@ class Bot(Player):
         super(Bot, self).__init__(callsign, team=team, is_bot=True)
 
     def act(self):
-        print('ACTING')
+        print('bot > ACTING')
         # make the bot do things
         battle = Battle.BATTLE
         board = Board.BOARD
@@ -73,7 +73,6 @@ class Bot(Player):
 
             board.scroller.set_focus(*turn_cell_pos)
 
-            # print('next turn')
             # actions.nextTurn()
             self._prepare_attack()
 
@@ -105,11 +104,18 @@ class Bot(Player):
                 target_to_hit = to_hit
 
         if target_unit is not None:
+            print('bot > attacking '+str(target_unit))
             attack_time = actions.performAttackOnUnit(board, target_unit)
 
             def _ready_next_turn():
+                print('bot > next turn...')
                 Interface.UI.setUnitStatsIndicatorsVisible(True)
                 actions.nextTurn()
 
             # start the next turn when the attack is completed
             board.do(Delay(attack_time) + CallFunc(_ready_next_turn))
+
+        else:
+            print('bot > skipping turn...')
+            Interface.UI.setUnitStatsIndicatorsVisible(True)
+            actions.nextTurn()
