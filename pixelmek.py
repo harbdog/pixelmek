@@ -14,7 +14,9 @@ def find_data_file(filename):
     if getattr(sys, 'frozen', False):
         # The application is frozen
         datadir = os.path.dirname(sys.executable)
-        sys.stdout = sys.stderr = open('pixelmek.log', 'w')
+
+        logfile = os.path.expanduser('~/.pixelmek.log')
+        sys.stdout = sys.stderr = open(logfile, 'w')
     else:
         # The application is not frozen
         # Change this bit to match where you store your data files:
