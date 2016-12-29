@@ -2,14 +2,23 @@
 
 1. Install Python 2.7.x (https://www.python.org/downloads/)
 2. Install pygame (http://www.pygame.org/download.shtml)
-2. Install the following Python extensions from command line using pip:
+3. Install the following Python extensions from command line using pip:
     1. pip install pyglet
     2. pip install cocos2d
     3. pip install pyyaml
     4. pip install numpy
     5. pip install pillow
+4. Run from command line using python:
+    * python pixelmek.py
+    
+    
+### Instructions for creating executable from source:
+
+1. Follow instructions used to run from source
+2. Install cx_Freeze (http://cx-freeze.sourceforge.net/):
+    * pip install cx_Freeze
 3. Run from command line using python:
-    * python main.py
+    * python dist_setup.py bdist_msi
 
 
 ### Game resources

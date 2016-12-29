@@ -1,15 +1,29 @@
 import os
 import pygame
 import pyglet
+import sys
 
-from random import randint
 from pixelmek.ai.bot import Bot
 from pixelmek.misc import resources
 from pixelmek.model.battle import *
 from pixelmek.ui import actions, events, menu
 from pixelmek.ui.board import *
 
-DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
+
+def find_data_file(filename):
+    if getattr(sys, 'frozen', False):
+        # The application is frozen
+        datadir = os.path.dirname(sys.executable)
+        sys.stdout = sys.stderr = open('pixelmek.log', 'w')
+    else:
+        # The application is not frozen
+        # Change this bit to match where you store your data files:
+        datadir = os.path.dirname(__file__)
+
+    return os.path.join(datadir, filename)
+
+
+DATA_DIR = find_data_file('data')
 Settings.init(DATA_DIR)
 
 mech_list = Resources.get_units()
