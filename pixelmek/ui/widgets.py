@@ -13,7 +13,7 @@ from pixelmek.misc.resources import Resources
 
 class UnitCard(cocos.layer.Layer):
 
-    def __init__(self, battle_unit, is_friendly=True, reverse=False, mask_image=True):
+    def __init__(self, battle_unit, is_friendly=True, reverse=False, mask_image=True, menu_selected=False):
         super(UnitCard, self).__init__()
         from board import Board
 
@@ -62,30 +62,44 @@ class UnitCard(cocos.layer.Layer):
         self.add(self.unit_display)
 
         # Show unit name above the image
+        unit_name_str = "%it %s [%ipv]" % (battle_unit.getTonnage(), battle_unit.getName(), battle_unit.getPointValue())
+        unit_name_font_size = Board.TILE_SIZE // 2
+        if menu_selected:
+            unit_name_font_size = int(unit_name_font_size * 1.5)
+
         if reverse:
-            self.unit_name = floaters.TextFloater(battle_unit.getName(), font_name='TranscendsGames',
-                                                  font_size=Board.TILE_SIZE // 2, anchor_x='right', anchor_y='bottom')
+            self.unit_name = floaters.TextFloater(unit_name_str, font_name='TranscendsGames',
+                                                  font_size=unit_name_font_size, anchor_x='right', anchor_y='bottom')
             name_rect = mech_sprite.get_rect().topright
             self.unit_name.position = name_rect[0], name_rect[1]
         else:
-            self.unit_name = floaters.TextFloater(battle_unit.getName(), font_name='TranscendsGames',
-                                                  font_size=Board.TILE_SIZE // 2, anchor_x='left', anchor_y='bottom')
+            self.unit_name = floaters.TextFloater(unit_name_str, font_name='TranscendsGames',
+                                                  font_size=unit_name_font_size, anchor_x='left', anchor_y='bottom')
             name_rect = mech_sprite.get_rect().topleft
             self.unit_name.position = name_rect[0], name_rect[1]
 
         self.add(self.unit_name)
 
         # Show unit variant below the image
+        unit_variant_str = battle_unit.getVariant().upper()
+        unit_variant_font_size = Board.TILE_SIZE // 3
+        if menu_selected:
+            unit_variant_font_size = int(unit_variant_font_size * 1.5)
+
         if reverse:
-            self.unit_variant = floaters.TextFloater(battle_unit.getVariant().upper(), font_name='TranscendsGames',
-                                                     font_size=Board.TILE_SIZE // 3, anchor_x='right', anchor_y='top')
+            self.unit_variant = floaters.TextFloater(unit_variant_str, font_name='TranscendsGames',
+                                                     font_size=unit_variant_font_size, anchor_x='right', anchor_y='top')
             variant_rect = mech_sprite.get_rect().bottomright
-            self.unit_variant.position = variant_rect[0], variant_rect[1] - 2
+            self.unit_variant.position = variant_rect[0], variant_rect[1] - 4
         else:
-            self.unit_variant = floaters.TextFloater(battle_unit.getVariant().upper(), font_name='TranscendsGames',
-                                                     font_size=Board.TILE_SIZE // 3, anchor_x='left', anchor_y='top')
+            self.unit_variant = floaters.TextFloater(unit_variant_str, font_name='TranscendsGames',
+                                                     font_size=unit_variant_font_size, anchor_x='left', anchor_y='top')
             variant_rect = mech_sprite.get_rect().bottomleft
-            self.unit_variant.position = variant_rect[0], variant_rect[1] - 2
+            self.unit_variant.position = variant_rect[0], variant_rect[1] - 4
+
+        if menu_selected:
+            # when selected in a menu the fonts are larger and needs more space away from the image stamp
+            self.unit_variant.y -= unit_variant_font_size
 
         self.add(self.unit_variant)
 
@@ -107,18 +121,22 @@ class UnitCard(cocos.layer.Layer):
         move_icon = Sprite(Resources.move_icon_img)
         move_str = str(battle_unit.getTurnMove())
 
+        unit_values_font_size = Board.TILE_SIZE // 3
+        if menu_selected:
+            unit_values_font_size = int(unit_values_font_size * 1.25)
+
         if reverse:
             move_icon.position = -move_icon.width // 2, stats_height + move_icon.height // 2
 
             move_label = floaters.TextFloater(move_str, font_name='TranscendsGames',
-                                              font_size=Board.TILE_SIZE // 3, anchor_x='right', anchor_y='bottom')
+                                              font_size=unit_values_font_size, anchor_x='right', anchor_y='bottom')
             move_label.position = move_icon.get_rect().bottomleft
             unit_stats.add(move_label, z=2)
         else:
             move_icon.position = move_icon.width // 2, stats_height + move_icon.height // 2
 
             move_label = floaters.TextFloater(move_str, font_name='TranscendsGames',
-                                              font_size=Board.TILE_SIZE // 3, anchor_x='left', anchor_y='bottom')
+                                              font_size=unit_values_font_size, anchor_x='left', anchor_y='bottom')
             move_label.position = move_icon.get_rect().bottomright
             unit_stats.add(move_label, z=2)
 
@@ -137,14 +155,14 @@ class UnitCard(cocos.layer.Layer):
             attack_icon.position = -attack_icon.width // 2, stats_height + attack_icon.height // 2
 
             attack_label = floaters.TextFloater(attack_str, font_name='TranscendsGames',
-                                                font_size=Board.TILE_SIZE // 3, anchor_x='right', anchor_y='bottom')
+                                                font_size=unit_values_font_size, anchor_x='right', anchor_y='bottom')
             attack_label.position = attack_icon.get_rect().bottomleft
             unit_stats.add(attack_label, z=2)
         else:
             attack_icon.position = attack_icon.width // 2, stats_height + attack_icon.height // 2
 
             attack_label = floaters.TextFloater(attack_str, font_name='TranscendsGames',
-                                                font_size=Board.TILE_SIZE // 3, anchor_x='left', anchor_y='bottom')
+                                                font_size=unit_values_font_size, anchor_x='left', anchor_y='bottom')
             attack_label.position = attack_icon.get_rect().bottomright
             unit_stats.add(attack_label, z=2)
 

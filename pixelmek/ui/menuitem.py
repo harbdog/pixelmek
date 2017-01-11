@@ -30,7 +30,7 @@ class UnitMenuItem(BaseMenuItem):
         self.item.x = self.pos_x - 25
         self.item.y = self.pos_y
 
-        self.selected_item = UnitCard(battle_unit, mask_image=False)
+        self.selected_item = UnitCard(battle_unit, mask_image=False, menu_selected=True)
         self.selected_item.x = self.pos_x - 25
         self.selected_item.y = self.pos_y
 

@@ -497,6 +497,9 @@ class BattleMech(object):
     def getTonnage(self):
         return self.mech.tonnage
 
+    def getPointValue(self):
+        return self.mech.pv
+
     def getAllSpecials(self):
         return self.mech.specials
 

@@ -11,12 +11,18 @@ from pixelmek.ui import actions
 
 class PlayerUnitsMenu(Menu):
     def __init__(self, player, tech=None):
-        super(PlayerUnitsMenu, self).__init__("%s Units" % str(player))
-
         print("loading player units menu for %s" % str(player))
 
         self.player = player
         self.player_units = Battle.BATTLE.getPlayerUnits(player)
+
+        num_units = 0
+        total_pv = 0
+        for battle_unit_index, battle_unit in enumerate(self.player_units):
+            num_units += 1
+            total_pv += battle_unit.getPointValue()
+
+        super(PlayerUnitsMenu, self).__init__("%i %s Units [%ipv]" % (num_units, str(player), total_pv))
 
         self.font_title['font_name'] = 'Convoy'
         self.font_title['font_size'] = 50
@@ -37,7 +43,8 @@ class PlayerUnitsMenu(Menu):
 
             on_select_unit.__name__ = "on_select_unit_%s" % battle_unit_index
 
-            unit_str = "%i: %s - %i Tons" % (battle_unit_index + 1, battle_unit.getName(), battle_unit.getTonnage())
+            unit_str = "%it %s [%ipv]" % (battle_unit.getTonnage(),
+                                                battle_unit.getName(), battle_unit.getPointValue())
             unit_change = MenuItem(unit_str, on_select_unit, this_unit=battle_unit)
             menus.append(unit_change)
 
