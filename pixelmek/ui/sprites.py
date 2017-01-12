@@ -11,6 +11,7 @@ from cocos.particle_systems import Meteor
 from cocos.sprite import Sprite
 
 from pixelmek.misc.resources import Resources
+from pixelmek.model.battle import Battle
 from pixelmek.model.map import Map
 from board import Board
 from settings import Settings
@@ -280,59 +281,139 @@ class MechSprite(cocos.layer.Layer):
         for section in self.node.get_children():
             section.resume()
 
-    def moveBy(self, x, y, func):
-        time = self.timeBySize() * 6
-
-        actions = MoveBy((x, y), duration=time)
-        if func is not None:
-            actions += CallFunc(func)
-
-        self.do(actions)
-        self.shadow.do(actions)
-
-    def moveToCell(self, col, row, reverse=False, func=None):
-        if col == self.battle_mech.col and row == self.battle_mech.row:
+    def moveToCell(self, to_col, to_row, reverse=False, func=None):
+        if to_col == self.battle_mech.col and to_row == self.battle_mech.row:
             return 0.5
 
-        num_steps = 1 + int(math.ceil(Point2(col, row).distance(Point2(self.battle_mech.col, self.battle_mech.row))))
-        time = self.timeBySize() * (num_steps * 2)
+        # determine the route and the points along the way
+        to_cell = (to_col, to_row)
+        cell_route = self._get_cell_move_route(to_cell)
 
-        shadow_rect = self.shadow.get_rect()
-        shadow_rect.bottomleft = (col * 32), (row * 32)
+        total_time = 0
 
-        rect = self.img_static.get_rect()
-        rect.bottomleft = (col * Board.TILE_SIZE) - (self.img_static.width // 2 - self.shadow.width // 2), \
-                          (row * Board.TILE_SIZE)
+        actions = Delay(0)
+        shadow_actions = Delay(0)
+        stomp_actions = Delay(0)
 
-        actions = MoveTo(rect.center, duration=time)
+        for cell in cell_route:
+            col = cell[0]
+            row = cell[1]
+
+            num_steps = 2
+            time = self.timeBySize() * (num_steps * 2)
+
+            shadow_rect = self.shadow.get_rect()
+            shadow_rect.bottomleft = (col * 32), (row * 32)
+
+            rect = self.img_static.get_rect()
+            rect.bottomleft = (col * Board.TILE_SIZE) - (self.img_static.width // 2 - self.shadow.width // 2), \
+                              (row * Board.TILE_SIZE)
+
+            actions += MoveTo(rect.center, duration=time)
+            shadow_actions += MoveTo(shadow_rect.center, duration=time)
+
+            # play movement sounds
+            sound_index = self.battle_mech.getSize() - 1
+            stomp_sound = Resources.stomp_sounds[sound_index]
+            for i in range(num_steps):
+                # use channel 0 and 1 for alternating steps
+                stomp_channel = pygame.mixer.Channel(i % 2)
+                stomp_channel.set_volume(Settings.get_volume_fx())
+
+                stomp_reverse = True
+                if i % 2 == (1 if reverse else 0):
+                    stomp_reverse = False
+
+                stomp_actions += CallFunc(stomp_channel.play, stomp_sound) + Delay(time / num_steps) \
+                    + CallFunc(self.spawnStompCloud, stomp_reverse)
+
+            total_time += time
+
         if func is not None:
             actions += CallFunc(func)
 
         self.do(actions)
+        self.shadow.do(shadow_actions)
+        self.do(stomp_actions)
 
-        shadow_action = MoveTo(shadow_rect.center, duration=time)
-        self.shadow.do(shadow_action)
+        return total_time
 
-        # play movement sounds
-        sound_index = self.battle_mech.getSize() - 1
+    def _get_cell_move_route(self, to_cell):
+        battle = Battle.BATTLE
+        cell_route = [to_cell]
 
-        stomp_sound = Resources.stomp_sounds[sound_index]
-        stomp_action = Delay(0)
-        for i in range(num_steps):
-            # use channel 0 and 1 for alternating steps
-            stomp_channel = pygame.mixer.Channel(i % 2)
-            stomp_channel.set_volume(Settings.get_volume_fx())
+        cells_in_range = battle.getCellsInRange(self.battle_mech.col, self.battle_mech.row, self.battle_mech.move)
 
-            stomp_reverse = True
-            if i % 2 == (1 if reverse else 0):
-                stomp_reverse = False
+        if to_cell not in cells_in_range:
+            return cell_route
 
-            stomp_action += CallFunc(stomp_channel.play, stomp_sound) + Delay(time / num_steps) \
-                + CallFunc(self.spawnStompCloud, stomp_reverse)
+        # starting from the cell being moved to, find the connected cell paths that leads
+        # back to the unit's current cell in as straight a path as possible
+        cell_move_dist = cells_in_range[to_cell]
 
-        self.do(stomp_action)
+        self._recurse_cell_move_route(to_cell, cell_move_dist, cells_in_range, cell_route)
 
-        return time
+        return cell_route
+
+    def _recurse_cell_move_route(self, recurse_cell, cell_move_dist, cells_in_range, cell_route):
+        if cell_move_dist <= 1:
+            return
+
+        battle = Battle.BATTLE
+        turn_unit = battle.getTurnUnit()
+        turn_player = turn_unit.getPlayer()
+
+        x = recurse_cell[0]
+        y = recurse_cell[1]
+        next_cell_dist = cell_move_dist - 1
+
+        # get all adjacent cells in range with distance equal to the current cell_move_dist minus 1
+        adjacent_cells = []
+        for cell, dist in cells_in_range.items():
+            if dist != next_cell_dist:
+                # must be adjacent in the correct direction toward origin (0)
+                continue
+
+            cell_x = cell[0]
+            cell_y = cell[1]
+
+            if x != cell_x and y != cell_y:
+                # must be either in same row or column as cell currently being looked at
+                continue
+
+            if abs(x - cell_x) != 1 and abs(y - cell_y) != 1:
+                # and needs to be within one cell distance away in some direction
+                continue
+
+            # allow passing through friendly unit occupied cells
+            cell_unit = battle.getUnitAt(cell_x, cell_y)
+            is_friendly_occupied = False
+            if cell_unit is not None:
+                is_friendly_occupied = battle.isFriendlyUnit(turn_player, cell_unit)
+            if battle.isCellAvailable(cell_x, cell_y) or \
+                    (cell_unit is not None and is_friendly_occupied):
+                adjacent_cells.append(cell)
+
+        if len(adjacent_cells) == 0:
+            # shouldn't happen...
+            return
+
+        # determine current course direction to prefer not turning if possible
+        prev_cell = cell_route[0]
+        course_x = prev_cell[0] - x
+        course_y = prev_cell[1] - y
+
+        next_cell = adjacent_cells[0]
+        for cell in adjacent_cells:
+            diff_x = x - cell[0]
+            diff_y = y - cell[1]
+
+            if course_x == diff_x and course_y == diff_y:
+                next_cell = cell
+                break
+
+        cell_route.insert(0, next_cell)
+        self._recurse_cell_move_route(next_cell, next_cell_dist, cells_in_range, cell_route)
 
     def spawnStompCloud(self, reverse):
         # show cloud particles from stomps

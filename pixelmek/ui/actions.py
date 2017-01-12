@@ -467,15 +467,15 @@ def actOnCell(board, col, row, **kwargs):
     elif battle.isCellAvailable(col, row) and cell.range_to_display > 0:
         setActionReady(False)
 
-        turn_unit.move -= cell.range_to_display
+        cell_range = cell.range_to_display
 
         Interface.UI.action_btn.selected = True
         Interface.UI.action_btn.update_selected()
         Interface.UI.clearToHitLabels()
         Interface.UI.setUnitStatsIndicatorsVisible(False)
 
-        for cell in board.cellMap.itervalues():
-            cell.remove_indicators()
+        for chk_cell in board.cellMap.itervalues():
+            chk_cell.remove_indicators()
 
         animate_reverse = (turn_unit.col - col > 0) or (turn_unit.row - row > 0)
 
@@ -505,6 +505,7 @@ def actOnCell(board, col, row, **kwargs):
         turn_unit.sprite.strut(reverse=animate_reverse)
         turn_unit.sprite.moveToCell(col, row, animate_reverse, _ready_next_move)
 
+        turn_unit.move -= cell_range
         turn_unit.col = col
         turn_unit.row = row
 
