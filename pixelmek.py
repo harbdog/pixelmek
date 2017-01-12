@@ -62,7 +62,7 @@ mouse_events = events.MouseEvents(board)
 
 battle.addPlayer(bot)
 
-# TODO: use menu system to determine which mechs the players get
+# TODO: randomize the starting units based on a target total PV
 player_mechs = 'Commando', 'Firestarter', 'Jenner', 'Centurion', \
                'Hunchback', 'Archer', 'Rifleman', 'Warhammer', \
                'Marauder', 'Awesome', 'Atlas', 'King Crab'

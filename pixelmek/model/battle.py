@@ -40,6 +40,10 @@ class Battle(object):
     def addUnit(self, battle_unit):
         self.unit_list.append(battle_unit)
 
+    def removeUnit(self, battle_unit):
+        if battle_unit in self.unit_list:
+            self.unit_list.remove(battle_unit)
+
     def updateUnitsTurnOrder(self):
         # start by sorting from most MP to least, and give lighter mech an advantage over heavier mechs with same speed
         sorted_list = sorted(self.unit_list, key=lambda x: x.getTurnMove() / float(x.getSize()), reverse=True)

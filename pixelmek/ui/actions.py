@@ -78,6 +78,19 @@ def add_unit_for_player(unit, owner):
     Board.BOARD.add(sprite, z=sprite_z + 1)
 
 
+def clear_units_for_player(owner):
+    battle = Battle.BATTLE
+    for battle_unit in battle.getPlayerUnits(owner):
+        battle.removeUnit(battle_unit)
+
+        sprite = battle_unit.sprite
+        sprite.shadow.kill()
+        sprite.kill()
+
+        del sprite
+        del battle_unit
+
+
 def update_battle_unit(battle_unit, unit):
     # remove previous sprites
     sprite = battle_unit.sprite
