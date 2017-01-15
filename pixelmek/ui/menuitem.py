@@ -26,7 +26,7 @@ class UnitMenuItem(BaseMenuItem):
     def _update_selected_unit(self):
         battle_unit = BattleMech(self.player, self.units[self.idx], col=0, row=0)
 
-        self.item = UnitCard(battle_unit)
+        self.item = UnitCard(battle_unit, mask_image=False)
         self.item.x = self.pos_x - 25
         self.item.y = self.pos_y
 
