@@ -61,12 +61,12 @@ class PlayerUnitsMenu(Menu):
 class UnitSelectionMenu(Menu):
 
     def __init__(self, player, battle_unit, tech=None):
-        super(UnitSelectionMenu, self).__init__("Unit Selection")
+        super(UnitSelectionMenu, self).__init__("Use arrow keys to cycle left/right")
 
         print("loading unit selection menu for %s" % str(player))
 
         self.font_title['font_name'] = 'Convoy'
-        self.font_title['font_size'] = 50
+        self.font_title['font_size'] = 40
         self.font_item['font_name'] = 'Convoy'
         self.font_item['font_size'] = 32
         self.font_item_selected['font_name'] = 'Convoy'
