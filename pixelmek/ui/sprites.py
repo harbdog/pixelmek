@@ -399,9 +399,12 @@ class MechSprite(cocos.layer.Layer):
             return
 
         # determine current course direction to prefer not turning if possible
-        prev_cell = cell_route[0]
-        course_x = prev_cell[0] - x
-        course_y = prev_cell[1] - y
+        course_x = 0
+        course_y = 0
+        if len(cell_route) > 1:
+            prev_cell = cell_route[1]
+            course_x = prev_cell[0] - x
+            course_y = prev_cell[1] - y
 
         next_cell = adjacent_cells[0]
         for cell in adjacent_cells:
