@@ -106,9 +106,9 @@ class MechSprite(cocos.layer.Layer):
     def timeBySize(self):
         times = {
             4: 0.25,
-            3: 0.22,
-            2: 0.19,
-            1: 0.16
+            3: 0.21,
+            2: 0.17,
+            1: 0.13
         }
         return times.get(self.battle_mech.getSize(), times[4])
 
