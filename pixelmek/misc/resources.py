@@ -186,4 +186,7 @@ class Resources(object):
 
             unit_deck.append(random.choice(units_for_pv))
 
+        # sort unit deck by tonnage for display purposes
+        unit_deck.sort(key=lambda unit: (unit.tonnage, unit.name))
+
         return unit_deck
