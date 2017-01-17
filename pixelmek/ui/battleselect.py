@@ -94,35 +94,19 @@ class BattleSelectionMenu(Menu):
     def update_units_for_tech(self, player, tech):
         print("Updating units for tech change")
 
-        # TODO: randomize the selected units based on a given target total PV
-        unit_name_list = []
-        if self.TECH_MAP.get(tech) == 'is':
-            unit_name_list = ['Commando', 'Firestarter', 'Jenner', 'Centurion',
-                       'Hunchback', 'Archer', 'Rifleman', 'Warhammer',
-                       'Marauder', 'Awesome', 'Atlas', 'King Crab']
-
-        else:
-            unit_name_list = ['Hankyu (Arctic Cheetah)', 'Puma (Adder)', 'Shadow Cat',
-                    'Black Hawk (Nova)', 'Ryoken (Stormcrow)', 'Thor (Summoner)', 'Mad Cat (Timber Wolf)',
-                    'Masakari (Warhawk)', 'Gladiator (Executioner)', 'Daishi (Dire Wolf)']
-
-        from pixelmek.misc.resources import Resources
-        mech_list = Resources.get_units()
-
-        def get_mech_by_name(mech_name):
-            for mech in mech_list:
-                if mech.name == mech_name:
-                    return mech
-
-            return None
-
         actions.clear_units_for_player(player)
 
-        for mech_name in unit_name_list:
-            mech = get_mech_by_name(mech_name)
+        # randomize the selected units based on a given target total PV
+        total_units = 12
+        if self.TECH_MAP.get(tech) == 'cl':
+            total_units = 10
 
-            if mech is not None:
-                actions.add_unit_for_player(mech, player)
+        from pixelmek.misc.resources import Resources
+        unit_deck = Resources.generate_random_unit_deck(total_units, self.TECH_MAP.get(tech),
+                                                        target_pv=400, variance=0.05)
+
+        for unit in unit_deck:
+            actions.add_unit_for_player(unit, player)
 
     def on_combat(self):
         from menu import MainMenu

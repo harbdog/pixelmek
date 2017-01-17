@@ -62,35 +62,16 @@ mouse_events = events.MouseEvents(board)
 
 battle.addPlayer(bot)
 
-# TODO: randomize the starting units based on a target total PV
-player_mechs = 'Commando', 'Firestarter', 'Jenner', 'Centurion', \
-               'Hunchback', 'Archer', 'Rifleman', 'Warhammer', \
-               'Marauder', 'Awesome', 'Atlas', 'King Crab'
+# randomize the starting units based on a target total PV
+player_units = Resources.generate_random_unit_deck(12, 'is', target_pv=400, variance=0.05)
 
-bot_mechs = 'Hankyu (Arctic Cheetah)', 'Puma (Adder)', 'Shadow Cat', \
-            'Black Hawk (Nova)', 'Ryoken (Stormcrow)', 'Thor (Summoner)', 'Mad Cat (Timber Wolf)', \
-            'Masakari (Warhawk)', 'Gladiator (Executioner)', 'Daishi (Dire Wolf)',
+bot_units = Resources.generate_random_unit_deck(10, 'cl', target_pv=400, variance=0.05)
 
+for unit in player_units:
+    actions.add_unit_for_player(unit, player)
 
-def get_mech_by_name(mech_name):
-    for mech in mech_list:
-        if mech.name == mech_name:
-            return mech
-
-    return None
-
-
-for mech_name in player_mechs:
-    mech = get_mech_by_name(mech_name)
-
-    if mech is not None:
-        actions.add_unit_for_player(mech, player)
-
-for mech_name in bot_mechs:
-    mech = get_mech_by_name(mech_name)
-
-    if mech is not None:
-        actions.add_unit_for_player(mech, bot)
+for unit in bot_units:
+    actions.add_unit_for_player(unit, bot)
 
 scroller = cocos.layer.ScrollingManager()
 scroller.add(board, z=0)
