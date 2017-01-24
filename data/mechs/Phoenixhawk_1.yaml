@@ -1,0 +1,27 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/2491/phoenix-hawk-pxh-1
+name: Phoenix Hawk
+variant: PHX-1
+tech: is
+image_path: images/mechs/phoenix_hawk.png
+tonnage: 45
+cost: 4,066,090
+pv: 25
+type: BM
+size: 2
+move: 12
+jump: 12
+role: Skirmisher
+short: 2
+medium: 2
+long: 0
+overheat: 0
+armor: 4
+structure: 4
+specials:
+weapons:
+- !include ../weapons/is_llas.yaml:  {location: RA, offset: [-15, 9]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [-15, 7]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [15, 7]}
+- !include ../weapons/is_mg.yaml: {location: LA, offset: [-15, 5]}
+- !include ../weapons/is_mg.yaml: {location: RA, offset: [-15, 5]}

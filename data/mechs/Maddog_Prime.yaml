@@ -1,0 +1,31 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3473/vulture-mad-dog-prime
+name: Vulture (Mad Dog)
+variant: Prime
+tech: cl
+image_path: images/mechs/mad_dog.png
+tonnage: 60
+cost: 15,172,000
+pv: 38
+type: BM
+size: 3
+move: 10
+role: Missile Boat
+short: 4
+medium: 4
+long: 4
+overheat: 2
+armor: 5
+structure: 3
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/idf.yaml: 2
+- !include ../specials/lrm.yaml: [1, 1, 2]
+weapons:
+- !include ../weapons/cl_lpl.yaml: {location: LA, offset: [18, 13]}
+- !include ../weapons/cl_lpl.yaml: {location: RA, offset: [-18, 13]}
+- !include ../weapons/cl_mpl.yaml: {location: LA, offset: [18, 15]}
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-18, 15]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 20, offset: [10, 38]}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 20, offset: [-10, 38]}

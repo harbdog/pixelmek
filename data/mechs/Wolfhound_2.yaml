@@ -1,0 +1,28 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3563/wolfhound-wlf-2
+name: Wolfhound
+variant: WLF-2
+tech: is
+image_path: images/mechs/wolfhound.png
+tonnage: 35
+cost: 3,141,180
+pv: 25
+type: BM
+size: 1
+move: 12
+role: Striker
+short: 3
+medium: 3
+long: 1
+overheat: 0
+armor: 4
+structure: 3
+specials:
+- !include ../specials/ene.yaml: True
+- !include ../specials/rear.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/is_erll.yaml:  {location: RA, offset: [-10, 15]}
+- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-5, 15]}
+- !include ../weapons/is_mlas.yaml: {location: LT, offset: [5, 15]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 19]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 17]}

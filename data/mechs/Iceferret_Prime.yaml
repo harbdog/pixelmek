@@ -1,0 +1,28 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1053/fenris-ice-ferret-prime
+name: Fenris (Ice Ferret)
+variant: Prime
+tech: cl
+image_path: images/mechs/ice_ferret.png
+tonnage: 45
+cost: 12,445,713
+pv: 33
+type: BM
+size: 2
+move: 10
+role: Striker
+short: 3
+medium: 3
+long: 2
+overheat: 0
+armor: 5
+structure: 2
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/prb.yaml: True
+- !include ../specials/rcn.yaml: True
+weapons:
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [18, 17]}
+- !include ../weapons/cl_ersl.yaml: {location: LA, offset: [18, 15]}
+- !include ../weapons/cl_ssrm.yaml: {location: RA, count: 2, offset: [-18, 15]}

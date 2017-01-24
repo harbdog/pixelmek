@@ -1,0 +1,28 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1137/flea-fle-17
+name: Flea
+variant: FLE-17
+tech: is
+image_path: images/mechs/flea.png
+tonnage: 20
+cost: 1,728,000
+pv: 17
+type: BM
+size: 1
+move: 16
+role: Striker
+short: 2
+medium: 2
+long: 0
+overheat: 0
+armor: 2
+structure: 2
+specials:
+- !include ../specials/ene.yaml: True
+- !include ../specials/rear.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/is_mpl.yaml: {location: LA, offset: [10, 16]}
+- !include ../weapons/is_mpl.yaml: {location: RA, offset: [-10, 16]}
+- !include ../weapons/is_slas.yaml: {location: LT, offset: [6, 22]}
+- !include ../weapons/is_slas.yaml: {location: RT, offset: [6, 22]}
+- !include ../weapons/is_flamer.yaml: {location: CT, offset: [0, 20]}

@@ -1,0 +1,33 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/5460/mauler-mal-2r
+name: Mauler
+variant: MAL-2R
+tech: is
+image_path: images/mechs/mauler.png
+tonnage: 90
+cost: 18,167,800
+pv: 42
+type: BM
+size: 4
+move: 6
+role: Juggernaut
+short: 3
+medium: 4
+long: 3
+overheat: 1
+armor: 7
+structure: 7
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/idf.yaml: 1
+weapons:
+- !include ../weapons/is_erml.yaml: {location: LA, offset: [20, 16]}
+- !include ../weapons/is_erml.yaml: {location: LA, offset: [20, 18]}
+- !include ../weapons/is_erml.yaml: {location: RA, offset: [-20, 16]}
+- !include ../weapons/is_erml.yaml: {location: RA, offset: [-20, 18]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [10, 32]}
+- !include ../weapons/is_lrm.yaml: {location: RT, count: 10, offset: [-10, 32]}
+- !include ../weapons/is_uac2.yaml:  {location: LT, offset: [9, 20]}
+- !include ../weapons/is_uac2.yaml:  {location: LT, offset: [9, 22]}
+- !include ../weapons/is_uac2.yaml:  {location: RT, offset: [-9, 20]}
+- !include ../weapons/is_uac2.yaml:  {location: RT, offset: [-9, 22]}

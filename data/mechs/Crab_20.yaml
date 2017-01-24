@@ -1,0 +1,26 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/715/crab-crb-20
+name: Crab
+variant: CRB-20
+tech: is
+image_path: images/mechs/crab.png
+tonnage: 50
+cost: 3,921,875
+pv: 27
+type: BM
+size: 2
+move: 10
+role: Skirmisher
+short: 3
+medium: 2
+long: 0
+overheat: 1
+armor: 5
+structure: 4
+specials:
+- !include ../specials/ene.yaml: True
+weapons:
+- !include ../weapons/is_llas.yaml: {location: LA, offset: [18, 14]}
+- !include ../weapons/is_llas.yaml: {location: RR, offset: [-18, 14]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 14]}
+- !include ../weapons/is_slas.yaml: {location: HD, offset: [2, 26]}

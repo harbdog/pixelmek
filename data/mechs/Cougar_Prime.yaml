@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/712/cougar-prime
+name: Cougar
+variant: Prime
+tech: cl
+image_path: images/mechs/cougar.png
+tonnage: 35
+cost: 5,964,188
+pv: 28
+type: BM
+size: 1
+move: 10
+role: Sniper
+short: 3
+medium: 3
+long: 3
+overheat: 1
+armor: 4
+structure: 2
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/ovl.yaml: True
+- !include ../specials/idf.yaml: 1
+- !include ../specials/lrm.yaml: [1, 1, 1]
+weapons:
+- !include ../weapons/cl_lpl.yaml: {location: LA, offset: [18, 15]}
+- !include ../weapons/cl_lpl.yaml: {location: RA, offset: [-18, 15]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 10, offset: [10, 38]}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 10, offset: [-10, 38]}

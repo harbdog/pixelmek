@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/750/crusader-crd-3k
+name: Crusader
+variant: CRD-3K
+tech: is
+image_path: images/mechs/crusader.png
+tonnage: 65
+cost: 5,296,610
+pv: 34
+type: BM
+size: 3
+move: 8
+role: Missile Boat
+short: 3
+medium: 3
+long: 2
+overheat: 1
+armor: 6
+structure: 5
+specials:
+- !include ../specials/idf.yaml: 1
+- !include ../specials/lrm.yaml: [1, 1, 1]
+- !include ../specials/srm.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/is_lrm.yaml: {location: LA, count: 10, offset: [16, 22]}
+- !include ../weapons/is_lrm.yaml: {location: RA, count: 10, offset: [-16, 22]}
+- !include ../weapons/is_srm.yaml: {location: LL, count: 6, offset: [0, 14]}
+- !include ../weapons/is_srm.yaml: {location: RL, count: 6, offset: [0, -14]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [16, 20]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-16, 20]}

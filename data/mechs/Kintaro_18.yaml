@@ -1,0 +1,29 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1790/kintaro-kto-18
+name: Kintaro
+variant: KTO-18
+tech: is
+image_path: images/mechs/kintaro.png
+tonnage: 55
+cost: 4,532,407
+pv: 33
+type: BM
+size: 2
+move: 10
+role: Skirmisher
+short: 2
+medium: 3
+long: 0
+overheat: 0
+armor: 6
+structure: 5
+specials:
+- !include ../specials/idf.yaml: 0
+- !include ../specials/srm.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [16, 16]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-16, 16]}
+- !include ../weapons/is_srm.yaml: {location: LA, count: 6, offset: [16, 19]}
+- !include ../weapons/is_srm.yaml: {location: CT, count: 6, offset: [0, 19]}
+- !include ../weapons/is_srm.yaml: {location: RT, count: 6, offset: [-8, 19]}
+- !include ../weapons/is_lrm.yaml: {location: LA, count: 5, offset: [16, 14]}

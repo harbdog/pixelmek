@@ -1,0 +1,8 @@
+--- !Weapon
+name: Ultra Autocannon/2
+short_name: UAC/2
+range: long
+type: ballistic
+speed: 575
+scale: 0.5
+projectiles: 2

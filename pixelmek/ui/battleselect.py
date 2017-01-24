@@ -103,7 +103,7 @@ class BattleSelectionMenu(Menu):
 
         from pixelmek.misc.resources import Resources
         unit_deck = Resources.generate_random_unit_deck(total_units, self.TECH_MAP.get(tech),
-                                                        target_pv=400, variance=0.05)
+                                                        target_pv=350, variance=0.05)
 
         for unit in unit_deck:
             actions.add_unit_for_player(unit, player)

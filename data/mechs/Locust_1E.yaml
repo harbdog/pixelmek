@@ -1,0 +1,26 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1897/locust-lct-1e
+name: Locust
+variant: LCT-1E
+tech: is
+image_path: images/mechs/locust.png
+tonnage: 20
+cost: 1,574,200
+pv: 15
+type: BM
+size: 1
+move: 16
+role: Scout
+short: 2
+medium: 1
+long: 0
+overheat: 0
+armor: 2
+structure: 2
+specials:
+- !include ../specials/ene.yaml: True
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [12, 18]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-12, 18]}
+- !include ../weapons/is_slas.yaml: {location: LA, offset: [12, 16]}
+- !include ../weapons/is_slas.yaml: {location: RA, offset: [-12, 16]}

@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/496/cauldron-born-ebon-jaguar-prime
+name: Cauldron-Born (Ebon Jaguar)
+variant: Prime
+tech: cl
+image_path: images/mechs/ebon_jaguar.png
+tonnage: 65
+cost: 17,972,282
+pv: 37
+type: BM
+size: 3
+move: 10
+role: Skirmisher
+short: 3
+medium: 4
+long: 3
+overheat: 0
+armor: 6
+structure: 4
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/idf.yaml: 2
+- !include ../specials/flk.yaml: 1
+weapons:
+- !include ../weapons/cl_gauss.yaml: {location: RA, offset: [-18, 13]}
+- !include ../weapons/cl_lbx5.yaml: {location: LA, offset: [18, 13]}
+- !include ../weapons/cl_erml.yaml: {location: LT, offset: [10, 33]}
+- !include ../weapons/cl_srm.yaml: {location: RT, count: 2, offset: [-10, 38]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 10, offset: [10, 38]}

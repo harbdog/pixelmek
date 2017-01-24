@@ -1,0 +1,6 @@
+--- !Weapon
+name: Extended Range Small Laser
+short_name: ERSL
+range: medium
+type: energy
+color: [250, 0, 50]

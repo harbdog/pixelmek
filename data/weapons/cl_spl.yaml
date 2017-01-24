@@ -1,0 +1,6 @@
+--- !Weapon
+name: Small Pulse Laser
+short_name: SPL
+range: short
+type: energy
+color: [250, 50, 50]

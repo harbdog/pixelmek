@@ -1,0 +1,27 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/846/dasher-fire-moth-prime
+name: Dasher (Fire Moth)
+variant: Prime
+tech: cl
+image_path: images/mechs/fire_moth.png
+tonnage: 20
+cost: 4,127,800
+pv: 17
+type: BM
+size: 1
+move: 26
+role: Striker
+short: 3
+medium: 3
+long: 0
+overheat: 0
+armor: 1
+structure: 1
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/srm.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [15, 15]}
+- !include ../weapons/cl_srm.yaml: {location: RA, count: 6, offset: [-15, 38]}
+- !include ../weapons/cl_srm.yaml: {location: RT, count: 4, offset: [-10, 38]}

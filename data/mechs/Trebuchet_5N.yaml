@@ -1,0 +1,27 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3297/trebuchet-tbt-5n
+name: Trebuchet
+variant: TBT-5N
+tech: is
+image_path: images/mechs/trebuchet.png
+tonnage: 50
+cost: 4,203,500
+pv: 27
+type: BM
+size: 2
+move: 10
+role: Missile Boat
+short: 2
+medium: 2
+long: 2
+overheat: 1
+armor: 4
+structure: 4
+specials:
+- !include ../specials/idf.yaml: 1
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 17]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 17]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 17]}
+- !include ../weapons/is_lrm.yaml: {location: LA, count: 15, offset: [14, 14]}
+- !include ../weapons/is_lrm.yaml: {location: RT, count: 15, offset: [-4, 24]}

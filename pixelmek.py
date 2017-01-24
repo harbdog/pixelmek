@@ -63,9 +63,9 @@ mouse_events = events.MouseEvents(board)
 battle.addPlayer(bot)
 
 # randomize the starting units based on a target total PV
-player_units = Resources.generate_random_unit_deck(12, 'is', target_pv=400, variance=0.05)
+player_units = Resources.generate_random_unit_deck(12, 'is', target_pv=350, variance=0.05)
 
-bot_units = Resources.generate_random_unit_deck(10, 'cl', target_pv=400, variance=0.05)
+bot_units = Resources.generate_random_unit_deck(10, 'cl', target_pv=350, variance=0.05)
 
 for unit in player_units:
     actions.add_unit_for_player(unit, player)

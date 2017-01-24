@@ -1,0 +1,33 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/4565/mad-cat-mk-ii-standard
+name: Mad Cat Mk II
+variant: Standard
+tech: cl
+image_path: images/mechs/madcat_mk2.png
+tonnage: 90
+cost: 23,751,900
+pv: 56
+type: BM
+size: 4
+move: 8
+jump: 6
+role: Brawler
+short: 7
+medium: 7
+long: 5
+overheat: 0
+armor: 8
+structure: 5
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/idf.yaml: 1
+- !include ../specials/lrm.yaml: [1, 1, 1]
+weapons:
+- !include ../weapons/cl_gauss.yaml:  {location: LA, offset: [18, 20]}
+- !include ../weapons/cl_gauss.yaml:  {location: RA, offset: [-18, 20]}
+- !include ../weapons/cl_erml.yaml: {location: LT, offset: [10, 13]}
+- !include ../weapons/cl_erml.yaml: {location: LT, offset: [12, 13]}
+- !include ../weapons/cl_erml.yaml: {location: RT, offset: [-10, 13]}
+- !include ../weapons/cl_erml.yaml: {location: RT, offset: [-12, 13]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 10, offset: [12, 38]}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 10, offset: [-12, 38]}

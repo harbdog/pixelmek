@@ -1,0 +1,37 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/2296/nobori-nin-huntsman-prime
+name: Nobori-nin (Huntsman)
+variant: Prime
+tech: cl
+image_path: images/mechs/huntsman.png
+tonnage: 50
+cost: 12,415,000
+pv: 41
+type: BM
+size: 2
+move: 10
+jump: 10
+role: Skirmisher
+short: 3
+medium: 3
+long: 2
+overheat: 3
+armor: 6
+structure: 3
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/ams.yaml: True
+- !include ../specials/idf.yaml: 1
+- !include ../specials/prb.yaml: True
+- !include ../specials/rcn.yaml: True
+- !include ../specials/tag.yaml: True
+weapons:
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 17]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 19]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 17]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 19]}
+- !include ../weapons/cl_ssrm.yaml: {location: LA, count: 6, offset: [18, 38]}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 10, offset: [-10, 38]}
+- !include ../weapons/cl_uac2.yaml: {location: RT, offset: [-18, 21]}
+- !include ../weapons/cl_flamer.yaml: {location: LT, offset: [10, 20]}

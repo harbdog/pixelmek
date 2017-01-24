@@ -1,0 +1,6 @@
+--- !Weapon
+name: Large Pulse Laser
+short_name: LPL
+range: long
+type: energy
+color: [50, 200, 250]

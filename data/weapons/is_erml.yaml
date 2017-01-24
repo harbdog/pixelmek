@@ -1,0 +1,6 @@
+--- !Weapon
+name: Extended Range Medium Laser
+short_name: ERML
+range: medium
+type: energy
+color: [0, 250, 50]

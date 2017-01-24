@@ -1,0 +1,31 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1836/koshi-mist-lynx-prime
+name: Koshi (Mist Lynx)
+variant: Prime
+tech: cl
+image_path: images/mechs/mist_lynx.png
+tonnage: 25
+cost: 4,680,730
+pv: 21
+type: BM
+size: 1
+move: 14
+jump: 12
+role: Scout
+short: 2
+medium: 2
+long: 1
+overheat: 0
+armor: 2
+structure: 1
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/idf.yaml: True
+- !include ../specials/prb.yaml: True
+- !include ../specials/rcn.yaml: True
+weapons:
+- !include ../weapons/cl_ssrm.yaml: {location: RA, count: 4, offset: [-10, 26]}
+- !include ../weapons/cl_lrm.yaml: {location: LA, count: 10, offset: [10, 26]}
+- !include ../weapons/cl_mg.yaml: {location: RA, offset: [-12, 14]}
+- !include ../weapons/cl_mg.yaml: {location: RA, offset: [-12, 14]}

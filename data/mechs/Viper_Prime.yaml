@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/926/dragonfly-viper-prime
+name: Dragonfly (Viper)
+variant: Prime
+tech: cl
+image_path: images/mechs/viper.png
+tonnage: 40
+cost: 11,000,034
+pv: 28
+type: BM
+size: 2
+move: 16
+jump: 16
+role: Scout
+short: 3
+medium: 3
+long: 0
+overheat: 0
+armor: 4
+structure: 2
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/ams.yaml: True
+weapons:
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-18, 17]}
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-18, 15]}
+- !include ../weapons/cl_srm.yaml: {location: LA, count: 4, offset: [-18, 15]}
+- !include ../weapons/cl_mg.yaml: {location: RA, offset: [-18, 17]}
+- !include ../weapons/cl_mg.yaml: {location: RA, offset: [-18, 15]}

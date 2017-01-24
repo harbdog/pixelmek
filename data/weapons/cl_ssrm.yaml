@@ -1,0 +1,6 @@
+--- !Weapon
+name: Streak Short Range Missile
+short_name: SSRM
+range: medium
+type: missile
+speed: 400

@@ -1,0 +1,26 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3373/valkyrie-vlk-qd
+name: Valkyrie
+variant: VLK-QD
+tech: is
+image_path: images/mechs/valkyrie.png
+tonnage: 30
+cost: 2,509,520
+pv: 25
+type: BM
+size: 1
+move: 10
+jump: 10
+role: Missile Boat
+short: 2
+medium: 2
+long: 1
+overheat: 0
+armor: 4
+structure: 3
+specials:
+- !include ../specials/idf.yaml: 0
+- !include ../specials/case.yaml: 1
+weapons:
+- !include ../weapons/is_mpl.yaml: {location: RA, offset: [-10, 16]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [4, 24]}

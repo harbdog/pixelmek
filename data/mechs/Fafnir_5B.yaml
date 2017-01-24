@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/4153/fafnir-fnr-5b
+name: Fafnir
+variant: FNR-5B
+tech: is
+image_path: images/mechs/fafnir.png
+tonnage: 100
+cost: 10,958,000
+pv: 57
+type: BM
+size: 4
+move: 6
+role: Juggernaut
+short: 5
+medium: 6
+long: 4
+overheat: 0
+armor: 10
+structure: 8
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/ecm.yaml: True
+weapons:
+- !include ../weapons/is_gauss.yaml: {location: LT, offset: [14, 13]}
+- !include ../weapons/is_gauss.yaml: {location: RT, offset: [-14, 13]}
+- !include ../weapons/is_erll.yaml: {location: RA, offset: [-18, 11]}
+- !include ../weapons/is_erml.yaml: {location: LA, offset: [18, 22]}
+- !include ../weapons/is_erml.yaml: {location: LA, offset: [18, 24]}
+- !include ../weapons/is_erml.yaml: {location: RA, offset: [-18, 28]}
+- !include ../weapons/is_mpl.yaml: {location: HD, offset: [0, 22]}

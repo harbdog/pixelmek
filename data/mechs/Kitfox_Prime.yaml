@@ -1,0 +1,28 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3347/uller-kit-fox-prime
+name: Uller (Kit Fox)
+variant: Prime
+tech: cl
+image_path: images/mechs/kit_fox.png
+tonnage: 30
+cost: 5,256,713
+pv: 23
+type: BM
+size: 1
+move: 12
+role: Sniper
+short: 3
+medium: 3
+long: 2
+overheat: 0
+armor: 3
+structure: 2
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/flk.yaml: 0
+weapons:
+- !include ../weapons/cl_erll.yaml: {location: LA, offset: [18, 15]}
+- !include ../weapons/cl_spl.yaml: {location: LA, offset: [18, 13]}
+- !include ../weapons/cl_ssrm.yaml: {location: RA, count: 4, offset: [-18, 15]}
+- !include ../weapons/cl_lbx5.yaml: {location: RA, offset: [-18, 18]}

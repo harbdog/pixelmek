@@ -1,0 +1,8 @@
+--- !Weapon
+name: Gauss Rifle
+short_name: GAUSS
+range: long
+type: ballistic
+speed: 800
+scale: 1.0
+projectiles: 1

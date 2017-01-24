@@ -1,0 +1,25 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/3061/stinger-stg-3r
+name: Stinger
+variant: STG-3R
+tech: is
+image_path: images/mechs/stinger.png
+tonnage: 20
+cost: 1,614,240
+pv: 14
+type: BM
+size: 1
+move: 12
+jump: 12
+role: Scout
+short: 1
+medium: 1
+long: 0
+overheat: 0
+armor: 2
+structure: 2
+specials:
+weapons:
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 16]}
+- !include ../weapons/is_mg.yaml: {location: LA, offset: [-10, 15]}
+- !include ../weapons/is_mg.yaml: {location: RA, offset: [-10, 15]}

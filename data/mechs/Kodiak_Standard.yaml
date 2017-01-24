@@ -1,0 +1,34 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1805/kodiak-standard
+name: Kodiak
+variant: Standard
+tech: cl
+image_path: images/mechs/kodiak.png
+tonnage: 100
+cost: 29,495,334
+pv: 53
+type: BM
+size: 4
+move: 8
+role: Brawler
+short: 7
+medium: 7
+long: 1
+overheat: 4
+armor: 9
+structure: 5
+specials:
+- !include ../specials/case.yaml: True
+weapons:
+- !include ../weapons/cl_erll.yaml: {location: CT, offset: [0, 13]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [20, 15]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [19, 15]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 15]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [17, 15]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-20, 15]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-19, 15]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 15]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-17, 15]}
+- !include ../weapons/cl_ssrm.yaml:  {location: LT, count: 6, offset: [8, 20]}
+- !include ../weapons/cl_ssrm.yaml:  {location: LT, count: 6, offset: [8, 20]}
+- !include ../weapons/cl_uac20.yaml: {location: RT, offset: [-10, 38]}

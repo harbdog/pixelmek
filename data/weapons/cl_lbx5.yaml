@@ -1,0 +1,8 @@
+--- !Weapon
+name: LBX Autocannon/5
+short_name: LBX/5
+range: long
+type: ballistic
+speed: 550
+scale: 0.7
+projectiles: 5

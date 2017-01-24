@@ -1,0 +1,30 @@
+--- !Mech
+# http://www.masterunitlist.info/Unit/Details/1892/linebacker-prime
+name: Linebacker
+variant: Prime
+tech: cl
+image_path: images/mechs/linebacker.png
+tonnage: 65
+cost: 20,104,735
+pv: 40
+type: BM
+size: 3
+move: 12
+role: Skirmisher
+short: 4
+medium: 4
+long: 4
+overheat: 1
+armor: 6
+structure: 4
+specials:
+- !include ../specials/case.yaml: True
+- !include ../specials/omni.yaml: True
+- !include ../specials/idf.yaml: 0
+- !include ../specials/rear.yaml: [1, 1, 0]
+weapons:
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [18, 14]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-18, 14]}
+- !include ../weapons/cl_ersl.yaml: {location: RT, offset: [-12, 14]}
+- !include ../weapons/cl_ssrm.yaml: {location: RT, count: 4, offset: [-12, 32]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 5, offset: [12, 32]}
