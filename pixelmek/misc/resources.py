@@ -111,7 +111,7 @@ class Resources(object):
         return Resources.mech_list
 
     @staticmethod
-    def generate_random_unit_deck(num_units, tech, target_pv=400, variance=0.05):
+    def generate_random_unit_deck(num_units, tech, target_pv=350, variance=0.05):
         """
         Generates a randomized list of units equal to the given amount using the given tech, aiming for given total PV
         Args:
