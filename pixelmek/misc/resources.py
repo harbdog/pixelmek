@@ -101,9 +101,19 @@ class Resources(object):
         for root, dirs, f_names in os.walk(Settings.DATA_DIR + '/mechs/'):
             for f_name in f_names:
                 mech = include.IncludeLoader(open(os.path.join(root, f_name), 'r')).get_data()
-                print("Loaded %s:" % mech.full_name())
-                print("  " + str(mech))
-                Resources.mech_list.append(mech)
+                # print("Loaded %s:" % mech.full_name())
+                # print("  " + str(mech))
+
+                try:
+                    # Test loading the mech image to ensure
+                    mech_img = pyglet.resource.image(mech.image_path)
+                    mech_img_grid = pyglet.image.ImageGrid(mech_img, 1, 6)
+                    img_static = mech_img_grid[0]
+                except Exception:
+                    print("ERROR: Problem loading %s: %s" % (mech.full_name(), mech.image_path))
+
+                else:
+                    Resources.mech_list.append(mech)
 
         # sort list alphabetically by name
         Resources.mech_list = sorted(Resources.mech_list, key=lambda x: x.name)
