@@ -103,8 +103,8 @@ class Interface(cocos.layer.Layer):
                               width=4 + Board.TILE_SIZE, height=4 + Board.TILE_SIZE)
 
         self.addButton(self.move_btn, actions.doMoveAction)
-        self.addButton(self.evade_btn, actions.doEvadeAction)
-        self.addButton(self.sprint_btn, actions.doSprintAction)
+        # self.addButton(self.evade_btn, actions.doEvadeAction)
+        # self.addButton(self.sprint_btn, actions.doSprintAction)
         self.addButton(self.weapon_btn, actions.doWeaponAction)
         self.addButton(self.overheat_btn, actions.doOverheatAction)
         self.addButton(self.end_btn, actions.doEndAction)
