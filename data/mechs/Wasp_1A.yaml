@@ -20,5 +20,5 @@ armor: 2
 structure: 2
 specials:
 weapons:
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 16]}
-- !include ../weapons/is_srm.yaml: {location: LT, count: 2, offset: [4, 24]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-14, 20]}
+- !include ../weapons/is_srm.yaml: {location: LT, count: 2, offset: [2, 28]}

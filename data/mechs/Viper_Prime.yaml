@@ -23,8 +23,8 @@ specials:
 - !include ../specials/omni.yaml: True
 - !include ../specials/ams.yaml: True
 weapons:
-- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-18, 17]}
-- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-18, 15]}
-- !include ../weapons/cl_srm.yaml: {location: LA, count: 4, offset: [-18, 15]}
-- !include ../weapons/cl_mg.yaml: {location: RA, offset: [-18, 17]}
-- !include ../weapons/cl_mg.yaml: {location: RA, offset: [-18, 15]}
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-19, 33]}
+- !include ../weapons/cl_mpl.yaml: {location: RA, offset: [-22, 33]}
+- !include ../weapons/cl_srm.yaml: {location: LA, count: 4, offset: [-18, 33]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-6, 40]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-6, 43]}

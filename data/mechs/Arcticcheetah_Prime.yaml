@@ -27,8 +27,8 @@ specials:
 - !include ../specials/rcn.yaml: True
 - !include ../specials/tag.yaml: True
 weapons:
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [12, 14]}
-- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-12, 14]}
-- !include ../weapons/cl_lrm.yaml: {location: LA, count: 5, offset: [10, 26]}
-- !include ../weapons/cl_lrm.yaml: {location: RA, count: 5, offset: [-12, 26]}
-- !include ../weapons/cl_flamer.yaml: {location: RT, offset: [-6, 20]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [12, 30]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-12, 30]}
+- !include ../weapons/cl_lrm.yaml: {location: LA, count: 5, offset: [10, 42]}
+- !include ../weapons/cl_lrm.yaml: {location: RA, count: 5, offset: [-12, 42]}
+- !include ../weapons/cl_flamer.yaml: {location: RT, offset: [-6, 36]}

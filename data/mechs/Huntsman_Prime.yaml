@@ -27,11 +27,11 @@ specials:
 - !include ../specials/rcn.yaml: True
 - !include ../specials/tag.yaml: True
 weapons:
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 17]}
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 19]}
-- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 17]}
-- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 19]}
-- !include ../weapons/cl_ssrm.yaml: {location: LA, count: 6, offset: [18, 38]}
-- !include ../weapons/cl_lrm.yaml: {location: RT, count: 10, offset: [-10, 38]}
-- !include ../weapons/cl_uac2.yaml: {location: RT, offset: [-18, 21]}
-- !include ../weapons/cl_flamer.yaml: {location: LT, offset: [10, 20]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 37]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 39]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 37]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 39]}
+- !include ../weapons/cl_ssrm.yaml: {location: LA, count: 6, offset: [13, 37]}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 10, offset: [-12, 47]}
+- !include ../weapons/cl_uac2.yaml: {location: RA, offset: [-14, 36]}
+- !include ../weapons/cl_flamer.yaml: {location: LT, offset: [10, 48]}

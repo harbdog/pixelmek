@@ -21,8 +21,8 @@ specials:
 - !include ../specials/ene.yaml: True
 - !include ../specials/omni.yaml: True
 weapons:
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 19]}
-- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 19]}
-- !include ../weapons/cl_erml.yaml: {location: HD, offset: [0, 14]}
-- !include ../weapons/cl_erll.yaml: {location: LA, offset: [15, 19]}
-- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-15, 19]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 35]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 35]}
+- !include ../weapons/cl_erml.yaml: {location: HD, offset: [0, 30]}
+- !include ../weapons/cl_erll.yaml: {location: LA, offset: [15, 35]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-15, 35]}

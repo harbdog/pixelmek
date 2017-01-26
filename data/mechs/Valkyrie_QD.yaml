@@ -22,5 +22,5 @@ specials:
 - !include ../specials/idf.yaml: 0
 - !include ../specials/case.yaml: 1
 weapons:
-- !include ../weapons/is_mpl.yaml: {location: RA, offset: [-10, 16]}
-- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [4, 24]}
+- !include ../weapons/is_mpl.yaml: {location: RA, offset: [-15, 21]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [3, 35]}

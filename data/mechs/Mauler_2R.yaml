@@ -21,13 +21,13 @@ specials:
 - !include ../specials/case.yaml: True
 - !include ../specials/idf.yaml: 1
 weapons:
-- !include ../weapons/is_erml.yaml: {location: LA, offset: [20, 16]}
-- !include ../weapons/is_erml.yaml: {location: LA, offset: [20, 18]}
-- !include ../weapons/is_erml.yaml: {location: RA, offset: [-20, 16]}
-- !include ../weapons/is_erml.yaml: {location: RA, offset: [-20, 18]}
-- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [10, 32]}
-- !include ../weapons/is_lrm.yaml: {location: RT, count: 10, offset: [-10, 32]}
-- !include ../weapons/is_uac2.yaml:  {location: LT, offset: [9, 20]}
-- !include ../weapons/is_uac2.yaml:  {location: LT, offset: [9, 22]}
-- !include ../weapons/is_uac2.yaml:  {location: RT, offset: [-9, 20]}
-- !include ../weapons/is_uac2.yaml:  {location: RT, offset: [-9, 22]}
+- !include ../weapons/is_erml.yaml: {location: LA, offset: [19, 45]}
+- !include ../weapons/is_erml.yaml: {location: LA, offset: [19, 47]}
+- !include ../weapons/is_erml.yaml: {location: RA, offset: [-19, 45]}
+- !include ../weapons/is_erml.yaml: {location: RA, offset: [-19, 47]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 10, offset: [10, 63]}
+- !include ../weapons/is_lrm.yaml: {location: RT, count: 10, offset: [-12, 63]}
+- !include ../weapons/is_uac2.yaml:  {location: LT, offset: [7, 53]}
+- !include ../weapons/is_uac2.yaml:  {location: LT, offset: [11, 53]}
+- !include ../weapons/is_uac2.yaml:  {location: RT, offset: [-7, 53]}
+- !include ../weapons/is_uac2.yaml:  {location: RT, offset: [-11, 53]}

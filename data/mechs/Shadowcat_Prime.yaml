@@ -24,6 +24,6 @@ specials:
 - !include ../specials/prb.yaml: True
 - !include ../specials/rcn.yaml: True
 weapons:
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [16, 24]}
-- !include ../weapons/cl_erml.yaml: {location: RT, offset: [-8, 28]}
-- !include ../weapons/cl_gauss.yaml: {location: RA, offset: [-18, 24]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [16, 40]}
+- !include ../weapons/cl_erml.yaml: {location: RT, offset: [-8, 42]}
+- !include ../weapons/cl_gauss.yaml: {location: RA, offset: [-18, 40]}

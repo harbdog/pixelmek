@@ -21,9 +21,9 @@ specials:
 - !include ../specials/idf.yaml: 0
 - !include ../specials/srm.yaml: [1, 1, 0]
 weapons:
-- !include ../weapons/is_mlas.yaml: {location: LA, offset: [16, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-16, 16]}
-- !include ../weapons/is_srm.yaml: {location: LA, count: 6, offset: [16, 19]}
-- !include ../weapons/is_srm.yaml: {location: CT, count: 6, offset: [0, 19]}
-- !include ../weapons/is_srm.yaml: {location: RT, count: 6, offset: [-8, 19]}
-- !include ../weapons/is_lrm.yaml: {location: LA, count: 5, offset: [16, 14]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [20, 41]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-24, 41]}
+- !include ../weapons/is_srm.yaml: {location: LA, count: 6, offset: [19, 38]}
+- !include ../weapons/is_srm.yaml: {location: CT, count: 6, offset: [0, 40]}
+- !include ../weapons/is_srm.yaml: {location: RT, count: 6, offset: [-8, 43]}
+- !include ../weapons/is_lrm.yaml: {location: LA, count: 5, offset: [14, 40]}

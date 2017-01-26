@@ -23,8 +23,8 @@ specials:
 - !include ../specials/idf.yaml: 0
 - !include ../specials/rear.yaml: [1, 1, 0]
 weapons:
-- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [18, 14]}
-- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-18, 14]}
-- !include ../weapons/cl_ersl.yaml: {location: RT, offset: [-12, 14]}
-- !include ../weapons/cl_ssrm.yaml: {location: RT, count: 4, offset: [-12, 32]}
-- !include ../weapons/cl_lrm.yaml: {location: LT, count: 5, offset: [12, 32]}
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [17, 37]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-17, 37]}
+- !include ../weapons/cl_ersl.yaml: {location: RT, offset: [-4, 38]}
+- !include ../weapons/cl_ssrm.yaml: {location: RT, count: 4, offset: [-12, 47]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 5, offset: [10, 47]}

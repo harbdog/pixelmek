@@ -20,13 +20,13 @@ structure: 7
 specials:
 - !include ../specials/rear.yaml: [1, 1, 0]
 weapons:
-- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-20, 8]}
-- !include ../weapons/is_mlas.yaml: {location: LT, offset: [10, 16]}
-- !include ../weapons/is_mlas.yaml: {location: LT, offset: [10, 16]}
-- !include ../weapons/is_mlas.yaml: {location: LT, offset: [10, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-10, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-10, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-10, 16]}
-- !include ../weapons/is_srm.yaml: {location: LT, count: 6, offset: [10, 19]}
-- !include ../weapons/is_mg.yaml: {location: LA, offset: [20, 8]}
-- !include ../weapons/is_mg.yaml: {location: LA, offset: [20, 8]}
+- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-26, 42]}
+- !include ../weapons/is_mlas.yaml: {location: LT, offset: [7, 53]}
+- !include ../weapons/is_mlas.yaml: {location: LT, offset: [7, 55]}
+- !include ../weapons/is_mlas.yaml: {location: LT, offset: [11, 55]}
+- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-7, 53]}
+- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-7, 55]}
+- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-11, 55]}
+- !include ../weapons/is_srm.yaml: {location: LT, count: 6, offset: [4, 59]}
+- !include ../weapons/is_mg.yaml: {location: LA, offset: [27, 39]}
+- !include ../weapons/is_mg.yaml: {location: LA, offset: [27, 41]}

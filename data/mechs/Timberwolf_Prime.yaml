@@ -23,12 +23,12 @@ specials:
 - !include ../specials/idf.yaml: 2
 - !include ../specials/lrm.yaml: [1, 1, 2]
 weapons:
-- !include ../weapons/cl_erll.yaml: {location: LA, offset: [18, 11]}
-- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 14]}
-- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 11]}
-- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 14]}
-- !include ../weapons/cl_lrm.yaml: {location: LT, count: 20, offset: [10, 32]}
-- !include ../weapons/cl_lrm.yaml: {location: RT, count: 20, offset: [-12, 32]}
-- !include ../weapons/cl_mpl.yaml: {location: RT, offset: [-5, 20]}
-- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 16]}
-- !include ../weapons/cl_mg.yaml: {location: CT, offset: [0, 16]}
+- !include ../weapons/cl_erll.yaml: {location: LA, offset: [18, 27]}
+- !include ../weapons/cl_erml.yaml: {location: LA, offset: [18, 30]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 27]}
+- !include ../weapons/cl_erml.yaml: {location: RA, offset: [-18, 30]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 20, offset: [10, 48]}
+- !include ../weapons/cl_lrm.yaml: {location: RT, count: 20, offset: [-12, 48]}
+- !include ../weapons/cl_mpl.yaml: {location: RT, offset: [-5, 36]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 32]}
+- !include ../weapons/cl_mg.yaml: {location: CT, offset: [0, 32]}

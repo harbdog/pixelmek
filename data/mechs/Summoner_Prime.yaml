@@ -24,6 +24,6 @@ specials:
 - !include ../specials/idf.yaml: 1
 - !include ../specials/flk.yaml: [1, 1, 1]
 weapons:
-- !include ../weapons/cl_lbx10.yaml: {location: LA, offset: [18, 13]}
-- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-19, 13]}
-- !include ../weapons/cl_lrm.yaml: {location: LT, count: 15, offset: [6, 34]}
+- !include ../weapons/cl_lbx10.yaml: {location: LA, offset: [18, 29]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-19, 29]}
+- !include ../weapons/cl_lrm.yaml: {location: LT, count: 15, offset: [6, 50]}

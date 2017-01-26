@@ -20,11 +20,11 @@ structure: 6
 specials:
 - !include ../specials/ene.yaml: True
 weapons:
-- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-18, 14]}
-- !include ../weapons/is_llas.yaml: {location: LT, offset: [12, 26]}
-- !include ../weapons/is_llas.yaml: {location: RT, offset: [-12, 26]}
-- !include ../weapons/is_mlas.yaml: {location: LT, offset: [8, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-8, 16]}
-- !include ../weapons/is_mlas.yaml: {location: LA, offset: [18, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-18, 16]}
-- !include ../weapons/is_slas.yaml: {location: HD, offset: [2, 32]}
+- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-19, 43]}
+- !include ../weapons/is_llas.yaml: {location: LT, offset: [10, 46]}
+- !include ../weapons/is_llas.yaml: {location: RT, offset: [-10, 46]}
+- !include ../weapons/is_mlas.yaml: {location: LT, offset: [6, 44]}
+- !include ../weapons/is_mlas.yaml: {location: RT, offset: [-6, 44]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [18, 38]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-18, 38]}
+- !include ../weapons/is_slas.yaml: {location: HD, offset: [6, 68]}

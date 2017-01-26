@@ -22,8 +22,8 @@ specials:
 - !include ../specials/case.yaml: True
 - !include ../specials/omni.yaml: True
 weapons:
-- !include ../weapons/cl_gauss.yaml: {location: LA, offset: [18, 13]}
-- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-20, 11]}
-- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 11]}
-- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 22]}
-- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 24]}
+- !include ../weapons/cl_gauss.yaml: {location: LA, offset: [18, 29]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-20, 27]}
+- !include ../weapons/cl_erll.yaml: {location: RA, offset: [-18, 27]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 38]}
+- !include ../weapons/cl_mg.yaml: {location: RT, offset: [-5, 40]}

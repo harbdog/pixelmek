@@ -21,11 +21,11 @@ structure: 3
 specials:
 - !include ../specials/ht.yaml: [1, 0, 0]
 weapons:
-- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 16]}
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 16]}
-- !include ../weapons/is_mg.yaml: {location: LT, offset: [-5, 16]}
-- !include ../weapons/is_mg.yaml: {location: RT, offset: [-5, 16]}
-- !include ../weapons/is_flamer.yaml: {location: LA, offset: [12, 16]}
-- !include ../weapons/is_flamer.yaml: {location: RA, offset: [-12, 16]}
-- !include ../weapons/is_flamer.yaml: {location: CT, offset: [0, 18]}
-- !include ../weapons/is_flamer.yaml: {location: CT, offset: [0, 20]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [10, 32]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-10, 32]}
+- !include ../weapons/is_mg.yaml: {location: LT, offset: [-5, 32]}
+- !include ../weapons/is_mg.yaml: {location: RT, offset: [-5, 32]}
+- !include ../weapons/is_flamer.yaml: {location: LA, offset: [12, 32]}
+- !include ../weapons/is_flamer.yaml: {location: RA, offset: [-12, 32]}
+- !include ../weapons/is_flamer.yaml: {location: CT, offset: [0, 34]}
+- !include ../weapons/is_flamer.yaml: {location: CT, offset: [0, 36]}

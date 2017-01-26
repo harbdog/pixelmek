@@ -20,7 +20,7 @@ structure: 4
 specials:
 - !include ../specials/ene.yaml: True
 weapons:
-- !include ../weapons/is_llas.yaml: {location: LA, offset: [18, 14]}
-- !include ../weapons/is_llas.yaml: {location: RR, offset: [-18, 14]}
-- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 14]}
-- !include ../weapons/is_slas.yaml: {location: HD, offset: [2, 26]}
+- !include ../weapons/is_llas.yaml: {location: LA, offset: [17, 30]}
+- !include ../weapons/is_llas.yaml: {location: RA, offset: [-17, 30]}
+- !include ../weapons/is_mlas.yaml: {location: CT, offset: [0, 35]}
+- !include ../weapons/is_slas.yaml: {location: HD, offset: [6, 46]}

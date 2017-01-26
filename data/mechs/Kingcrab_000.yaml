@@ -21,7 +21,7 @@ specials:
 - !include ../specials/idf.yaml: 1
 - !include ../specials/ac.yaml: [2, 2, 0]
 weapons:
-- !include ../weapons/is_ac20.yaml:  {location: LA, offset: [24, 18]}
-- !include ../weapons/is_ac20.yaml:  {location: RA, offset: [-24, 18]}
-- !include ../weapons/is_llas.yaml: {location: RT, offset: [-12, 34]}
-- !include ../weapons/is_lrm.yaml: {location: LT, count: 15, offset: [12, 34]}
+- !include ../weapons/is_ac20.yaml:  {location: LA, offset: [24, 34]}
+- !include ../weapons/is_ac20.yaml:  {location: RA, offset: [-24, 34]}
+- !include ../weapons/is_llas.yaml: {location: RT, offset: [-12, 57]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 15, offset: [10, 55]}

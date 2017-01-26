@@ -22,9 +22,9 @@ specials:
 - !include ../specials/case.yaml: 1
 - !include ../specials/ac.yaml: [1, 1, 0]
 weapons:
-- !include ../weapons/is_erll.yaml:  {location: CT, offset: [0, 15]}
-- !include ../weapons/is_ac10.yaml:  {location: RA, offset: [-16, 14]}
-- !include ../weapons/is_lrm.yaml: {location: LA, count: 5, offset: [16, 14]}
-- !include ../weapons/is_lrm.yaml: {location: LT, count: 5, offset: [7, 28]}
-- !include ../weapons/is_mg.yaml: {location: LT, offset: [-5, 16]}
-- !include ../weapons/is_mg.yaml: {location: RT, offset: [-5, 16]}
+- !include ../weapons/is_erll.yaml:  {location: CT, offset: [0, 31]}
+- !include ../weapons/is_ac10.yaml:  {location: RA, offset: [-16, 30]}
+- !include ../weapons/is_lrm.yaml: {location: LA, count: 5, offset: [16, 30]}
+- !include ../weapons/is_lrm.yaml: {location: LT, count: 5, offset: [7, 44]}
+- !include ../weapons/is_mg.yaml: {location: LT, offset: [-5, 32]}
+- !include ../weapons/is_mg.yaml: {location: RT, offset: [-5, 32]}

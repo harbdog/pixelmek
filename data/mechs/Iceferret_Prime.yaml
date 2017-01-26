@@ -23,6 +23,6 @@ specials:
 - !include ../specials/prb.yaml: True
 - !include ../specials/rcn.yaml: True
 weapons:
-- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [18, 17]}
-- !include ../weapons/cl_ersl.yaml: {location: LA, offset: [18, 15]}
-- !include ../weapons/cl_ssrm.yaml: {location: RA, count: 2, offset: [-18, 15]}
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [17, 37]}
+- !include ../weapons/cl_ersl.yaml: {location: LA, offset: [20, 34]}
+- !include ../weapons/cl_ssrm.yaml: {location: RA, count: 2, offset: [-18, 40]}

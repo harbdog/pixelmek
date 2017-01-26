@@ -19,8 +19,8 @@ armor: 6
 structure: 6
 specials:
 weapons:
-- !include ../weapons/is_ppc.yaml:  {location: LA, offset: [20, 16]}
-- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-20, 16]}
-- !include ../weapons/is_ac5.yaml:  {location: RT, offset: [-4, 36]}
-- !include ../weapons/is_mlas.yaml: {location: LA, offset: [18, 13]}
-- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-18, 13]}
+- !include ../weapons/is_ppc.yaml:  {location: LA, offset: [20, 32]}
+- !include ../weapons/is_ppc.yaml:  {location: RA, offset: [-20, 32]}
+- !include ../weapons/is_ac5.yaml:  {location: RT, offset: [-4, 52]}
+- !include ../weapons/is_mlas.yaml: {location: LA, offset: [18, 29]}
+- !include ../weapons/is_mlas.yaml: {location: RA, offset: [-18, 29]}

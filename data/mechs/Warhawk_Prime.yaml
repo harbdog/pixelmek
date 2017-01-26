@@ -22,8 +22,8 @@ specials:
 - !include ../specials/omni.yaml: True
 - !include ../specials/ovl.yaml: True
 weapons:
-- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [20, 15]}
-- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [22, 17]}
-- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-20, 15]}
-- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-22, 17]}
-- !include ../weapons/cl_lrm.yaml: {location: LA, count: 10, offset: [16, 10]}
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [20, 31]}
+- !include ../weapons/cl_erppc.yaml: {location: LA, offset: [22, 33]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-20, 31]}
+- !include ../weapons/cl_erppc.yaml: {location: RA, offset: [-22, 33]}
+- !include ../weapons/cl_lrm.yaml: {location: LA, count: 10, offset: [16, 26]}

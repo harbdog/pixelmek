@@ -730,8 +730,8 @@ def performAttackOnUnit(board, target_unit, overheat=0):
             weapon_channel.set_volume(Settings.get_volume_fx())
 
             weapon_offset = weapon_data.get('offset', [0, 0])
-            weapon_x = turn_unit.sprite.position[0] + weapon_offset[0]
-            weapon_y = turn_unit.sprite.position[1] + weapon_offset[1]
+            weapon_x = turn_unit.sprite.x + weapon_offset[0]
+            weapon_y = turn_unit.sprite.y - (Board.TILE_SIZE // 2) + weapon_offset[1]
 
             weapon_color = weapon.get_color()
 
