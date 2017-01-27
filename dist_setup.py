@@ -17,7 +17,7 @@ if sys.platform == "win32":
     base = "Win32GUI"
 
 setup(name="pixelmek",
-      version="0.1",
+      version="0.2",
       description="PixelMek: The Game",
       options=build_options,
       executables=[Executable("pixelmek.py", base=base)])
