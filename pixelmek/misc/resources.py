@@ -182,7 +182,11 @@ class Resources(object):
             sum_diff_low = (target_pv - sum_pv) / num_units
             sum_diff_high = ((target_pv + (target_pv * variance)) - sum_pv) / num_units
             for i, pv in enumerate(pv_list):
-                pv_list[i] += random.randint(int(sum_diff_low), int(sum_diff_high))
+                curr_pv = pv_list[i]
+                rand_pv_add = random.randint(int(sum_diff_low), int(sum_diff_high))
+
+                if curr_pv + rand_pv_add <= max_pv:
+                    pv_list[i] = curr_pv + rand_pv_add
 
         for pv in pv_list:
             # find a unit at or very close to the chosen PV
