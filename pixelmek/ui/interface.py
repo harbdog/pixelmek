@@ -142,7 +142,7 @@ class Interface(cocos.layer.Layer):
         if button is not None:
             button.set_selected(True)
 
-            from board import Board
+            from pixelmek.ui.board import Board
             battle = Board.BOARD.battle
             turn_unit = battle.getTurnUnit()
             sel_cell_pos = battle.getSelectedCellPosition()

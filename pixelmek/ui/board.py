@@ -299,7 +299,7 @@ class Cell(cocos.sprite.Sprite):
     def remove_indicators(self):
         self.range_to_display = 0
 
-        for indicator_name in self.indicators.keys():
+        for indicator_name in list(self.indicators.keys()):
             indicator = self.indicators[indicator_name]
             indicator.kill()
 

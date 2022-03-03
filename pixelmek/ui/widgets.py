@@ -349,7 +349,7 @@ class Button(cocos.layer.ColorLayer):
     def set_selected(self, selected):
         if selected != self.selected:
             if selected:
-                from interface import Interface
+                from pixelmek.ui.interface import Interface
                 is_action_btn = Interface.UI.isActionButton(self)
                 if not is_action_btn:
                     Interface.UI.deselectAllButtons(hide_action=True)
@@ -386,7 +386,7 @@ class Button(cocos.layer.ColorLayer):
 
         if self.selected:
             # any vars placed on the selected button need to be given to the called function
-            from interface import Interface
+            from pixelmek.ui.interface import Interface
             is_action_btn = Interface.UI.isActionButton(self)
             if is_action_btn:
                 sel_btn = Interface.UI.getSelectedButton()
