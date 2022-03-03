@@ -371,7 +371,7 @@ def nextTurn():
 
         action = ToggleVisibility() \
                  + MoveBy((0, Board.TILE_SIZE), 1.0) \
-                 + Delay(0.5) + FadeOut(2.0) + CallFunc(floater.kill) + CallFunc(nextTurn)
+                 + Delay(0.5) + FadeOut(2.0) + CallFunc(nextTurn)
         floater.do(action)
         return
 
@@ -387,7 +387,7 @@ def nextTurn():
 
         action = ToggleVisibility() \
                  + MoveBy((-Board.TILE_SIZE, -Board.TILE_SIZE), 0.1) \
-                 + CallFunc(floater.kill) + CallFunc(next_unit.getPlayer().act)
+                 + CallFunc(next_unit.getPlayer().act)
         floater.do(action)
 
     else:
@@ -759,7 +759,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
 
                 action = Delay(0.5) + MoveTo((target_x, target_y), duration=ppc_t) \
                          + CallFunc(impact_ppc, ppc) \
-                         + Delay(0.5) + CallFunc(ppc.kill) \
+                         + Delay(0.5) \
                          + Delay(ppc_sound.get_length()) \
                          + CallFunc(weapon_channel.stop)
 
@@ -813,7 +813,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
                 action = Delay(flamer_t) \
                          + CallFunc(impact_flamer, flamer) \
                          + CallFunc(weapon_channel.fadeout, 750) \
-                         + Delay(flamer_t) + CallFunc(flamer.kill) \
+                         + Delay(flamer_t) \
                          + CallFunc(weapon_channel.stop)
 
                 flamer.do(action)
@@ -884,7 +884,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
                 las_action = Delay(0.5) + ToggleVisibility() \
                              + CallFunc(create_laser_impact, board, target_pos, laser_drift, las_life) \
                              + gl.LineDriftBy(laser_drift, las_life) \
-                             + CallFunc(laser_charge.stop_system) + CallFunc(node.kill)
+                             + CallFunc(laser_charge.stop_system)
                 las_outer.do(las_action)
                 las_middle.do(las_action)
                 las_inner.do(las_action)
@@ -956,8 +956,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
                     action = Delay(i * 0.1) + ToggleVisibility() \
                              + CallFunc(weapon_channel.play, cannon_sound) \
                              + MoveTo((target_x, target_y), ballistic_t) \
-                             + CallFunc(impact_func, weapon, board, target_pos) \
-                             + CallFunc(ballistic.kill)
+                             + CallFunc(impact_func, weapon, board, target_pos)
 
                     if weapon.isGauss():
                         # give gauss sound a bit more time to stop
@@ -1033,7 +1032,6 @@ def performAttackOnUnit(board, target_unit, overheat=0):
                              + CallFunc(weapon_channel.play, missile_sound) \
                              + MoveTo((target_x, target_y), missile_t) \
                              + CallFunc(create_missile_impact, board, target_pos) \
-                             + CallFunc(missile.kill) \
                              + CallFunc(explosion_channel.play, explosion_sound) \
                              + Delay(0.5)
 
@@ -1068,7 +1066,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
     action = Delay(min_travel_time / 2) + CallFunc(board.scroller.set_focus, *target_area) \
         + Delay(min_travel_time / 2) + ToggleVisibility() \
         + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.0) \
-        + FadeOut(1.0) + CallFunc(floater.kill)
+        + FadeOut(1.0)
     floater.do(action)
 
     if critical_type is not None:
@@ -1080,7 +1078,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
 
         action = Delay(min_travel_time) + Delay(1.0) + ToggleVisibility() \
                  + Delay(0.25) + MoveBy((0, Board.TILE_SIZE), 1.5) \
-                 + FadeOut(1.5) + CallFunc(crit_floater.kill)
+                 + FadeOut(1.5)
         crit_floater.do(action)
 
     if action.duration > max_travel_time:
@@ -1103,7 +1101,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
 
         action = Delay(max_travel_time) + ToggleVisibility() \
             + (MoveBy((0, Board.TILE_SIZE), 1.0) | CallFunc(create_destruction_explosions, board, target_unit)) \
-            + Delay(0.5) + CallFunc(target_sprite.destroy) + FadeOut(2.0) + CallFunc(destroyed.kill)
+            + Delay(0.5) + CallFunc(target_sprite.destroy) + FadeOut(2.0)
         destroyed.do(action)
 
         # give a bit of extra time to explode
@@ -1119,7 +1117,7 @@ class LaserImpact(cocos.sprite.Sprite):
 
     def __init__(self, pos):
         super(LaserImpact, self).__init__(LaserImpact.explosion_img, pos)
-        self.do(Delay(0.05 * 24) + CallFunc(self.kill))
+        self.do(Delay(0.05 * 24))
 
 
 def create_laser_impact(board, pos, drift, duration):
@@ -1150,7 +1148,7 @@ class MissileImpact(cocos.sprite.Sprite):
 
     def __init__(self, pos):
         super(MissileImpact, self).__init__(MissileImpact.explosion_img, pos)
-        self.do(Delay(0.05 * 26) + CallFunc(self.kill))
+        self.do(Delay(0.05 * 26))
 
 
 def create_missile_impact(board, pos):
@@ -1167,7 +1165,7 @@ class BallisticImpact(cocos.sprite.Sprite):
 
     def __init__(self, pos):
         super(BallisticImpact, self).__init__(BallisticImpact.explosion_img, pos)
-        self.do(Delay(0.07 * 6) + CallFunc(self.kill))
+        self.do(Delay(0.07 * 6))
 
 
 def create_ballistic_impact(weapon, board, pos):
