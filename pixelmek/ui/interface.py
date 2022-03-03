@@ -34,7 +34,8 @@ class Interface(cocos.layer.Layer):
 
     def __init__(self):
         super(Interface, self).__init__()
-        from board import Board
+
+        from pixelmek.ui.board import Board
         Interface.UI = self
 
         self.action_btn = None
@@ -179,7 +180,7 @@ class Interface(cocos.layer.Layer):
             selected_button.update_selected()
             return
 
-        from board import Board
+        from pixelmek.ui.board import Board
 
         if self.action_btn is not None:
             self.action_btn.kill()
@@ -203,7 +204,7 @@ class Interface(cocos.layer.Layer):
         if num_buttons == 0:
             return
 
-        from board import Board
+        from pixelmek.ui.board import Board
         size = director.get_window_size()
         width = size[0]
         height = size[1]
@@ -298,7 +299,7 @@ class Interface(cocos.layer.Layer):
             self.action_super_label.y = self.action_super_icon.y + self.action_super_icon.height // 2
 
     def setUnitStatsIndicatorsVisible(self, visible, except_units=None):
-        from board import Board
+        from pixelmek.ui.board import Board
 
         if except_units is None:
             except_units = []
@@ -320,7 +321,7 @@ class Interface(cocos.layer.Layer):
             self.unit_display_bg = None
             return
 
-        from board import Board
+        from pixelmek.ui.board import Board
         # size = director.get_window_size()
         # width = size[0]
         # height = size[1]
@@ -347,7 +348,7 @@ class Interface(cocos.layer.Layer):
             self.target_display_bg = None
             return
 
-        from board import Board
+        from pixelmek.ui.board import Board
 
         size = director.get_window_size()
         width = size[0]
@@ -375,7 +376,7 @@ class Interface(cocos.layer.Layer):
         self.clearLosLines()
 
     def updateToHitLabels(self):
-        from board import Board
+        from pixelmek.ui.board import Board
         board = Board.BOARD
         battle = board.battle
 
@@ -416,7 +417,7 @@ class Interface(cocos.layer.Layer):
         self.los_lines = []
 
     def drawLosLine(self, source_coords, target_coords, width=2, alpha=0.8):
-        from board import Board
+        from pixelmek.ui.board import Board
         board = Board.BOARD
 
         source_x, source_y = Board.board_to_layer(*source_coords)
@@ -432,7 +433,7 @@ class Interface(cocos.layer.Layer):
         self.los_lines.append(los_line)
 
     def generateLosLinesFrom(self, source_unit, source_coords=None):
-        from board import Board
+        from pixelmek.ui.board import Board
         board = Board.BOARD
         battle = board.battle
 
@@ -455,7 +456,7 @@ class Interface(cocos.layer.Layer):
                 self.drawLosLine(source_coords, target_coords)
 
     def generateTargetLosLine(self, source_unit, target_unit):
-        from board import Board
+        from pixelmek.ui.board import Board
         board = Board.BOARD
         battle = board.battle
 

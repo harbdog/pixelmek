@@ -1,5 +1,3 @@
-from __future__ import division
-
 import cocos
 import pyglet
 from pyglet import window

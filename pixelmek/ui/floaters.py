@@ -7,7 +7,7 @@ class TextFloater(cocos.text.Label):
                  font_name='Convoy', anchor_x='center', anchor_y='center'):
 
         if font_size is None:
-            from board import Board
+            from pixelmek.ui.board import Board
             font_size = Board.TILE_SIZE // 2
 
         super(TextFloater, self).__init__(text, color=color, font_size=font_size, font_name=font_name,

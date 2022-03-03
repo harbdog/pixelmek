@@ -38,7 +38,7 @@ class Modifiers(object):
                 move_modifier = 1 + Modifiers._getMoveModifier(current_jump)
             else:
                 # use the variable movement modifiers rules, where if target is standing still its easier to hit
-                from battle import Battle
+                from pixelmek.model.battle import Battle
                 distance_moved = Battle.getCellDistance(battle_unit.getPosition(), battle_unit.prev_position)
                 if distance_moved < 1:
                     move_modifier = 0

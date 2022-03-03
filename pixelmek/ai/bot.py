@@ -25,7 +25,7 @@ class Bot(Player):
 
         Interface.UI.setUnitStatsIndicatorsVisible(False)
 
-        for cell in board.cellMap.itervalues():
+        for cell in board.cellMap.values():
             cell.remove_indicators()
 
         # first, determine where to move

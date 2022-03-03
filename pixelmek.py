@@ -35,7 +35,7 @@ def main():
     # director must be initialized before any cocos elements can be created
     display_width = Settings.get_resolution_width()
     display_height = Settings.get_resolution_height()
-    director.init(width=display_width, height=display_height, resizable=True, autoscale=False)
+    director.init(width=display_width, height=display_height, resizable=True, autoscale=True)
     director.show_FPS = True
 
     # initialize the audio mixer

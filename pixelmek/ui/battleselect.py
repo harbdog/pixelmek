@@ -28,7 +28,7 @@ class BattleSelectionMenu(Menu):
 
         menus = []
 
-        self.teams = self.TECH_MAP.keys()
+        self.teams = sorted(self.TECH_MAP.keys())
 
         # Select player team (IS/Clan)
         self.player = Battle.BATTLE.player_one
@@ -108,7 +108,7 @@ class BattleSelectionMenu(Menu):
             actions.add_unit_for_player(unit, player)
 
     def on_combat(self):
-        from menu import MainMenu
+        from pixelmek.ui.menu import MainMenu
 
         MainMenu.start_battle()
 

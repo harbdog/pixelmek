@@ -14,7 +14,8 @@ class UnitCard(cocos.layer.Layer):
 
     def __init__(self, battle_unit, is_friendly=True, reverse=False, mask_image=True, menu_selected=False):
         super(UnitCard, self).__init__()
-        from board import Board
+
+        from pixelmek.ui.board import Board
 
         self.battle_unit = battle_unit
         self.reverse = reverse

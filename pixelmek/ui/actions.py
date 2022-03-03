@@ -1,5 +1,3 @@
-from __future__ import division
-
 import pygame
 import random
 from math import atan2, degrees, pi
@@ -326,7 +324,7 @@ def nextTurn():
     if prev_unit is not None:
         prev_unit.sprite.stop()
 
-    for cell in board.cellMap.itervalues():
+    for cell in board.cellMap.values():
         cell.remove_indicators()
 
     # make the model update to the next turn
@@ -472,14 +470,14 @@ def actOnCell(board, col, row, **kwargs):
         Interface.UI.clearToHitLabels()
         Interface.UI.setUnitStatsIndicatorsVisible(False)
 
-        for chk_cell in board.cellMap.itervalues():
+        for chk_cell in board.cellMap.values():
             chk_cell.remove_indicators()
 
         animate_reverse = (turn_unit.col - col > 0) or (turn_unit.row - row > 0)
 
         def _ready_next_move():
             turn_unit.sprite.sulk()
-            for chk_cell in board.cellMap.itervalues():
+            for chk_cell in board.cellMap.values():
                 chk_cell.remove_indicators()
 
             board.showRangeIndicators()
@@ -526,7 +524,7 @@ def actOnCell(board, col, row, **kwargs):
         Interface.UI.setUnitStatsIndicatorsVisible(False, except_units=[cell_unit])
 
         board.showUnitIndicators(visible=False)
-        for chk_cell in board.cellMap.itervalues():
+        for chk_cell in board.cellMap.values():
             chk_cell.remove_indicators()
 
         # Apply overheat value if selected
@@ -561,7 +559,7 @@ def actOnCell(board, col, row, **kwargs):
 
 
 def updateLOS(board):
-    for this_cell in board.cellMap.itervalues():
+    for this_cell in board.cellMap.values():
         this_cell.update_los_visibility()
 
 
@@ -714,7 +712,7 @@ def performAttackOnUnit(board, target_unit, overheat=0):
         real_y += random.choice([-1, 0, 1]) * Board.TILE_SIZE
 
     for weaponMap in turn_unit.mech.weapons:
-        for weapon in weaponMap.iterkeys():
+        for weapon in weaponMap.keys():
 
             if not weapon.inRange(cell_distance):
                 continue
