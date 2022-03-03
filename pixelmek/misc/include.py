@@ -51,6 +51,6 @@ class IncludeLoader(yaml.Loader):
         oldRoot = self.root
         filename = os.path.join(self.root, loader.construct_scalar(node))
         self.root = os.path.dirname(filename)
-        data = yaml.safe_load(open(filename, 'r'))
+        data = yaml.load(stream=open(filename, 'r'), Loader=yaml.Loader)
         self.root = oldRoot
         return data
