@@ -1,0 +1,6 @@
+cocos2d
+numpy
+pillow
+pygame
+pyglet
+pyyaml

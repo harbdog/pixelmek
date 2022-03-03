@@ -1,12 +1,12 @@
 import cocos
-
 from cocos.director import director
 from cocos.menu import *
 from cocos.scenes import *
-from menuitem import UnitMenuItem
+
 from pixelmek.misc.resources import Resources
 from pixelmek.model.battle import Battle
 from pixelmek.ui import actions
+from pixelmek.ui.menuitem import UnitMenuItem
 
 
 class PlayerUnitsMenu(Menu):

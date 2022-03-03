@@ -35,7 +35,7 @@ class Settings:
         else:
             try:
                 with open(Settings.FILE, 'r') as infile:
-                    Settings.SETTINGS = (yaml.load(infile))
+                    Settings.SETTINGS = yaml.safe_load(infile)
             except IOError:
                 print('Error loading settings file %s!' % Settings.FILE)
 

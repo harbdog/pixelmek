@@ -1,5 +1,6 @@
 import yaml
-import battle
+
+from pixelmek.model import battle
 
 
 class Mech(yaml.YAMLObject):

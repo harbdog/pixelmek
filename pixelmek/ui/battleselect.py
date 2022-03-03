@@ -1,13 +1,12 @@
 import cocos
-import actions
-import unitselect
-
 from cocos.director import director
 from cocos.menu import *
 from cocos.scenes import *
-from menuitem import LoopingMultipleMenuItem
+
+from pixelmek.ui import actions
+from pixelmek.ui import unitselect
+from pixelmek.ui.menuitem import LoopingMultipleMenuItem
 from pixelmek.model.battle import Battle
-from interface import Interface
 
 
 class BattleSelectionMenu(Menu):

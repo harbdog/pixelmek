@@ -2,7 +2,7 @@
 # http://www.roguebasin.com/index.php?title=Raycasting_in_python
 # By init. initd5@gmail.com
 
-from map import Map
+from pixelmek.model.map import Map
 
 
 class LineOfSight:

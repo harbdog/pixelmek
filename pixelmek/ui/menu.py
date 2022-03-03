@@ -4,10 +4,8 @@ from cocos.director import director
 from cocos.menu import *
 from cocos.scenes import *
 
-import actions
-import settings
-import battleselect
-from interface import Interface
+from pixelmek.ui import actions, battleselect, settings
+from pixelmek.ui.interface import Interface
 
 
 class MainMenu(Menu):

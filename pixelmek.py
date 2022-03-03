@@ -25,61 +25,66 @@ def find_data_file(filename):
     return os.path.join(datadir, filename)
 
 
-DATA_DIR = find_data_file('data')
-Settings.init(DATA_DIR)
+def main():
+    data_dir = find_data_file('data')
+    Settings.init(data_dir)
 
-mech_list = Resources.get_units()
+    # pre-load units
+    Resources.get_units()
 
-# director must be initialized before any cocos elements can be created
-display_width = Settings.get_resolution_width()
-display_height = Settings.get_resolution_height()
-director.init(width=display_width, height=display_height, resizable=True, autoscale=False)
-director.show_FPS = True
+    # director must be initialized before any cocos elements can be created
+    display_width = Settings.get_resolution_width()
+    display_height = Settings.get_resolution_height()
+    director.init(width=display_width, height=display_height, resizable=True, autoscale=False)
+    director.show_FPS = True
 
-# initialize the audio mixer
-pygame.mixer.init(44100, -16, 2, 2048)
-pygame.mixer.set_num_channels(32)
+    # initialize the audio mixer
+    pygame.mixer.init(44100, -16, 2, 2048)
+    pygame.mixer.set_num_channels(32)
 
-# preload all sound and image resources
-resources.Resources.preload()
+    # preload all sound and image resources
+    resources.Resources.preload()
+
+    # setup custom mouse cursor
+    cursor = pyglet.window.ImageMouseCursor(resources.Resources.mouse_pointer, 1, 17)
+    director.window.set_mouse_cursor(cursor)
+
+    # set up test players
+    player = Player("Player", team=0)
+    bot = Bot("Enemy", team=1)
+
+    battle = Battle(player)
+    map_model = Map()
+    battle.setMap(map_model)
+
+    board = Board(battle)
+    key_events = events.KeyboardEvents(board)
+    mouse_events = events.MouseEvents(board)
+
+    battle.addPlayer(bot)
+
+    # randomize the starting units based on a target total PV
+    player_units = Resources.generate_random_unit_deck(12, 'is', target_pv=350, variance=0.05)
+
+    bot_units = Resources.generate_random_unit_deck(10, 'cl', target_pv=350, variance=0.05)
+
+    for unit in player_units:
+        actions.add_unit_for_player(unit, player)
+
+    for unit in bot_units:
+        actions.add_unit_for_player(unit, bot)
+
+    scroller = cocos.layer.ScrollingManager()
+    scroller.add(board, z=0)
+    scroller.add(key_events, z=-1)
+    scroller.add(mouse_events, z=1)
+
+    board.setScroller(scroller)
+
+    scene = cocos.scene.Scene(menu.MainMenu(scroller))
+
+    director.run(scene)
 
 
-# setup custom mouse cursor
-cursor = pyglet.window.ImageMouseCursor(resources.Resources.mouse_pointer, 1, 17)
-director.window.set_mouse_cursor(cursor)
-
-# set up test players
-player = Player("Player", team=0)
-bot = Bot("Enemy", team=1)
-
-battle = Battle(player)
-map_model = Map()
-battle.setMap(map_model)
-
-board = Board(battle)
-key_events = events.KeyboardEvents(board)
-mouse_events = events.MouseEvents(board)
-
-battle.addPlayer(bot)
-
-# randomize the starting units based on a target total PV
-player_units = Resources.generate_random_unit_deck(12, 'is', target_pv=350, variance=0.05)
-
-bot_units = Resources.generate_random_unit_deck(10, 'cl', target_pv=350, variance=0.05)
-
-for unit in player_units:
-    actions.add_unit_for_player(unit, player)
-
-for unit in bot_units:
-    actions.add_unit_for_player(unit, bot)
-
-scroller = cocos.layer.ScrollingManager()
-scroller.add(board, z=0)
-scroller.add(key_events, z=-1)
-scroller.add(mouse_events, z=1)
-
-board.setScroller(scroller)
-
-scene = cocos.scene.Scene(menu.MainMenu(scroller))
-
-director.run(scene)
+if __name__ == "__main__":
+    main()

@@ -1,8 +1,9 @@
 from cocos.menu import BaseMenuItem, MultipleMenuItem
 from pyglet import gl
 from pyglet.window import key
-from pixelmek.model.battle import Battle, BattleMech
-from widgets import UnitCard
+
+from pixelmek.model.battle import BattleMech
+from pixelmek.ui.widgets import UnitCard
 
 
 class UnitMenuItem(BaseMenuItem):

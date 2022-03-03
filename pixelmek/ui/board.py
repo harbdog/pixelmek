@@ -4,12 +4,10 @@ from cocos.director import director
 from cocos.rect import Rect
 from cocos.sprite import Sprite
 
-
-import floaters
-from interface import Interface
-from pixelmek.model.battle import Battle
-from pixelmek.model.map import Map
+from pixelmek.ui import floaters
+from pixelmek.ui.interface import Interface
 from pixelmek.misc.resources import Resources
+from pixelmek.model.battle import Battle
 
 
 class Board(cocos.layer.ScrollableLayer):

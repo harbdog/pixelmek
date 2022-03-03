@@ -2,6 +2,7 @@ import pygame
 
 from cocos.director import director
 from cocos.menu import *
+
 from pixelmek.misc.settings import Settings
 from pixelmek.misc.resources import Resources
 

@@ -1,14 +1,13 @@
 import cocos
-import actions
 from cocos.batch import BatchNode
 from cocos.director import director
 from cocos.sprite import Sprite
 
-from floaters import TextFloater
-from gl import SingleLine
 from pixelmek.misc.resources import Resources
-from widgets import UnitCard
-from widgets import Button, TextButton
+from pixelmek.ui import actions
+from pixelmek.ui.floaters import TextFloater
+from pixelmek.ui.gl import SingleLine
+from pixelmek.ui.widgets import Button, TextButton, UnitCard
 
 
 class Interface(cocos.layer.Layer):

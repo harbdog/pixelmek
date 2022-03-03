@@ -1,7 +1,5 @@
-import math
 import pygame
 import pyglet
-import random
 import cocos
 
 from cocos.actions import *
@@ -13,8 +11,8 @@ from cocos.sprite import Sprite
 from pixelmek.misc.resources import Resources
 from pixelmek.model.battle import Battle
 from pixelmek.model.map import Map
-from board import Board
-from settings import Settings
+from pixelmek.ui.board import Board
+from pixelmek.ui.settings import Settings
 
 
 class MechSprite(cocos.layer.Layer):

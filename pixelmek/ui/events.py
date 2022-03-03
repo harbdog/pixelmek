@@ -5,9 +5,8 @@ import pyglet
 from pyglet import window
 from pyglet.window import mouse
 
-import actions
-from board import Board
-from interface import Interface
+from pixelmek.ui import actions
+from pixelmek.ui.board import Board
 
 
 class KeyboardEvents(cocos.layer.ScrollableLayer):

@@ -6,10 +6,6 @@ from math import atan2, degrees, pi
 
 import cocos
 import pyglet
-import floaters
-import gl
-import sprites
-from pixelmek.model.model import Special
 
 from cocos.actions import *
 from cocos.euclid import Point2
@@ -18,10 +14,12 @@ from cocos.particle_systems import Meteor, Galaxy, Fire
 from cocos.sprite import Sprite
 
 from pixelmek.misc.resources import Resources
-from pixelmek.model.battle import Battle, BattleMech
-from board import Board
 from pixelmek.misc.settings import Settings
-from interface import Interface
+from pixelmek.model.battle import Battle, BattleMech
+from pixelmek.model.model import Special
+from pixelmek.ui import floaters, gl, sprites
+from pixelmek.ui.board import Board
+from pixelmek.ui.interface import Interface
 
 
 class Actions(object):

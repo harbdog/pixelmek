@@ -1,6 +1,6 @@
 import random
 
-from model import Special
+from pixelmek.model.model import Special
 
 
 class CriticalHits(object):

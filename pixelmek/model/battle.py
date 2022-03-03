@@ -1,13 +1,14 @@
-import model
 import random
-from pixelmek.misc.settings import Settings
-
 from collections import namedtuple
+
 from cocos.euclid import Point2
-from los import LineOfSight
-from map import Map
-from modifiers import Modifiers
-from criticals import CriticalHits
+
+from pixelmek.misc.settings import Settings
+from pixelmek.model import model
+from pixelmek.model.criticals import CriticalHits
+from pixelmek.model.los import LineOfSight
+from pixelmek.model.map import Map
+from pixelmek.model.modifiers import Modifiers
 
 
 class Battle(object):

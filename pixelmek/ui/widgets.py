@@ -1,13 +1,12 @@
 import cocos
 import pyglet
-import random
+
 from cocos.batch import BatchNode
 from cocos.rect import Rect
 from cocos.sprite import Sprite
 from PIL import Image
 
-import floaters
-import gl
+from pixelmek.ui import floaters, gl
 from pixelmek.misc.resources import Resources
 
 

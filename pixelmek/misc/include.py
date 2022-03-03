@@ -42,7 +42,7 @@ class IncludeLoader(yaml.Loader):
         self.add_constructor('!include', self._include)
         if 'root' in kwargs:
             self.root = kwargs['root']
-        elif isinstance(self.stream, file):
+        elif hasattr(self.stream, 'name'):
             self.root = os.path.dirname(self.stream.name)
         else:
             self.root = os.path.curdir
@@ -51,6 +51,6 @@ class IncludeLoader(yaml.Loader):
         oldRoot = self.root
         filename = os.path.join(self.root, loader.construct_scalar(node))
         self.root = os.path.dirname(filename)
-        data = yaml.load(open(filename, 'r'))
+        data = yaml.safe_load(open(filename, 'r'))
         self.root = oldRoot
         return data
