@@ -1,14 +1,15 @@
+# PixelMek
+
+PixelMek is an unofficial BattleTech strategy game using community contributed pixel mech artwork.
+
+![](doc/pixelmek.png)
+
 ### Instructions for running from source:
 
-1. Install Python 2.7.x (https://www.python.org/downloads/)
-2. Install pygame (http://www.pygame.org/download.shtml)
-3. Install the following Python extensions from command line using pip:
-    1. pip install pyglet
-    2. pip install cocos2d
-    3. pip install pyyaml
-    4. pip install numpy
-    5. pip install pillow
-4. Run from command line using python:
+1. Install [Python 2.7.x](https://www.python.org/downloads/release/python-2716/)
+2. Install the required Python extensions from command line using pip:
+    * pip install -r requirements.txt
+3. Run from command line using python:
     * python pixelmek.py
     
     

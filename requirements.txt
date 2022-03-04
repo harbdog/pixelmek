@@ -1,0 +1,7 @@
+cocos2d==0.6.4
+numpy==1.16.6
+pillow==6.2.2
+pygame==2.0.3
+pyglet==1.2.4
+pyyaml==3.13
+six==1.16.0
